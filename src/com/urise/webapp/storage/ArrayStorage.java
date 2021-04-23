@@ -8,7 +8,7 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    private Resume[] storage = new Resume[10000];
+    private Resume[] storage = new Resume[10_000];
     private int size = 0;
 
     public void clear() {
@@ -18,51 +18,45 @@ public class ArrayStorage {
         size = 0;
     }
 
-    public void update(Resume r) {
-        if (!isPresent(r)) {
-            System.out.println("ERROR resume missing in the database");
+    public void update(Resume resume) {
+        if (!isPresent(resume.getUuid())) {
+            System.out.println("ERROR: resume with uuid " + resume.getUuid() + " missing in the database");
         } else {
-            for (int i = 0; i < size; i++) {
-                if (storage[i].getUuid().equals(r.getUuid())) {
-                    storage[i] = r;
-                    break;
-                }
-            }
+            storage[getIndexResumeInStorage(resume.getUuid())] = resume;
         }
     }
 
-    public void save(Resume r) {
-        if (isPresent(r)) {
-            System.out.println("ERROR resume exist in the database");
+    public void save(Resume resume) {
+        if (isPresent(resume.getUuid())) {
+            System.out.println("ERROR: resume with uuid: " + resume.getUuid() + "  exist in the database");
+        } else if (size >= 10_000) {
+            System.out.println("ERROR: resume storage overflowing");
         } else {
-            storage[size] = r;
+            storage[size] = resume;
             size++;
         }
     }
 
     public Resume get(String uuid) {
         Resume resume = null;
-        for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                resume = storage[i];
-            }
+        if (!isPresent(uuid)) {
+            System.out.println("ERROR: resume with uuid: " + uuid + "  missing in the database");
+            return resume;
         }
+        resume = storage[getIndexResumeInStorage(uuid)];
         return resume;
     }
 
     public void delete(String uuid) {
-        if (!isPresent(get(uuid))) {
-            System.out.println("ERROR resume missing in the database");
+        if (!isPresent(uuid)) {
+            System.out.println("ERROR: resume with uuid: " + uuid + "  missing in the database");
         } else {
-            for (int i = 0; i < size; i++) {
-                if (storage[i].getUuid().equals(uuid)) {
-                    while (i < size) {
-                        storage[i] = storage[i + 1];
-                        i++;
-                    }
-                    size--;
-                }
+            int i = getIndexResumeInStorage(uuid);
+            while (i < size) {
+                storage[i] = storage[i + 1];
+                i++;
             }
+            size--;
         }
     }
 
@@ -70,19 +64,28 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     public Resume[] getAll() {
-        return Arrays.copyOfRange(storage, 0, size);
+        return Arrays.copyOf(storage, size);
     }
 
     public int size() {
         return size;
     }
 
-    public boolean isPresent(Resume r) {
+    public boolean isPresent(String uuid) {
         for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(r.getUuid())) {
+            if (storage[i].getUuid().equals(uuid)) {
                 return true;
             }
         }
         return false;
+    }
+
+    public int getIndexResumeInStorage(String uuid) {
+        for (int i = 0; i < size; i++) {
+            if (storage[i].getUuid().equals(uuid)) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
