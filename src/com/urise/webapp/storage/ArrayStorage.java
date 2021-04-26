@@ -12,24 +12,23 @@ public class ArrayStorage {
     private int size = 0;
 
     public void clear() {
-        for (int i = 0; i < size; i++) {
-            storage[i] = null;
-        }
+        Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
     public void update(Resume resume) {
-        if (!isPresent(resume.getUuid())) {
+        int index = getIndex(resume.getUuid());
+        if (index == -1) {
             System.out.println("ERROR: resume with uuid " + resume.getUuid() + " missing in the database");
         } else {
-            storage[getIndexResumeInStorage(resume.getUuid())] = resume;
+            storage[index] = resume;
         }
     }
 
     public void save(Resume resume) {
-        if (isPresent(resume.getUuid())) {
+        if (getIndex(resume.getUuid()) != -1) {
             System.out.println("ERROR: resume with uuid: " + resume.getUuid() + "  exist in the database");
-        } else if (size >= 10_000) {
+        } else if (size >= storage.length) {
             System.out.println("ERROR: resume storage overflowing");
         } else {
             storage[size] = resume;
@@ -38,25 +37,24 @@ public class ArrayStorage {
     }
 
     public Resume get(String uuid) {
-        Resume resume = null;
-        if (!isPresent(uuid)) {
+        int index = getIndex(uuid);
+        if (index == -1) {
             System.out.println("ERROR: resume with uuid: " + uuid + "  missing in the database");
-            return resume;
+            return null;
         }
-        resume = storage[getIndexResumeInStorage(uuid)];
-        return resume;
+        return storage[index];
     }
 
     public void delete(String uuid) {
-        if (!isPresent(uuid)) {
+        int index = getIndex(uuid);
+        if (index == -1) {
             System.out.println("ERROR: resume with uuid: " + uuid + "  missing in the database");
         } else {
-            int i = getIndexResumeInStorage(uuid);
-            while (i < size) {
-                storage[i] = storage[i + 1];
-                i++;
-            }
-            size--;
+            Resume[] sourse = getAll();
+            clear();
+            System.arraycopy(sourse, 0, storage, 0, index);
+            System.arraycopy(sourse, index + 1, storage, index, (sourse.length - index - 1));
+            size = sourse.length - 1;
         }
     }
 
@@ -71,16 +69,7 @@ public class ArrayStorage {
         return size;
     }
 
-    public boolean isPresent(String uuid) {
-        for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public int getIndexResumeInStorage(String uuid) {
+    private int getIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;
