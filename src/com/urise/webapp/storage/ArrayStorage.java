@@ -50,11 +50,8 @@ public class ArrayStorage {
         if (index == -1) {
             System.out.println("ERROR: resume with uuid: " + uuid + "  missing in the database");
         } else {
-            Resume[] sourse = getAll();
-            clear();
-            System.arraycopy(sourse, 0, storage, 0, index);
-            System.arraycopy(sourse, index + 1, storage, index, (sourse.length - index - 1));
-            size = sourse.length - 1;
+            System.arraycopy(storage, index + 1, storage, index, (storage.length - index - 1));
+            size--;
         }
     }
 
