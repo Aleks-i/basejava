@@ -28,7 +28,7 @@ public class ArrayStorage {
     public void save(Resume resume) {
         if (getIndex(resume.getUuid()) != -1) {
             System.out.println("ERROR: resume with uuid: " + resume.getUuid() + "  exist in the database");
-        } else if (size >= storage.length) {
+        } else if (size == storage.length) {
             System.out.println("ERROR: resume storage overflowing");
         } else {
             storage[size] = resume;
@@ -50,7 +50,7 @@ public class ArrayStorage {
         if (index == -1) {
             System.out.println("ERROR: resume with uuid: " + uuid + "  missing in the database");
         } else {
-            System.arraycopy(storage, index + 1, storage, index, (storage.length - index - 1));
+            System.arraycopy(storage, index + 1, storage, index, (size - index - 1));
             size--;
         }
     }
