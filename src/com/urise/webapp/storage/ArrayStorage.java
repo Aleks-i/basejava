@@ -7,6 +7,7 @@ import com.urise.webapp.model.Resume;
  */
 public class ArrayStorage extends AbstractArrayStorage {
 
+    @Override
     public void save(Resume resume) {
         if (getIndex(resume.getUuid()) != -1) {
             System.out.println("ERROR: resume with uuid: " + resume.getUuid() + "  exist in the database");
@@ -18,6 +19,7 @@ public class ArrayStorage extends AbstractArrayStorage {
         }
     }
 
+    @Override
     protected int getIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (uuid.equals(storage[i].getUuid())) {
