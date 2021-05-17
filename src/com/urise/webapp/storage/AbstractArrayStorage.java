@@ -14,12 +14,13 @@ public abstract class AbstractArrayStorage implements Storage {
 
     public void save(Resume resume) {
         int index = getIndex(resume.getUuid());
-        if (getIndex(resume.getUuid()) >= 0) {
+        if (index >= 0) {
             System.out.println("ERROR: resume with uuid: \"" + resume.getUuid() + "\"  exist in the database");
         } else if (size == storage.length) {
             System.out.println("ERROR: resume storage overflowing");
         } else {
             insertResume(resume, index);
+            size++;
         }
     }
 
@@ -40,7 +41,6 @@ public abstract class AbstractArrayStorage implements Storage {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
-
 
     public void delete(String uuid) {
         int index = getIndex(uuid);
