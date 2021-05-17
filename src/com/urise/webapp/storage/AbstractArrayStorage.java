@@ -12,6 +12,17 @@ public abstract class AbstractArrayStorage implements Storage {
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
+    public void save(Resume resume) {
+        int index = getIndex(resume.getUuid());
+        if (getIndex(resume.getUuid()) >= 0) {
+            System.out.println("ERROR: resume with uuid: \"" + resume.getUuid() + "\"  exist in the database");
+        } else if (size == storage.length) {
+            System.out.println("ERROR: resume storage overflowing");
+        } else {
+            insertResume(resume, index);
+        }
+    }
+
     public int size() {
         return size;
     }
@@ -54,7 +65,7 @@ public abstract class AbstractArrayStorage implements Storage {
         return Arrays.copyOf(storage, size);
     }
 
-    public abstract void save(Resume resume);
-
     protected abstract int getIndex(String uuid);
+
+    protected abstract void insertResume(Resume resume, int index);
 }

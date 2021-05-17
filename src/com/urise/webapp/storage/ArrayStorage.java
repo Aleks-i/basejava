@@ -8,15 +8,9 @@ import com.urise.webapp.model.Resume;
 public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
-    public void save(Resume resume) {
-        if (getIndex(resume.getUuid()) != -1) {
-            System.out.println("ERROR: resume with uuid: " + resume.getUuid() + "  exist in the database");
-        } else if (size == storage.length) {
-            System.out.println("ERROR: resume storage overflowing");
-        } else {
-            storage[size] = resume;
-            size++;
-        }
+    protected void insertResume(Resume resume, int index) {
+        storage[size] = resume;
+        size++;
     }
 
     @Override
