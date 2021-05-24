@@ -1,5 +1,8 @@
 package com.urise.webapp.storage;
 
+import com.urise.webapp.exception.ExistStorageException;
+import com.urise.webapp.exception.NotExistStorageException;
+import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
 import java.util.Arrays;
@@ -15,9 +18,9 @@ public abstract class AbstractArrayStorage implements Storage {
     public void save(Resume resume) {
         int index = getIndex(resume.getUuid());
         if (index >= 0) {
-            System.out.println("ERROR: resume with uuid: \"" + resume.getUuid() + "\"  exist in the database");
+            throw new ExistStorageException(resume.getUuid());
         } else if (size == storage.length) {
-            System.out.println("ERROR: resume storage overflowing");
+            throw new StorageException("ERROR: resume storage overflowing", resume.getUuid());
         } else {
             insertResume(resume, index);
             size++;
@@ -30,9 +33,8 @@ public abstract class AbstractArrayStorage implements Storage {
 
     public Resume get(String uuid) {
         int index = getIndex(uuid);
-        if (index == -1) {
-            System.out.println("ERROR: resume with uuid: \"" + uuid + "\"  missing in the database");
-            return null;
+        if (index < 0) {
+            throw new NotExistStorageException(uuid);
         }
         return storage[index];
     }
@@ -45,7 +47,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public void delete(String uuid) {
         int index = getIndex(uuid);
         if (index == -1) {
-            System.out.println("ERROR: resume with uuid: \"" + uuid + "\"  missing in the database");
+            throw new NotExistStorageException(uuid);
         } else {
             System.arraycopy(storage, index + 1, storage, index, (size - index - 1));
             size--;
@@ -55,7 +57,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public void update(Resume resume) {
         int index = getIndex(resume.getUuid());
         if (index == -1) {
-            System.out.println("ERROR: resume with uuid \"" + resume.getUuid() + "\" missing in the database");
+            throw new NotExistStorageException(resume.getUuid());
         } else {
             storage[index] = resume;
         }
