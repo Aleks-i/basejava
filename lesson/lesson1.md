@@ -69,7 +69,7 @@
 
 ![finish](https://user-images.githubusercontent.com/29703461/88059306-579cf780-cb6d-11ea-8094-bbf87474a127.png)
 
-- Реализуйте методы `save, get, delete, clear, getAll, size` в классе `com.urise.webapp.storage.ArrayStorage`, организовав хранение резюме в массиве 
+- Реализуйте методы `save, get, delete, clear, getAll, size` в классе `com.urise.webapp.storage.array.ArrayStorage`, организовав хранение резюме в массиве 
 - Храните все резюме в начале `storage` (без пустот в виде `null`), чтобы не перебирать каждый раз все 10_000 элементов
 - При реализации метода `delete` учитывайте, что после удаления резюме между оставшимися резюме не должно быть пустых ячеек, заполненных null
 ```
@@ -100,7 +100,7 @@ r1, r2, r3,..., rn, null, null,..., null
 1. Не игнорируй подсказки IDEA (подсвечивает)
 1. В методе `clear()` обнуление массива предполагает обнуление (null) ячеек, где хранятся com.urise.webapp.model.Resume, а не создание нового или присваивание ему null
 1. При реализации методов не используйте коллекции
-1. Не меняйте сигнатуры методов в `com.urise.webapp.storage.ArrayStorage`
+1. Не меняйте сигнатуры методов в `com.urise.webapp.storage.array.ArrayStorage`
 1. Не добавляйте в `com.urise.webapp.model.Resume` новые поля
 1. com.urise.webapp.model.Resume r — давайте переменным осмысленные имена, например resume. r допустимо в коротких циклах и лямбда-выражениях
 
