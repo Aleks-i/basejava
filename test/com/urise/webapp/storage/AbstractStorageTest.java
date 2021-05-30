@@ -25,6 +25,23 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
+    public void clear() {
+        storage.clear();
+        assertSize(EMPTY_STORAGE_SIZE);
+    }
+
+    @Test
+    public void update() {
+        storage.update(RESUME_1);
+        assertGet(RESUME_1);
+    }
+
+    @Test(expected = NotExistStorageException.class)
+    public void updateNotExist() {
+        storage.update(RESUME_NOT_EXIST);
+    }
+
+    @Test
     public void save() {
         storage.save(RESUME_SAVED);
         assertGet(RESUME_SAVED);
@@ -37,11 +54,6 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    public void size() {
-        assertSize(STORAGE_SIZE_EXPECTED);
-    }
-
-    @Test
     public void get() {
         assertGet(RESUME_2);
         assertGet(RESUME_3);
@@ -50,12 +62,6 @@ public abstract class AbstractStorageTest {
     @Test(expected = NotExistStorageException.class)
     public void getNotExist() {
         storage.get(UUID_NOT_EXIST);
-    }
-
-    @Test
-    public void clear() {
-        storage.clear();
-        assertSize(EMPTY_STORAGE_SIZE);
     }
 
     @Test(expected = NotExistStorageException.class)
@@ -71,14 +77,8 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    public void update() {
-        storage.update(RESUME_1);
-        assertGet(RESUME_1);
-    }
-
-    @Test(expected = NotExistStorageException.class)
-    public void updateNotExist() {
-        storage.update(RESUME_NOT_EXIST);
+    public void size() {
+        assertSize(STORAGE_SIZE_EXPECTED);
     }
 
     protected void assertSize(int size) {

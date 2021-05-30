@@ -23,29 +23,6 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index == -1) {
-            throw new NotExistStorageException(resume.getUuid());
-        } else {
-            storage[index] = resume;
-        }
-    }
-
-    @Override
-    public void save(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index >= 0) {
-            throw new ExistStorageException(resume.getUuid());
-        } else if (size == storage.length) {
-            throw new StorageException("ERROR: resume storage overflowing", resume.getUuid());
-        } else {
-            insertResume(resume, index);
-            size++;
-        }
-    }
-
-    @Override
     public Resume get(String uuid) {
         int index = getIndex(uuid);
         if (index < 0) {
@@ -75,5 +52,26 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return size;
     }
 
-    protected abstract void insertResume(Resume resume, int index);
+    @Override
+    protected void validToUpdate(Resume resume, int index) {
+        if (index == -1) {
+            throw new NotExistStorageException(resume.getUuid());
+        }
+    }
+
+    @Override
+    protected void updateResume(Resume resume, int index) {
+        storage[index] = resume;
+    }
+
+    @Override
+    protected void validToSave(Resume resume, int index) {
+        if (index >= 0) {
+            throw new ExistStorageException(resume.getUuid());
+        } else if (size == storage.length) {
+            throw new StorageException("ERROR: resume storage overflowing", resume.getUuid());
+        }
+    }
+
+    protected abstract void saveResume(Resume resume, int index);
 }
