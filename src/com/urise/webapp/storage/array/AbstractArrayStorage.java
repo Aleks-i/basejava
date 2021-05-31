@@ -1,7 +1,6 @@
 package com.urise.webapp.storage.array;
 
 import com.urise.webapp.exception.ExistStorageException;
-import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 import com.urise.webapp.storage.AbstractStorage;
@@ -23,46 +22,19 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index == -1) {
-            throw new NotExistStorageException(resume.getUuid());
-        } else {
-            storage[index] = resume;
-        }
+    protected void updateResume(Resume resume, int index) {
+        storage[index] = resume;
     }
 
     @Override
-    public void save(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index >= 0) {
-            throw new ExistStorageException(resume.getUuid());
-        } else if (size == storage.length) {
-            throw new StorageException("ERROR: resume storage overflowing", resume.getUuid());
-        } else {
-            insertResume(resume, index);
-            size++;
-        }
-    }
-
-    @Override
-    public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
+    public Resume getResume(int index) {
         return storage[index];
     }
 
     @Override
-    public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index == -1) {
-            throw new NotExistStorageException(uuid);
-        } else {
-            System.arraycopy(storage, index + 1, storage, index, (size - index - 1));
-            size--;
-        }
+    public void deleteResume(String uuid, int index) {
+        System.arraycopy(storage, index + 1, storage, index, (size - index - 1));
+        size--;
     }
 
     @Override
@@ -75,5 +47,14 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return size;
     }
 
-    protected abstract void insertResume(Resume resume, int index);
+    @Override
+    protected void checkingForExistence(boolean exist, String uuid) {
+        if (exist) {
+            throw new ExistStorageException(uuid);
+        } else if (size == storage.length) {
+            throw new StorageException("ERROR: resume storage overflowing", uuid);
+        }
+    }
+
+    protected abstract void saveResume(Resume resume, int index);
 }

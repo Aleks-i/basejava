@@ -25,6 +25,12 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
+    public void clear() {
+        storage.clear();
+        assertSize(EMPTY_STORAGE_SIZE);
+    }
+
+    @Test
     public void update() {
         storage.update(RESUME_1);
         assertGet(RESUME_1);
@@ -71,18 +77,18 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
+    public void getAll() {
+        Assert.assertArrayEquals(EXPECTED_RESUMES, storage.getAll());
+        assertSize(STORAGE_SIZE_EXPECTED);
+    }
+
+    @Test
     public void size() {
         assertSize(STORAGE_SIZE_EXPECTED);
     }
 
     protected void assertSize(int size) {
         Assert.assertEquals(size, storage.size());
-    }
-
-    @Test
-    public void clear() {
-        storage.clear();
-        assertSize(EMPTY_STORAGE_SIZE);
     }
 
     private void assertGet(Resume resume) {

@@ -2,9 +2,6 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
 
-import java.util.Collection;
-import java.util.List;
-
 public class StorageData {
     public static final String UUID_1 = "uuid1";
     public static final String UUID_2 = "uuid2";
@@ -22,6 +19,5 @@ public class StorageData {
     public static final Resume RESUME_SAVED = new Resume(UUID_SAVED);
     public static final Resume RESUME_NOT_EXIST = new Resume(UUID_NOT_EXIST);
 
-    public static final Resume[] EXPECTED_RESUMES_ARRAY = new Resume[] {RESUME_1, RESUME_2, RESUME_3};
-    public static final Collection EXPECTED_RESUMES_LIST = List.of(RESUME_1, RESUME_2, RESUME_3);
+    public static final Resume[] EXPECTED_RESUMES = new Resume[] {RESUME_1, RESUME_2, RESUME_3};
 }
