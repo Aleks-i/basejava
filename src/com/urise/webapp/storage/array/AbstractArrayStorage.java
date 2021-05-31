@@ -1,7 +1,6 @@
 package com.urise.webapp.storage.array;
 
 import com.urise.webapp.exception.ExistStorageException;
-import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 import com.urise.webapp.storage.AbstractStorage;
@@ -23,23 +22,19 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
+    protected void updateResume(Resume resume, int index) {
+        storage[index] = resume;
+    }
+
+    @Override
+    public Resume getResume(int index) {
         return storage[index];
     }
 
     @Override
-    public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index == -1) {
-            throw new NotExistStorageException(uuid);
-        } else {
-            System.arraycopy(storage, index + 1, storage, index, (size - index - 1));
-            size--;
-        }
+    public void deleteResume(String uuid, int index) {
+        System.arraycopy(storage, index + 1, storage, index, (size - index - 1));
+        size--;
     }
 
     @Override
@@ -53,23 +48,11 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void validToUpdate(Resume resume, int index) {
-        if (index == -1) {
-            throw new NotExistStorageException(resume.getUuid());
-        }
-    }
-
-    @Override
-    protected void updateResume(Resume resume, int index) {
-        storage[index] = resume;
-    }
-
-    @Override
-    protected void validToSave(Resume resume, int index) {
-        if (index >= 0) {
-            throw new ExistStorageException(resume.getUuid());
+    protected void checkingForExistence(boolean exist, String uuid) {
+        if (exist) {
+            throw new ExistStorageException(uuid);
         } else if (size == storage.length) {
-            throw new StorageException("ERROR: resume storage overflowing", resume.getUuid());
+            throw new StorageException("ERROR: resume storage overflowing", uuid);
         }
     }
 
