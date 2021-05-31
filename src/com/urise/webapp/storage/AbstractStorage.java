@@ -5,6 +5,7 @@ import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
+    protected final Resume[] storage = new Resume[10_000];
 
     @Override
     public void update(Resume resume) {
@@ -24,7 +25,7 @@ public abstract class AbstractStorage implements Storage {
     public Resume get(String uuid) {
         int index = getIndex(uuid);
         checkingForAbsence(isExist(index), uuid);
-        return getResume(index);
+        return storage[index];
     }
 
     @Override
@@ -55,8 +56,6 @@ public abstract class AbstractStorage implements Storage {
     protected abstract void saveResume(Resume resume, int index);
 
     protected abstract int getIndex(String uuid);
-
-    protected abstract Resume getResume(int index);
 
     protected abstract void deleteResume(String uuid, int index);
 }

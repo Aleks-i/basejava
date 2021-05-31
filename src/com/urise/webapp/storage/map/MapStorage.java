@@ -1,13 +1,13 @@
-package com.urise.webapp.storage.list;
+package com.urise.webapp.storage.map;
 
 import com.urise.webapp.model.Resume;
 import com.urise.webapp.storage.AbstractStorage;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-public class ListStorage extends AbstractStorage {
-    private final List<Resume> storage = new ArrayList<>();
+public class MapStorage extends AbstractStorage {
+    private final Map<String, Resume> storage = new HashMap<>();
 
     @Override
     public void clear() {
@@ -16,29 +16,29 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected void updateResume(Resume resume, int index) {
-        storage.set(getIndex(resume.getUuid()), resume);
+        storage.put(resume.getUuid(), resume);
     }
 
     @Override
     protected void saveResume(Resume resume, int index) {
-        storage.add(resume);
+        storage.put(resume.getUuid(), resume);
     }
 
     @Override
     public Resume get(String uuid) {
         int index = getIndex(uuid);
         checkingForAbsence(isExist(index), uuid);
-        return storage.get(index);
+        return storage.get(uuid);
     }
 
     @Override
-    public void deleteResume(String uuid, int index) {
-        storage.remove(storage.get(index));
+    protected void deleteResume(String uuid, int index) {
+        storage.remove(uuid);
     }
 
     @Override
     public Resume[] getAll() {
-        return storage.toArray(new Resume[0]);
+        return storage.values().toArray(new Resume[0]);
     }
 
     @Override
@@ -48,12 +48,9 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected int getIndex(String uuid) {
-        int index = -1;
-        for (int i = 0; i < storage.size(); i++) {
-            if (storage.get(i).getUuid().equals(uuid)) {
-                index = i;
-            }
+        if (storage.containsKey(uuid)) {
+            return 0;
         }
-        return index;
+        return -1;
     }
 }
