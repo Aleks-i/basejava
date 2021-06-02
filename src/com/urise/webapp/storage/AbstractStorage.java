@@ -5,58 +5,57 @@ import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
+    protected int index;
 
     @Override
     public void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        checkingForAbsence(isExist(index), resume.getUuid());
-        updateResume(resume, index);
+        checkForAbsence(resume.getUuid());
+        updateResume(resume);
     }
 
     @Override
     public void save(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        checkingForExistence(isExist(index), resume.getUuid());
-        saveResume(resume, index);
+        checkForExistence(resume.getUuid());
+        saveResume(resume);
     }
 
     @Override
     public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        checkingForAbsence(isExist(index), uuid);
-        return getResume(index);
+        checkForAbsence(uuid);
+        return getResume();
     }
 
     @Override
     public void delete(String uuid) {
-        int index = getIndex(uuid);
-        checkingForAbsence(isExist(index), uuid);
-        deleteResume(uuid, index);
+        checkForAbsence(uuid);
+        deleteResume(uuid);
     }
 
     public boolean isExist(int index) {
         return index >= 0;
     }
 
-    protected void checkingForExistence(boolean exist, String uuid) {
-        if (exist) {
+    protected void checkForExistence(String uuid) {
+        index = getIndex(uuid);
+        if (isExist(index)) {
             throw new ExistStorageException(uuid);
         }
     }
 
-    protected void checkingForAbsence(boolean exist, String uuid) {
-        if (!exist) {
+    protected void checkForAbsence(String uuid) {
+        index = getIndex(uuid);
+        if (!isExist(index)) {
             throw new NotExistStorageException(uuid);
         }
     }
 
-    protected abstract void updateResume(Resume resume, int index);
+    protected abstract void updateResume(Resume resume);
 
-    protected abstract void saveResume(Resume resume, int index);
+    protected abstract void saveResume(Resume resume);
 
     protected abstract int getIndex(String uuid);
 
-    protected abstract Resume getResume(int index);
+    protected abstract Resume getResume();
 
-    protected abstract void deleteResume(String uuid, int index);
+    protected abstract void deleteResume(String uuid);
 }
