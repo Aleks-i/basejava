@@ -20,4 +20,5 @@ public class StorageData {
     public static final Resume RESUME_NOT_EXIST = new Resume(UUID_NOT_EXIST);
 
     public static final Resume[] EXPECTED_RESUMES = new Resume[] {RESUME_1, RESUME_2, RESUME_3};
+    public static final Resume[] EXPECTED_RESUMES_FOR_MAP = new Resume[] {RESUME_2, RESUME_1, RESUME_3};
 }

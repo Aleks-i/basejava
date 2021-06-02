@@ -22,7 +22,7 @@ public abstract class AbstractStorage implements Storage {
     @Override
     public Resume get(String uuid) {
         checkForAbsence(uuid);
-        return getResume();
+        return getResume(uuid);
     }
 
     @Override
@@ -55,7 +55,7 @@ public abstract class AbstractStorage implements Storage {
 
     protected abstract int getIndex(String uuid);
 
-    protected abstract Resume getResume();
+    protected abstract Resume getResume(String uuid);
 
     protected abstract void deleteResume(String uuid);
 }

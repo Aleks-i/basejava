@@ -36,7 +36,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public Resume getResume() {
+    public Resume getResume(String uuid) {
         return storage[index];
     }
 
