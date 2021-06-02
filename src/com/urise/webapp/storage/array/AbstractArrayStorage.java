@@ -1,6 +1,5 @@
 package com.urise.webapp.storage.array;
 
-import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 import com.urise.webapp.storage.AbstractStorage;
@@ -27,6 +26,16 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
+    protected void saveResume(Resume resume) {
+        checkForExistence(resume.getUuid());
+        if (size == storage.length) {
+            throw new StorageException("ERROR: resume storage overflowing", resume.getUuid());
+        }
+        insertResume(resume);
+        size++;
+    }
+
+    @Override
     public Resume getResume() {
         return storage[index];
     }
@@ -47,15 +56,5 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return size;
     }
 
-    @Override
-    protected void checkForExistence(String uuid) {
-        index = getIndex(uuid);
-        if (isExist(index)) {
-            throw new ExistStorageException(uuid);
-        } else if (size == storage.length) {
-            throw new StorageException("ERROR: resume storage overflowing", uuid);
-        }
-    }
-
-    protected abstract void saveResume(Resume resume);
+    protected abstract void insertResume(Resume resume);
 }
