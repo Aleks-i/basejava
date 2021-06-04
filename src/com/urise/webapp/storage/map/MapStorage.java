@@ -46,10 +46,8 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected int getIndex(String uuid) {
-        for (Resume resume : storage.values()) {
-            if (uuid.equals(resume.getUuid())) {
-                return 0;
-            }
+        if (storage.containsKey(uuid)) {
+            return 0;
         }
         return -1;
     }
