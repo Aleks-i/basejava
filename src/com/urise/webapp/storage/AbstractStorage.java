@@ -21,13 +21,13 @@ public abstract class AbstractStorage implements Storage {
     @Override
     public Resume get(String uuid) {
         int index = checkForAbsence(uuid);
-        return getResume(index);
+        return getResume(uuid, index);
     }
 
     @Override
     public void delete(String uuid) {
         int index = checkForAbsence(uuid);
-        deleteResume(index);
+        deleteResume(uuid, index);
     }
 
     public boolean isExist(int index) {
@@ -56,7 +56,7 @@ public abstract class AbstractStorage implements Storage {
 
     protected abstract void saveResume(Resume resume, int index);
 
-    protected abstract Resume getResume(int index);
+    protected abstract Resume getResume(String uuid, int index);
 
-    protected abstract void deleteResume(int index);
+    protected abstract void deleteResume(String uuid, int index);
 }
