@@ -22,6 +22,7 @@ public abstract class AbstractStorageTest {
         storage.save(RESUME_1);
         storage.save(RESUME_2);
         storage.save(RESUME_3);
+        storage.save(RESUME_4);
     }
 
     @Test
@@ -32,8 +33,8 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() {
-        storage.update(RESUME_1);
-        assertGet(RESUME_1);
+        storage.update(RESUME_UPDATED);
+        assertGet(RESUME_UPDATED);
     }
 
     @Test(expected = NotExistStorageException.class)
