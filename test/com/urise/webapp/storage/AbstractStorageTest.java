@@ -78,8 +78,8 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    public void getAll() {
-        Assert.assertArrayEquals(EXPECTED_RESUMES, storage.getAll());
+    public void getAllSorted() {
+        Assert.assertEquals(EXPECTED_RESUMES, storage.getAllSorted());
         assertSize(STORAGE_SIZE_EXPECTED);
     }
 

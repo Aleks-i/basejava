@@ -2,6 +2,8 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
 
+import java.util.List;
+
 public class StorageData {
     public static final String UUID_1 = "uuid1";
     public static final String UUID_2 = "uuid2";
@@ -32,6 +34,5 @@ public class StorageData {
     public static final Resume RESUME_UPDATED = new Resume(UUID_1, FULL_NAME_UPDATED);
     public static final Resume RESUME_NOT_EXIST = new Resume(UUID_NOT_EXIST, FULL_NAME_NOT_EXIST);
 
-    public static final Resume[] EXPECTED_RESUMES = new Resume[] {RESUME_1, RESUME_2, RESUME_3, RESUME_4};
-    public static final Resume[] EXPECTED_RESUMES_FOR_MAP = new Resume[] {RESUME_2, RESUME_1, RESUME_4, RESUME_3};
+    public static final List<Resume> EXPECTED_RESUMES = List.of(RESUME_3, RESUME_1, RESUME_4, RESUME_2);
 }
