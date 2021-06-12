@@ -7,8 +7,6 @@ import com.urise.webapp.storage.AbstractStorage;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.urise.webapp.util.Util.getSortedResumeList;
-
 /**
  * Array based storage for Resumes
  */

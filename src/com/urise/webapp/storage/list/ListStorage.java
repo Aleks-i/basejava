@@ -6,8 +6,6 @@ import com.urise.webapp.storage.AbstractStorage;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.urise.webapp.util.Util.getSortedResumeList;
-
 public class ListStorage extends AbstractStorage {
     private final List<Resume> storage = new ArrayList<>();
 

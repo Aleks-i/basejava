@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.urise.webapp.util.Util.getSortedResumeList;
-
 public abstract class AbstractMapStorage extends AbstractStorage {
     protected final Map<String, Resume> storage = new HashMap<>();
 
