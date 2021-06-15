@@ -2,26 +2,26 @@ package com.urise.webapp.storage.map;
 
 import com.urise.webapp.model.Resume;
 
-public class MapStorageSearchOfResume extends AbstractMapStorage {
+public class MapStorageSearchOfResume extends AbstractMapStorage<Resume> {
 
     @Override
-    protected void updateResume(Resume resume, Object searchKey) {
+    protected void updateResume(Resume resume, Resume searchKey) {
         storage.put(resume.getUuid(), resume);
     }
 
     @Override
-    protected void saveResume(Resume resume, Object searchKey) {
+    protected void saveResume(Resume resume, Resume searchKey) {
         storage.put(resume.getUuid(), resume);
     }
 
     @Override
-    protected Resume getResume(Object searchKey) {
-        return (Resume) searchKey;
+    protected Resume getResume(Resume searchKey) {
+        return searchKey;
     }
 
     @Override
-    protected void deleteResume(Object searchKey) {
-        storage.remove(((Resume) searchKey).getUuid());
+    protected void deleteResume(Resume searchKey) {
+        storage.remove(searchKey.getUuid());
     }
 
     @Override
@@ -30,7 +30,7 @@ public class MapStorageSearchOfResume extends AbstractMapStorage {
     }
 
     @Override
-    protected boolean isExist(Object searchKey) {
-        return storage.containsValue((Resume) searchKey);
+    protected boolean isExist(Resume searchKey) {
+        return storage.containsValue(searchKey);
     }
 }
