@@ -109,10 +109,6 @@ public class Resume {
             this.content = content;
         }
 
-        public List<TextSection> getContent() {
-            return content;
-        }
-
         @Override
         public String toString() {
             StringBuilder builder = new StringBuilder();
@@ -128,10 +124,6 @@ public class Resume {
 
         public UrlLinkSection() {
             this.organizations = new ArrayList<>();
-        }
-
-        public List<OrganizationSection> getOrganizations() {
-            return organizations;
         }
 
         public void addOrganizations(List<OrganizationSection> organizations) {
