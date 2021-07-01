@@ -53,7 +53,7 @@ public class Resume {
         builder.append(fullName).append("\n").append("\n");
 
         for (ContactType contactType : ContactType.values()) {
-            builder.append(contactType.getTitle()).append(contactData.get(contactType)).append("\n");
+            contactData.get(contactType).forEach(c -> builder.append(contactType.getTitle()).append(c).append("\n"));
         }
         builder.append("\n");
 
