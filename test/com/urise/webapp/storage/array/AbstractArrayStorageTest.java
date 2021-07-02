@@ -7,7 +7,8 @@ import com.urise.webapp.storage.Storage;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static com.urise.webapp.storage.StorageData.RESUME_SAVED;
+import static com.urise.webapp.storage.ResumeTestData.RESUME;
+import static com.urise.webapp.storage.ResumeTestData.RESUME_SAVED;
 import static com.urise.webapp.storage.array.AbstractArrayStorage.STORAGE_LIMIT;
 
 public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
@@ -21,7 +22,10 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
         storage.clear();
         try {
             for (int i = 0; i < STORAGE_LIMIT; i++) {
-                storage.save(new Resume("uuid" + i));
+                Resume resume = new Resume("uuid" + i);
+                resume.setContactData(RESUME.getContactData());
+                resume.setSectionData(RESUME.getSectionData());
+                storage.save(resume);
             }
         } catch (StorageException e) {
             Assert.fail("That the overflow occurred ahead of time");

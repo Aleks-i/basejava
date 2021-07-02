@@ -7,7 +7,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.urise.webapp.storage.StorageData.*;
+import static com.urise.webapp.storage.ResumeTestData.*;
 
 public abstract class AbstractStorageTest {
     protected final Storage storage;

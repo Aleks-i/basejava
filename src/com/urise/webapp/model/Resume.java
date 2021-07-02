@@ -11,8 +11,8 @@ public class Resume {
     // Unique identifier
     private final String uuid;
     private final String fullName;
-    private final Map<ContactType, Set<String>> contactData;
-    private final Map<SectionType, Section> sectionData;
+    private Map<ContactType, Set<String>> contactData;
+    private Map<SectionType, Section> sectionData;
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -68,8 +68,7 @@ public class Resume {
     }
 
     public void addContactData(ContactType contactType, String... contact) {
-        Set<String> newContacts = Set.of(contact);
-        contactData.merge(contactType, newContacts, (a, b) -> {
+        contactData.merge(contactType, Set.of(contact), (a, b) -> {
             a.addAll(b);
             return a;
         });
@@ -83,8 +82,38 @@ public class Resume {
         return fullName;
     }
 
+    public Map<ContactType, Set<String>> getContactData() {
+        return contactData;
+    }
+
+    public void setContactData(Map<ContactType, Set<String>> contactData) {
+        this.contactData = contactData;
+    }
+
     public Map<SectionType, Section> getSectionData() {
         return sectionData;
+    }
+
+    public void setSectionData(Map<SectionType, Section> sectionData) {
+        this.sectionData = sectionData;
+    }
+
+    public enum ContactType {
+        PHONENUMBER("Тел.: "),
+        SKYPE("Skype: "),
+        EMAIL("Почта: "),
+        PROFILE("Профиль соц. сетей: "),
+        URL("Сайт: ");
+
+        private final String title;
+
+        ContactType(String title) {
+            this.title = title;
+        }
+
+        public String getTitle() {
+            return title;
+        }
     }
 
     private interface Section {
