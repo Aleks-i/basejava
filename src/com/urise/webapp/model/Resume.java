@@ -166,7 +166,7 @@ public class Resume {
                         .append(typeOfActivity).append("\n");
                 if (content != null) {
                     content.content.forEach(c -> builder.append(String.format("%20s", ""))
-                            .append(String.format("%20s", c)).append("\n"));
+                            .append(c).append("\n"));
                 }
                 builder.append("\n");
                 return builder.toString();
