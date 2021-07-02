@@ -27,26 +27,6 @@ public class Resume {
         this.sectionData = new HashMap<>();
     }
 
-    public void addContactData(ContactType contactType, String... contact) {
-        Set<String> newContacts = Set.of(contact);
-        contactData.merge(contactType, newContacts, (a, b) -> {
-            a.addAll(b);
-            return a;
-        });
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public Map<SectionType, Section> getSectionData() {
-        return sectionData;
-    }
-
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -87,6 +67,26 @@ public class Resume {
         return result;
     }
 
+    public void addContactData(ContactType contactType, String... contact) {
+        Set<String> newContacts = Set.of(contact);
+        contactData.merge(contactType, newContacts, (a, b) -> {
+            a.addAll(b);
+            return a;
+        });
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public Map<SectionType, Section> getSectionData() {
+        return sectionData;
+    }
+
     private interface Section {
     }
 
@@ -116,9 +116,7 @@ public class Resume {
         @Override
         public String toString() {
             StringBuilder builder = new StringBuilder();
-            content.forEach(c -> {
-                builder.append(c.toString());
-            });
+            content.forEach(c -> builder.append(c.toString()));
             return builder.toString();
         }
     }
@@ -130,15 +128,15 @@ public class Resume {
             this.organizations = new ArrayList<>();
         }
 
-        public void addOrganizations(List<OrganizationSection> organizations) {
-            this.organizations.addAll(organizations);
-        }
-
         @Override
         public String toString() {
             StringBuilder builder = new StringBuilder();
             organizations.forEach(o -> builder.append(o.toString()));
             return builder.toString();
+        }
+
+        public void addOrganizations(List<OrganizationSection> organizations) {
+            this.organizations.addAll(organizations);
         }
 
         public class OrganizationSection {
@@ -167,7 +165,8 @@ public class Resume {
                         .append(String.format("%-20s", timePeriod))
                         .append(typeOfActivity).append("\n");
                 if (content != null) {
-                    content.content.forEach(c -> builder.append(String.format("%20s", "")).append(String.format("%20s", c)).append("\n"));
+                    content.content.forEach(c -> builder.append(String.format("%20s", ""))
+                            .append(String.format("%20s", c)).append("\n"));
                 }
                 builder.append("\n");
                 return builder.toString();
