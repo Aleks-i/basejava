@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ResumeTestData {
     public static void main(String[] args) {
-        System.out.println(RESUME);
+        System.out.println(TEMPLATE_TEST_RESUME);
     }
 
     public static final String UUID_1 = "uuid1";
@@ -42,151 +42,151 @@ public class ResumeTestData {
 
     public static final List<Resume> EXPECTED_RESUMES = List.of(RESUME_3, RESUME_1, RESUME_4, RESUME_2);
 
-    public static final Resume RESUME = new Resume("First Resume");
+    public static final Resume TEMPLATE_TEST_RESUME = new Resume("First Resume");
     static {
-        RESUME.addContactData(Resume.ContactType.PHONENUMBER, "+7(921) 855-0482");
-        RESUME.addContactData(Resume.ContactType.SKYPE, "skype:grigory.kislin");
-        RESUME.addContactData(Resume.ContactType.EMAIL, "gkislin@yandex.ru");
-        RESUME.addContactData(Resume.ContactType.PROFILE, "https://www.linkedin.com/in/gkislin",
+        TEMPLATE_TEST_RESUME.addContactData(Resume.ContactType.PHONENUMBER, "+7(921) 855-0482");
+        TEMPLATE_TEST_RESUME.addContactData(Resume.ContactType.SKYPE, "skype:grigory.kislin");
+        TEMPLATE_TEST_RESUME.addContactData(Resume.ContactType.EMAIL, "gkislin@yandex.ru");
+        TEMPLATE_TEST_RESUME.addContactData(Resume.ContactType.PROFILE, "https://www.linkedin.com/in/gkislin",
                 "https://github.com/gkislin", "https://stackoverflow.com/users/548473");
-        RESUME.addContactData(Resume.ContactType.URL, "http://gkislin.ru/");
+        TEMPLATE_TEST_RESUME.addContactData(Resume.ContactType.URL, "http://gkislin.ru/");
 
         //text sections
-        Resume.TextSection textSectionObjective = RESUME.new TextSection(
+        Resume.TextSection textSectionObjective = TEMPLATE_TEST_RESUME.new TextSection(
                 List.of("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям")
         );
-        Resume.TextSection textSectionPersonal = RESUME.new TextSection(
+        Resume.TextSection textSectionPersonal = TEMPLATE_TEST_RESUME.new TextSection(
                 List.of("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры.")
         );
 
         //text marker section
-        Resume.TextSection textSectionAchievement1 = RESUME.new TextSection(
+        Resume.TextSection textSectionAchievement1 = TEMPLATE_TEST_RESUME.new TextSection(
                 List.of(
                         "С 2013 года: разработка проектов \"Разработка Web приложения\",\"Java Enterprise\", \"Многомодульный maven. Многопоточность. XML (JAXB/StAX). Веб сервисы (JAX-RS/SOAP). Удаленное взаимодействие (JMS/AKKA)\". Организация онлайн стажировок и ведение проектов. Более 1000 выпускников.",
                         "Многопоточность. XML (JAXB/StAX). Веб сервисы (JAX-RS/SOAP). Удаленное взаимодействие (JMS/AKKA)\".",
                         "Организация онлайн стажировок и ведение проектов. Более 1000 выпускников."
                 )
         );
-        Resume.TextSection textSectionAchievement2 = RESUME.new TextSection(
+        Resume.TextSection textSectionAchievement2 = TEMPLATE_TEST_RESUME.new TextSection(
                 List.of(
                         "Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike. Интеграция с Twilio,",
                         "DuoSecurity, Google Authenticator, Jira, Zendesk."
                 )
         );
-        Resume.TextSection textSectionAchievement3 = RESUME.new TextSection(
+        Resume.TextSection textSectionAchievement3 = TEMPLATE_TEST_RESUME.new TextSection(
                 List.of(
                         "Налаживание процесса разработки и непрерывной интеграции ERP системы River BPM. Интеграция с 1С, Bonita BPM,",
                         "CMIS, LDAP. Разработка приложения управления окружением на стеке: Scala/Play/Anorm/JQuery. Разработка SSO",
                         "аутентификации и авторизации различных ERP модулей, интеграция CIFS/SMB java сервера."
                 )
         );
-        Resume.TextSection textSectionAchievement4 = RESUME.new TextSection(
+        Resume.TextSection textSectionAchievement4 = TEMPLATE_TEST_RESUME.new TextSection(
                 List.of(
                         "Реализация c нуля Rich Internet Application приложения на стеке технологий JPA, Spring, Spring-MVC, GWT, ExtGWT",
                         "(GXT), Commet, HTML5, Highstock для алгоритмического трейдинга."
                 )
         );
-        Resume.TextSection textSectionAchievement5 = RESUME.new TextSection(
+        Resume.TextSection textSectionAchievement5 = TEMPLATE_TEST_RESUME.new TextSection(
                 List.of(
                         "Создание JavaEE фреймворка для отказоустойчивого взаимодействия слабо-связанных сервисов (SOA-base архитектура,",
                         "JAX-WS, JMS, AS Glassfish). Сбор статистики сервисов и информации о состоянии через систему мониторинга Nagios.",
                         "Реализация онлайн клиента для администрирования и мониторинга системы по JMX (Jython/ Django)."
                 )
         );
-        Resume.TextSection textSectionAchievement6 = RESUME.new TextSection(
+        Resume.TextSection textSectionAchievement6 = TEMPLATE_TEST_RESUME.new TextSection(
                 List.of(
                         "Реализация протоколов по приему платежей всех основных платежных системы России (Cyberplat, Eport, Chronopay,",
                         "Сбербанк), Белоруcсии(Erip, Osmp) и Никарагуа."
                 )
         );
 
-        Resume.TextSection textSectionQualifications1 = RESUME.new TextSection(
+        Resume.TextSection textSectionQualifications1 = TEMPLATE_TEST_RESUME.new TextSection(
                 List.of(
                         "JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2"
                 )
         );
-        Resume.TextSection textSectionQualifications2 = RESUME.new TextSection(
+        Resume.TextSection textSectionQualifications2 = TEMPLATE_TEST_RESUME.new TextSection(
                 List.of(
                         "Version control: Subversion, Git, Mercury, ClearCase, Perforce"
                 )
         );
-        Resume.TextSection textSectionQualifications3 = RESUME.new TextSection(
+        Resume.TextSection textSectionQualifications3 = TEMPLATE_TEST_RESUME.new TextSection(
                 List.of(
                         "DB: PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle,"
                 )
         );
-        Resume.TextSection textSectionQualifications4 = RESUME.new TextSection(
+        Resume.TextSection textSectionQualifications4 = TEMPLATE_TEST_RESUME.new TextSection(
                 List.of(
                         "MySQL, SQLite, MS SQL, HSQLDB"
                 )
         );
-        Resume.TextSection textSectionQualifications5 = RESUME.new TextSection(
+        Resume.TextSection textSectionQualifications5 = TEMPLATE_TEST_RESUME.new TextSection(
                 List.of(
                         "Languages: Java, Scala, Python/Jython/PL-Python, JavaScript, Groovy,"
                 )
         );
-        Resume.TextSection textSectionQualifications6 = RESUME.new TextSection(
+        Resume.TextSection textSectionQualifications6 = TEMPLATE_TEST_RESUME.new TextSection(
                 List.of(
                         "XML/XSD/XSLT, SQL, C/C++, Unix shell scripts,"
                 )
         );
-        Resume.TextSection textSectionQualifications7 = RESUME.new TextSection(
+        Resume.TextSection textSectionQualifications7 = TEMPLATE_TEST_RESUME.new TextSection(
                 List.of(
                         "Java Frameworks: Java 8 (Time API, Streams), Guava, Java Executor, MyBatis, Spring (MVC, Security, Data, Clouds, Boot), JPA",
                         "(Hibernate, EclipseLink), Guice, GWT(SmartGWT, ExtGWT/GXT), Vaadin, Jasperreports, Apache Commons, Eclipse SWT, JUnit,",
                         "Selenium (htmlelements)."
                 )
         );
-        Resume.TextSection textSectionQualifications8 = RESUME.new TextSection(
+        Resume.TextSection textSectionQualifications8 = TEMPLATE_TEST_RESUME.new TextSection(
                 List.of(
                         "Python: Django."
                 )
         );
-        Resume.TextSection textSectionQualifications9 = RESUME.new TextSection(
+        Resume.TextSection textSectionQualifications9 = TEMPLATE_TEST_RESUME.new TextSection(
                 List.of(
                         "JavaScript: jQuery, ExtJS, Bootstrap.js, underscore.js"
                 )
         );
-        Resume.TextSection textSectionQualifications10 = RESUME.new TextSection(
+        Resume.TextSection textSectionQualifications10 = TEMPLATE_TEST_RESUME.new TextSection(
                 List.of(
                         "Scala: SBT, Play2, Specs2, Anorm, Spray, Akka"
                 )
         );
-        Resume.TextSection textSectionQualifications11 = RESUME.new TextSection(
+        Resume.TextSection textSectionQualifications11 = TEMPLATE_TEST_RESUME.new TextSection(
                 List.of(
                         "Технологии: Servlet, JSP/JSTL, JAX-WS, REST, EJB, RMI, JMS, JavaMail, JAXB, StAX, SAX, DOM, XSLT, MDB, JMX,",
                         "JDBC, JPA, JNDI, JAAS, SOAP, AJAX, Commet, HTML5, ESB, CMIS, BPMN2, LDAP, OAuth1, OAuth2, JWT."
                 )
         );
-        Resume.TextSection textSectionQualifications12 = RESUME.new TextSection(
+        Resume.TextSection textSectionQualifications12 = TEMPLATE_TEST_RESUME.new TextSection(
                 List.of(
                         "Инструменты: Maven + plugin development, Gradle, настройка Ngnix,"
                 )
         );
-        Resume.TextSection textSectionQualifications13 = RESUME.new TextSection(
+        Resume.TextSection textSectionQualifications13 = TEMPLATE_TEST_RESUME.new TextSection(
                 List.of(
                         "администрирование Hudson/Jenkins, Ant + custom task, SoapUI, JPublisher, Flyway, Nagios, iReport, OpenCmis, Bonita,",
                         "pgBouncer."
                 )
         );
-        Resume.TextSection textSectionQualifications14 = RESUME.new TextSection(
+        Resume.TextSection textSectionQualifications14 = TEMPLATE_TEST_RESUME.new TextSection(
                 List.of(
                         "Отличное знание и опыт применения концепций ООП, SOA, шаблонов проектрирования, архитектурных шаблонов, UML,",
                         "функционального программирования"
                 )
         );
-        Resume.TextSection textSectionQualifications15 = RESUME.new TextSection(
+        Resume.TextSection textSectionQualifications15 = TEMPLATE_TEST_RESUME.new TextSection(
                 List.of(
                         "Родной русский, английский \"upper intermediate\""
                 )
         );
 
-        Resume.MarkerTextSection markerTextSectionAchievement = RESUME.new MarkerTextSection(
+        Resume.MarkerTextSection markerTextSectionAchievement = TEMPLATE_TEST_RESUME.new MarkerTextSection(
                 List.of(textSectionAchievement1, textSectionAchievement2, textSectionAchievement3, textSectionAchievement4,
                         textSectionAchievement5, textSectionAchievement6)
         );
 
-        Resume.MarkerTextSection markerTextSectionQualifications = RESUME.new MarkerTextSection(
+        Resume.MarkerTextSection markerTextSectionQualifications = TEMPLATE_TEST_RESUME.new MarkerTextSection(
                 List.of(textSectionQualifications1, textSectionQualifications2, textSectionQualifications3, textSectionQualifications4,
                         textSectionQualifications5, textSectionQualifications6, textSectionQualifications7, textSectionQualifications8,
                         textSectionQualifications9, textSectionQualifications10, textSectionQualifications11, textSectionQualifications12,
@@ -194,14 +194,14 @@ public class ResumeTestData {
         );
 
         //text url link section
-        Resume.UrlLinkSection sectionExperience = RESUME.new UrlLinkSection();
+        Resume.UrlLinkSection sectionExperience = TEMPLATE_TEST_RESUME.new UrlLinkSection();
         Resume.UrlLinkSection.OrganizationSection javaOnlineProjectsOrganization = null;
         try {
             javaOnlineProjectsOrganization = sectionExperience.new OrganizationSection(
                     new URL("http://javaops.ru/"),
                     "10/2013 - Сейчас",
                     "Автор проекта.",
-                    RESUME.new TextSection(List.of("Создание, организация и проведение Java онлайн проектов и стажировок."))
+                    TEMPLATE_TEST_RESUME.new TextSection(List.of("Создание, организация и проведение Java онлайн проектов и стажировок."))
             );
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -212,7 +212,7 @@ public class ResumeTestData {
                     new URL("https://www.wrike.com/"),
                     "10/2014 - 01/2016",
                     "Старший разработчик (backend)",
-                    RESUME.new TextSection(List.of(
+                    TEMPLATE_TEST_RESUME.new TextSection(List.of(
                             "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring,",
                             "MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2,",
                             "JWT SSO."
@@ -227,7 +227,7 @@ public class ResumeTestData {
                     new URL("http://ritcenter.ru/"),
                     "04/2012 - 10/2014",
                     "Java архитектор",
-                    RESUME.new TextSection(List.of(
+                    TEMPLATE_TEST_RESUME.new TextSection(List.of(
                             "Организация процесса разработки системы ERP для разных окружений: релизная политика, версионирование,",
                             "ведение CI (Jenkins), миграция базы (кастомизация Flyway), конфигурирование системы (pgBoucer, Nginx),",
                             "AAA via SSO. Архитектура БД и серверной части системы. Разработка интергационных сервисов: CMIS,",
@@ -246,7 +246,7 @@ public class ResumeTestData {
                     new URL("http://www.luxoft.ru/"),
                     "12/2010 - 04/2012",
                     "Ведущий программист",
-                    RESUME.new TextSection(List.of(
+                    TEMPLATE_TEST_RESUME.new TextSection(List.of(
                             "Участие в проекте Deutsche Bank CRM (WebLogic, Hibernate, Spring, Spring MVC, SmartGWT, GWT, Jasper,",
                             "Oracle). Реализация клиентской и серверной части CRM. Реализация RIA-приложения для",
                             "администрирования, мониторинга и анализа результатов в области алгоритмического трейдинга. JPA, Spring,",
@@ -262,7 +262,7 @@ public class ResumeTestData {
                     new URL("https://www.yota.ru/"),
                     "06/2008 - 12/2010",
                     "Ведущий специалист",
-                    RESUME.new TextSection(List.of(
+                    TEMPLATE_TEST_RESUME.new TextSection(List.of(
                             "Дизайн и имплементация Java EE фреймворка для отдела \"Платежные Системы\" (GlassFish v2.1, v3, OC4J,",
                             "EJB3, JAX-WS RI 2.1, Servlet 2.4, JSP, JMX, JMS, Maven2). Реализация администрирования, статистики и",
                             "мониторинга фреймворка. Разработка online JMX клиента (Python/ Jython, Django, ExtJS)"
@@ -277,7 +277,7 @@ public class ResumeTestData {
                     new URL("http://enkata.com/"),
                     "03/2007 - 06/2008",
                     "Разработчик ПО",
-                    RESUME.new TextSection(List.of(
+                    TEMPLATE_TEST_RESUME.new TextSection(List.of(
                             "Реализация клиентской (Eclipse RCP) и серверной (JBoss 4.2, Hibernate 3.0, Tomcat, JMS) частей кластерного",
                             "J2EE приложения (OLAP, Data mining)."
                     ))
@@ -291,7 +291,7 @@ public class ResumeTestData {
                     new URL("https://www.siemens.com/ru/ru/home.html"),
                     "01/2005 - 02/2007",
                     "Разработчик ПО",
-                    RESUME.new TextSection(List.of(
+                    TEMPLATE_TEST_RESUME.new TextSection(List.of(
                             "Разработка информационной модели, проектирование интерфейсов, реализация и отладка ПО на мобильной",
                             "IN платформе Siemens @vantage (Java, Unix)."
                     ))
@@ -305,7 +305,7 @@ public class ResumeTestData {
                     new URL("http://www.alcatel.ru/"),
                     "09/1997 - 01/2005",
                     "Инженер по аппаратному и программному тестированию",
-                    RESUME.new TextSection(List.of(
+                    TEMPLATE_TEST_RESUME.new TextSection(List.of(
                             "Тестирование, отладка, внедрение ПО цифровой телефонной станции Alcatel 1000 S12 (CHILL, ASM)."
                     ))
             );
@@ -316,7 +316,7 @@ public class ResumeTestData {
         sectionExperience.addOrganizations(List.of(javaOnlineProjectsOrganization, wrikeOrganization, RITCenterOrganization,
                 luxoftOrganization, yotaOrganization, enkataOrganization, siemensOrganization, alcatelOrganization));
 
-        Resume.UrlLinkSection sectionEducation = RESUME.new UrlLinkSection();
+        Resume.UrlLinkSection sectionEducation = TEMPLATE_TEST_RESUME.new UrlLinkSection();
         Resume.UrlLinkSection.OrganizationSection courseraOrganization = null;
         try {
             courseraOrganization = sectionExperience.new OrganizationSection(
@@ -391,20 +391,20 @@ public class ResumeTestData {
         sectionEducation.addOrganizations(List.of(courseraOrganization, luxofttrainingOrganization, siemensOrganizationEducation,
                 alcatelOrganizationEducation, ifmoOrganization1, ifmoOrganization2, miptOrganization));
 
-        RESUME.getSectionData().put(SectionType.OBJECTIVE, textSectionObjective);
-        RESUME.getSectionData().put(SectionType.PERSONAL, textSectionPersonal);
-        RESUME.getSectionData().put(SectionType.ACHIEVEMENT, markerTextSectionAchievement);
-        RESUME.getSectionData().put(SectionType.QUALIFICATIONS, markerTextSectionQualifications);
-        RESUME.getSectionData().put(SectionType.EXPERIENCE, sectionExperience);
-        RESUME.getSectionData().put(SectionType.EDUCATION, sectionEducation);
+        TEMPLATE_TEST_RESUME.getSectionData().put(SectionType.OBJECTIVE, textSectionObjective);
+        TEMPLATE_TEST_RESUME.getSectionData().put(SectionType.PERSONAL, textSectionPersonal);
+        TEMPLATE_TEST_RESUME.getSectionData().put(SectionType.ACHIEVEMENT, markerTextSectionAchievement);
+        TEMPLATE_TEST_RESUME.getSectionData().put(SectionType.QUALIFICATIONS, markerTextSectionQualifications);
+        TEMPLATE_TEST_RESUME.getSectionData().put(SectionType.EXPERIENCE, sectionExperience);
+        TEMPLATE_TEST_RESUME.getSectionData().put(SectionType.EDUCATION, sectionEducation);
     }
 
     static {
         List<Resume> allResume = new java.util.ArrayList<>(List.of(RESUME_SAVED, RESUME_UPDATED, RESUME_NOT_EXIST));
         allResume.addAll(EXPECTED_RESUMES);
         allResume.forEach(r -> {
-            r.setContactData(RESUME.getContactData());
-            r.setSectionData(RESUME.getSectionData());
+            r.setContactData(TEMPLATE_TEST_RESUME.getContactData());
+            r.setSectionData(TEMPLATE_TEST_RESUME.getSectionData());
         });
     }
 }
