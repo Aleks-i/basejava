@@ -1,7 +1,7 @@
 package com.urise.webapp.model;
 
-import java.net.URL;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Initial resume class
@@ -25,6 +25,14 @@ public class Resume {
         this.fullName = fullName;
         this.contactData = new HashMap<>();
         this.sectionData = new HashMap<>();
+        sectionData = Map.of(
+                SectionType.OBJECTIVE, new TextSection<String>(),
+                SectionType.PERSONAL, new TextSection<String>(),
+                SectionType.ACHIEVEMENT, new MarkerTextSection<TextSection<String>>(),
+                SectionType.QUALIFICATIONS, new MarkerTextSection<TextSection<String>>(),
+                SectionType.EXPERIENCE, new UrlLinkSection(),
+                SectionType.EDUCATION, new UrlLinkSection()
+        );
     }
 
     @Override
@@ -74,6 +82,24 @@ public class Resume {
         });
     }
 
+    public void addTextSection(SectionType sectionType, List<String> content) {
+        sectionData.get(sectionType).getContent().add(content);
+    }
+
+    public void addMarkerSection(SectionType sectionType, Set<List<String>> content) {
+        sectionData.get(sectionType).getContent().addAll(content.stream()
+                .map(TextSection::new)
+                .collect(Collectors.toList())
+        );
+    }
+
+    public void addUrlLinkSection(SectionType sectionType, String url, String timePeriod,
+                                  String typeOfActivity, List<String> content) {
+        sectionData.get(sectionType).getContent().add(new OrganizationSection(url, timePeriod, typeOfActivity,
+                new TextSection<>(content)
+        ));
+    }
+
     public String getUuid() {
         return uuid;
     }
@@ -96,110 +122,5 @@ public class Resume {
 
     public void setSectionData(Map<SectionType, Section> sectionData) {
         this.sectionData = sectionData;
-    }
-
-    public enum ContactType {
-        PHONENUMBER("Тел.: "),
-        SKYPE("Skype: "),
-        EMAIL("Почта: "),
-        PROFILE("Профиль соц. сетей: "),
-        URL("Сайт: ");
-
-        private final String title;
-
-        ContactType(String title) {
-            this.title = title;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-    }
-
-    private interface Section {
-    }
-
-    public class TextSection implements Section {
-        private final List<String> content;
-
-        public TextSection(List<String> content) {
-            this.content = content;
-        }
-
-        @Override
-        public String toString() {
-            StringBuilder builder = new StringBuilder();
-            content.forEach(c -> builder.append(c).append("\n"));
-            builder.append("\n");
-            return builder.toString();
-        }
-    }
-
-    public class MarkerTextSection implements Section {
-        private final List<TextSection> content;
-
-        public MarkerTextSection(List<TextSection> content) {
-            this.content = content;
-        }
-
-        @Override
-        public String toString() {
-            StringBuilder builder = new StringBuilder();
-            content.forEach(c -> builder.append(c.toString()));
-            return builder.toString();
-        }
-    }
-
-    public class UrlLinkSection implements Section {
-        private final List<OrganizationSection> organizations;
-
-        public UrlLinkSection() {
-            this.organizations = new ArrayList<>();
-        }
-
-        @Override
-        public String toString() {
-            StringBuilder builder = new StringBuilder();
-            organizations.forEach(o -> builder.append(o.toString()));
-            return builder.toString();
-        }
-
-        public void addOrganizations(List<OrganizationSection> organizations) {
-            this.organizations.addAll(organizations);
-        }
-
-        public class OrganizationSection {
-            private final URL url;
-            private final String timePeriod;
-            private final String typeOfActivity;
-            private TextSection content;
-
-            public OrganizationSection(URL url, String timePeriod, String typeOfActivity, TextSection content) {
-                this.url = url;
-                this.timePeriod = timePeriod;
-                this.typeOfActivity = typeOfActivity;
-                this.content = content;
-            }
-
-            public OrganizationSection(URL url, String timePeriod, String typeOfActivity) {
-                this.url = url;
-                this.timePeriod = timePeriod;
-                this.typeOfActivity = typeOfActivity;
-            }
-
-            @Override
-            public String toString() {
-                StringBuilder builder = new StringBuilder();
-                builder.append(url).append("\n").append("\n")
-                        .append(String.format("%-20s", timePeriod))
-                        .append(typeOfActivity).append("\n");
-                if (content != null) {
-                    content.content.forEach(c -> builder.append(String.format("%20s", ""))
-                            .append(c).append("\n"));
-                }
-                builder.append("\n");
-                return builder.toString();
-            }
-        }
     }
 }

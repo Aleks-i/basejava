@@ -29,7 +29,7 @@ public abstract class AbstractStorage<SK> implements Storage {
 
     @Override
     public void update(Resume resume) {
-        LOG.info("Update " + resume);
+        LOG.info("Update resume id: " + resume.getUuid());
         SK searchKey = searchKeyForAbsence(resume.getUuid());
         updateResume(resume, searchKey);
     }

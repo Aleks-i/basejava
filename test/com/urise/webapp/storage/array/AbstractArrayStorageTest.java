@@ -2,13 +2,17 @@ package com.urise.webapp.storage.array;
 
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
+import com.urise.webapp.storage.AbstractStorage;
 import com.urise.webapp.storage.AbstractStorageTest;
 import com.urise.webapp.storage.Storage;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static com.urise.webapp.storage.ResumeTestData.TEMPLATE_TEST_RESUME;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import static com.urise.webapp.storage.ResumeTestData.RESUME_SAVED;
+import static com.urise.webapp.storage.ResumeTestData.TEMPLATE_TEST_RESUME;
 import static com.urise.webapp.storage.array.AbstractArrayStorage.STORAGE_LIMIT;
 
 public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
@@ -19,6 +23,7 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
 
     @Test(expected = StorageException.class)
     public void overflow() {
+        Logger.getLogger(AbstractStorage.class.getName()).setLevel(Level.OFF);
         storage.clear();
         try {
             for (int i = 0; i < STORAGE_LIMIT; i++) {
