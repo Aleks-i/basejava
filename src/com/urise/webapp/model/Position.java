@@ -1,6 +1,7 @@
 package com.urise.webapp.model;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Position {
     private final String url;
@@ -22,9 +23,11 @@ public class Position {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MM/yyyy");
         builder.append(url).append("\n").append("\n")
-                .append(String.format("%-12s", startDate))
-                .append(String.format("%-20s", endDate))
+                .append(startDate.format(dateTimeFormatter))
+                .append("-")
+                .append(String.format("%-12s", endDate.format(dateTimeFormatter)))
                 .append(typeOfActivity).append("\n");
         if (content.getContent() != null) {
             content.getContent().forEach(c -> builder.append(String.format("%20s", ""))
