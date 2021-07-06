@@ -26,12 +26,12 @@ public class Resume {
         this.contactData = new HashMap<>();
         this.sectionData = new HashMap<>();
         sectionData = Map.of(
-                SectionType.OBJECTIVE, new TextSection<>(),
-                SectionType.PERSONAL, new TextSection<>(),
-                SectionType.ACHIEVEMENT, new MarkerTextSection<>(),
-                SectionType.QUALIFICATIONS, new MarkerTextSection<>(),
-                SectionType.EXPERIENCE, new UrlLinkSection<>(),
-                SectionType.EDUCATION, new UrlLinkSection<>()
+                SectionType.OBJECTIVE, new TextSection(),
+                SectionType.PERSONAL, new TextSection(),
+                SectionType.ACHIEVEMENT, new MarkerTextSection(),
+                SectionType.QUALIFICATIONS, new MarkerTextSection(),
+                SectionType.EXPERIENCE, new UrlLinkSection(),
+                SectionType.EDUCATION, new UrlLinkSection()
         );
     }
 
@@ -83,19 +83,19 @@ public class Resume {
     }
 
     public void addTextSection(SectionType sectionType, List<String> content) {
-        sectionData.get(sectionType).getContent().add(new TextSection<String>(content));
+        sectionData.get(sectionType).getContent().addAll(content);
     }
 
     public void addMarkerSection(SectionType sectionType, Set<List<String>> content) {
-        sectionData.get(sectionType).getContent().add(new MarkerTextSection<TextSection<String>>(content.stream()
+        sectionData.get(sectionType).getContent().addAll(content.stream()
         .map(TextSection::new)
-        .collect(Collectors.toList())));
+        .collect(Collectors.toList()));
     }
 
     public void addUrlLinkSection(SectionType sectionType, String url, String timePeriod,
                                   String typeOfActivity, List<String> content) {
         sectionData.get(sectionType).getContent().add(new OrganizationSection(url, timePeriod, typeOfActivity,
-                new TextSection<String>(content)
+                new TextSection(content)
         ));
     }
 

@@ -3,11 +3,10 @@ package com.urise.webapp.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UrlLinkSection <OrganizationSection> extends AbstractSection<OrganizationSection> {
-    private final List<OrganizationSection> content;
+public class UrlLinkSection extends AbstractSection<OrganizationSection> {
 
     public UrlLinkSection() {
-        this.content = new ArrayList<>();
+        super(new ArrayList<>());
     }
 
     @Override
