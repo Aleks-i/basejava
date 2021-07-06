@@ -12,7 +12,7 @@ public class Resume {
     private final String uuid;
     private final String fullName;
     private Map<ContactType, Set<String>> contactData;
-    private Map<SectionType, Section> sectionData;
+    private Map<SectionType, AbstractSection> sectionData;
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -26,10 +26,10 @@ public class Resume {
         this.contactData = new HashMap<>();
         this.sectionData = new HashMap<>();
         sectionData = Map.of(
-                SectionType.OBJECTIVE, new TextSection<String>(),
-                SectionType.PERSONAL, new TextSection<String>(),
-                SectionType.ACHIEVEMENT, new MarkerTextSection<TextSection<String>>(),
-                SectionType.QUALIFICATIONS, new MarkerTextSection<TextSection<String>>(),
+                SectionType.OBJECTIVE, new TextSection(),
+                SectionType.PERSONAL, new TextSection(),
+                SectionType.ACHIEVEMENT, new MarkerTextSection(),
+                SectionType.QUALIFICATIONS, new MarkerTextSection(),
                 SectionType.EXPERIENCE, new UrlLinkSection(),
                 SectionType.EDUCATION, new UrlLinkSection()
         );
@@ -83,20 +83,20 @@ public class Resume {
     }
 
     public void addTextSection(SectionType sectionType, List<String> content) {
-        sectionData.get(sectionType).getContent().add(content);
+        sectionData.get(sectionType).getContent().add(new TextSection(content));
     }
 
     public void addMarkerSection(SectionType sectionType, Set<List<String>> content) {
-        sectionData.get(sectionType).getContent().addAll(content.stream()
+        List<TextSection> textSections = content.stream()
                 .map(TextSection::new)
-                .collect(Collectors.toList())
-        );
+                .collect(Collectors.toList());
+        sectionData.get(sectionType).getContent().add(new MarkerTextSection(textSections));
     }
 
     public void addUrlLinkSection(SectionType sectionType, String url, String timePeriod,
                                   String typeOfActivity, List<String> content) {
         sectionData.get(sectionType).getContent().add(new OrganizationSection(url, timePeriod, typeOfActivity,
-                new TextSection<>(content)
+                new TextSection(content)
         ));
     }
 
@@ -116,11 +116,11 @@ public class Resume {
         this.contactData = contactData;
     }
 
-    public Map<SectionType, Section> getSectionData() {
+    public Map<SectionType, AbstractSection> getSectionData() {
         return sectionData;
     }
 
-    public void setSectionData(Map<SectionType, Section> sectionData) {
+    public void setSectionData(Map<SectionType, AbstractSection> sectionData) {
         this.sectionData = sectionData;
     }
 }

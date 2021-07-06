@@ -3,10 +3,11 @@ package com.urise.webapp.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TextSection<String> implements Section<String> {
-    private List<String> content = new ArrayList<>();
+public class TextSection extends AbstractSection {
+    private final List<String> content;
 
     public TextSection() {
+        this.content = new ArrayList<>();
     }
 
     public TextSection(List<String> content) {

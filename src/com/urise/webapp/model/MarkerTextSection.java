@@ -3,11 +3,15 @@ package com.urise.webapp.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MarkerTextSection<TextSection> implements Section<TextSection> {
+public class MarkerTextSection extends AbstractSection {
     private final List<TextSection> content;
 
     public MarkerTextSection() {
         this.content = new ArrayList<>();
+    }
+
+    public MarkerTextSection(List<TextSection> content) {
+        this.content = content;
     }
 
     @Override
@@ -17,6 +21,7 @@ public class MarkerTextSection<TextSection> implements Section<TextSection> {
         return builder.toString();
     }
 
+    @Override
     public List<TextSection> getContent() {
         return content;
     }

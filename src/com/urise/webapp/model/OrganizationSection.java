@@ -4,9 +4,9 @@ public class OrganizationSection {
     private final String url;
     private final String timePeriod;
     private final String typeOfActivity;
-    private final TextSection<String> content;
+    private final TextSection content;
 
-    public OrganizationSection(String url, String timePeriod, String typeOfActivity, TextSection<String> content) {
+    public OrganizationSection(String url, String timePeriod, String typeOfActivity, TextSection content) {
         this.url = url;
         this.timePeriod = timePeriod;
         this.typeOfActivity = typeOfActivity;
@@ -26,6 +26,4 @@ public class OrganizationSection {
         builder.append("\n");
         return builder.toString();
     }
-
-
 }
