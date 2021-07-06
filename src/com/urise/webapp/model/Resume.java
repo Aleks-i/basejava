@@ -1,7 +1,10 @@
 package com.urise.webapp.model;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.urise.webapp.model.SectionType.*;
 
 /**
  * Initial resume class
@@ -11,8 +14,8 @@ public class Resume {
     // Unique identifier
     private final String uuid;
     private final String fullName;
-    private Map<ContactType, Set<String>> contactData;
-    private Map<SectionType, Section> sectionData;
+    private EnumMap<ContactType, Set<String>> contactData;
+    private EnumMap<SectionType, Section> sectionData;
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -23,16 +26,67 @@ public class Resume {
         Objects.requireNonNull(fullName, "fullName must not be null");
         this.uuid = uuid;
         this.fullName = fullName;
-        this.contactData = new HashMap<>();
-        this.sectionData = new HashMap<>();
-        sectionData = Map.of(
-                SectionType.OBJECTIVE, new TextSection<String>(),
-                SectionType.PERSONAL, new TextSection<String>(),
-                SectionType.ACHIEVEMENT, new MarkerTextSection<TextSection<String>>(),
-                SectionType.QUALIFICATIONS, new MarkerTextSection<TextSection<String>>(),
-                SectionType.EXPERIENCE, new UrlLinkSection(),
-                SectionType.EDUCATION, new UrlLinkSection()
-        );
+        this.contactData = new EnumMap<>(ContactType.class);
+        this.sectionData = new EnumMap<>(SectionType.class);
+        sectionData.put(OBJECTIVE, new TextSection());
+        sectionData.put(PERSONAL, new TextSection());
+        sectionData.put(ACHIEVEMENT, new BulletedListSection());
+        sectionData.put(QUALIFICATIONS, new BulletedListSection());
+        sectionData.put(EXPERIENCE, new Organization());
+        sectionData.put(EDUCATION, new Organization());
+    }
+
+    public void addContactData(ContactType contactType, String... contact) {
+        contactData.merge(contactType, Set.of(contact), (a, b) -> {
+            a.addAll(b);
+            return a;
+        });
+    }
+
+    public void addTextSection(SectionType sectionType, String content) {
+        sectionData.put(sectionType, new TextSection(content));
+    }
+
+    public void addBulletedListSection(SectionType sectionType, Set<List<String>> content) {
+        BulletedListSection bulletedListSection = new BulletedListSection();
+        content.forEach(c -> c.forEach(s -> bulletedListSection.getContent().add(new TextSection(s))));
+        sectionData.put(sectionType, bulletedListSection);
+    }
+
+    public void addOrganizationSection(SectionType sectionType, String url, LocalDate startDate, LocalDate endDate,
+                                       String typeOfActivity, List<String> content) {
+        sectionData.putIfAbsent(sectionType, new Organization());
+        List<TextSection> textSections = new ArrayList<>();
+        if (content != null) {
+            textSections = content.stream().map(TextSection::new).collect(Collectors.toList());
+        }
+        Position position = new Position(url, startDate, endDate, typeOfActivity,
+                new BulletedListSection(textSections));
+        ((Organization) sectionData.get(sectionType)).getContent().add(position);
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public EnumMap<ContactType, Set<String>> getContactData() {
+        return contactData;
+    }
+
+    public void setContactData(EnumMap<ContactType, Set<String>> contactData) {
+        this.contactData = contactData;
+    }
+
+    public EnumMap<SectionType, Section> getSectionData() {
+        return sectionData;
+    }
+
+    public void setSectionData(EnumMap<SectionType, Section> sectionData) {
+        this.sectionData = sectionData;
     }
 
     @Override
@@ -73,54 +127,5 @@ public class Resume {
         result = 31 * result + contactData.hashCode();
         result = 31 * result + sectionData.hashCode();
         return result;
-    }
-
-    public void addContactData(ContactType contactType, String... contact) {
-        contactData.merge(contactType, Set.of(contact), (a, b) -> {
-            a.addAll(b);
-            return a;
-        });
-    }
-
-    public void addTextSection(SectionType sectionType, List<String> content) {
-        sectionData.get(sectionType).getContent().add(content);
-    }
-
-    public void addMarkerSection(SectionType sectionType, Set<List<String>> content) {
-        sectionData.get(sectionType).getContent().addAll(content.stream()
-                .map(TextSection::new)
-                .collect(Collectors.toList())
-        );
-    }
-
-    public void addUrlLinkSection(SectionType sectionType, String url, String timePeriod,
-                                  String typeOfActivity, List<String> content) {
-        sectionData.get(sectionType).getContent().add(new OrganizationSection(url, timePeriod, typeOfActivity,
-                new TextSection<>(content)
-        ));
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public Map<ContactType, Set<String>> getContactData() {
-        return contactData;
-    }
-
-    public void setContactData(Map<ContactType, Set<String>> contactData) {
-        this.contactData = contactData;
-    }
-
-    public Map<SectionType, Section> getSectionData() {
-        return sectionData;
-    }
-
-    public void setSectionData(Map<SectionType, Section> sectionData) {
-        this.sectionData = sectionData;
     }
 }

@@ -3,11 +3,19 @@ package com.urise.webapp.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MarkerTextSection<TextSection> implements Section<TextSection> {
+public class BulletedListSection implements Section{
     private final List<TextSection> content;
 
-    public MarkerTextSection() {
+    public BulletedListSection() {
         this.content = new ArrayList<>();
+    }
+
+    public BulletedListSection(List<TextSection> content) {
+        this.content = content;
+    }
+
+    public List<TextSection> getContent() {
+        return content;
     }
 
     @Override
@@ -15,9 +23,5 @@ public class MarkerTextSection<TextSection> implements Section<TextSection> {
         StringBuilder builder = new StringBuilder();
         content.forEach(c -> builder.append(c.toString()));
         return builder.toString();
-    }
-
-    public List<TextSection> getContent() {
-        return content;
     }
 }

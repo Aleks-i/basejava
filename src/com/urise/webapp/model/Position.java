@@ -1,23 +1,30 @@
 package com.urise.webapp.model;
 
-public class OrganizationSection {
-    private final String url;
-    private final String timePeriod;
-    private final String typeOfActivity;
-    private final TextSection<String> content;
+import java.time.LocalDate;
 
-    public OrganizationSection(String url, String timePeriod, String typeOfActivity, TextSection<String> content) {
+public class Position {
+    private final String url;
+    private final LocalDate startDate;
+    private final LocalDate endDate;
+    private final String typeOfActivity;
+    private final BulletedListSection content;
+
+    public Position(String url, LocalDate startDate, LocalDate endDate, String typeOfActivity,
+                    BulletedListSection content) {
         this.url = url;
-        this.timePeriod = timePeriod;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.typeOfActivity = typeOfActivity;
         this.content = content;
     }
+
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append(url).append("\n").append("\n")
-                .append(String.format("%-20s", timePeriod))
+                .append(String.format("%-12s", startDate))
+                .append(String.format("%-20s", endDate))
                 .append(typeOfActivity).append("\n");
         if (content.getContent() != null) {
             content.getContent().forEach(c -> builder.append(String.format("%20s", ""))
@@ -26,6 +33,4 @@ public class OrganizationSection {
         builder.append("\n");
         return builder.toString();
     }
-
-
 }

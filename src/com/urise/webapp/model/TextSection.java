@@ -1,27 +1,24 @@
 package com.urise.webapp.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class TextSection<String> implements Section<String> {
-    private List<String> content = new ArrayList<>();
+public class TextSection implements Section {
+    private final String content;
 
     public TextSection() {
+        this.content = "";
     }
 
-    public TextSection(List<String> content) {
+    public TextSection(String content) {
         this.content = content;
     }
 
-    @Override
-    public java.lang.String toString() {
-        StringBuilder builder = new StringBuilder();
-        content.forEach(c -> builder.append(c).append("\n"));
-        builder.append("\n");
-        return builder.toString();
+
+
+    public String getContent() {
+        return content;
     }
 
-    public List<String> getContent() {
-        return content;
+    @Override
+    public String toString() {
+        return (content + "\n" + "\n");
     }
 }

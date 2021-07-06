@@ -3,11 +3,15 @@ package com.urise.webapp.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UrlLinkSection implements Section<OrganizationSection> {
-    private final List<OrganizationSection> content;
+public class Organization implements Section {
+    private final List<Position> content;
 
-    public UrlLinkSection() {
+    public Organization() {
         this.content = new ArrayList<>();
+    }
+
+    public List<Position> getContent() {
+        return content;
     }
 
     @Override
@@ -15,10 +19,5 @@ public class UrlLinkSection implements Section<OrganizationSection> {
         StringBuilder builder = new StringBuilder();
         content.forEach(o -> builder.append(o.toString()));
         return builder.toString();
-    }
-
-    @Override
-    public List<OrganizationSection> getContent() {
-        return content;
     }
 }
