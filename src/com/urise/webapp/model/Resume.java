@@ -26,12 +26,12 @@ public class Resume {
         this.contactData = new HashMap<>();
         this.sectionData = new HashMap<>();
         sectionData = Map.of(
-                SectionType.OBJECTIVE, new TextSection(),
-                SectionType.PERSONAL, new TextSection(),
-                SectionType.ACHIEVEMENT, new MarkerTextSection(),
-                SectionType.QUALIFICATIONS, new MarkerTextSection(),
-                SectionType.EXPERIENCE, new UrlLinkSection(),
-                SectionType.EDUCATION, new UrlLinkSection()
+                SectionType.OBJECTIVE, new TextSection<>(),
+                SectionType.PERSONAL, new TextSection<>(),
+                SectionType.ACHIEVEMENT, new MarkerTextSection<>(),
+                SectionType.QUALIFICATIONS, new MarkerTextSection<>(),
+                SectionType.EXPERIENCE, new UrlLinkSection<>(),
+                SectionType.EDUCATION, new UrlLinkSection<>()
         );
     }
 
@@ -83,20 +83,19 @@ public class Resume {
     }
 
     public void addTextSection(SectionType sectionType, List<String> content) {
-        sectionData.get(sectionType).getContent().add(new TextSection(content));
+        sectionData.get(sectionType).getContent().add(new TextSection<String>(content));
     }
 
     public void addMarkerSection(SectionType sectionType, Set<List<String>> content) {
-        List<TextSection> textSections = content.stream()
-                .map(TextSection::new)
-                .collect(Collectors.toList());
-        sectionData.get(sectionType).getContent().add(new MarkerTextSection(textSections));
+        sectionData.get(sectionType).getContent().add(new MarkerTextSection<TextSection<String>>(content.stream()
+        .map(TextSection::new)
+        .collect(Collectors.toList())));
     }
 
     public void addUrlLinkSection(SectionType sectionType, String url, String timePeriod,
                                   String typeOfActivity, List<String> content) {
         sectionData.get(sectionType).getContent().add(new OrganizationSection(url, timePeriod, typeOfActivity,
-                new TextSection(content)
+                new TextSection<String>(content)
         ));
     }
 

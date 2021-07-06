@@ -3,12 +3,8 @@ package com.urise.webapp.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UrlLinkSection extends AbstractSection {
+public class UrlLinkSection <OrganizationSection> extends AbstractSection<OrganizationSection> {
     private final List<OrganizationSection> content;
-
-    public UrlLinkSection(List<OrganizationSection> content) {
-        this.content = content;
-    }
 
     public UrlLinkSection() {
         this.content = new ArrayList<>();
