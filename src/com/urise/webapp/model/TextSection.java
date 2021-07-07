@@ -13,6 +13,6 @@ public class TextSection implements Section {
 
     @Override
     public String toString() {
-        return (content + "\n" + "\n");
+        return (content + "\n");
     }
 }

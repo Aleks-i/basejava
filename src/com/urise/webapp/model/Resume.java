@@ -96,11 +96,11 @@ public class Resume {
 
         for (ContactType contactType : ContactType.values()) {
             contactData.get(contactType).forEach(c -> builder.append(contactType.getTitle()).append(c).append("\n"));
-        }
-        builder.append("\n");
+        };
 
         for (SectionType sectionType : SectionType.values()) {
-            builder.append(sectionType.getTitle()).append("\n").append("\n").append(sectionData.get(sectionType).toString());
+            builder.append("\n").append(sectionType.getTitle()).append("\n").append("\n")
+                    .append(sectionData.get(sectionType).toString());
         }
         builder.append("\n");
 

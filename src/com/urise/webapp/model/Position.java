@@ -19,19 +19,22 @@ public class Position {
         this.content = content;
     }
 
+    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MM/yyyy");
+    private String getEndDate(LocalDate endDate) {
+        return endDate.equals(LocalDate.now()) ? "Сейчас" : endDate.format(dateTimeFormatter);
+    }
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MM/yyyy");
         builder.append(url).append("\n").append("\n")
                 .append(startDate.format(dateTimeFormatter))
                 .append("-")
-                .append(String.format("%-12s", endDate.format(dateTimeFormatter)))
+                .append(String.format("%-12s", getEndDate(endDate)))
                 .append(typeOfActivity).append("\n");
         if (content.getContent() != null) {
             content.getContent().forEach(c -> builder.append(String.format("%20s", ""))
-                    .append(c).append("\n"));
+                    .append(c));
         }
         builder.append("\n");
         return builder.toString();
