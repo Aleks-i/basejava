@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
  * Initial resume class
  */
 public class Resume {
-
     // Unique identifier
     private final String uuid;
     private final String fullName;

@@ -3,7 +3,7 @@ package com.urise.webapp.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MarkerTextSection extends AbstractSection<TextSection> {
+public class MarkerTextSection extends AbstractSection {
 
     public MarkerTextSection() {
         super(new ArrayList<>());

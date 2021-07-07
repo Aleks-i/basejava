@@ -3,7 +3,7 @@ package com.urise.webapp.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UrlLinkSection extends AbstractSection<OrganizationSection> {
+public class UrlLinkSection extends AbstractSection {
 
     public UrlLinkSection() {
         super(new ArrayList<>());
