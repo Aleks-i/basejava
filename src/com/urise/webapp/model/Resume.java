@@ -94,14 +94,13 @@ public class Resume {
         StringBuilder builder = new StringBuilder();
         builder.append(fullName).append("\n").append("\n");
 
-        for (ContactType contactType : ContactType.values()) {
-            contactData.get(contactType).forEach(c -> builder.append(contactType.getTitle()).append(c).append("\n"));
-        };
+        contactData.forEach((k, v) -> {
+            v.forEach(contact -> builder.append(k.getTitle()).append(contact).append("\n"));
+        });
 
-        for (SectionType sectionType : SectionType.values()) {
-            builder.append("\n").append(sectionType.getTitle()).append("\n").append("\n")
-                    .append(sectionData.get(sectionType).toString());
-        }
+        sectionData.forEach((k, v) -> {
+            builder.append("\n").append(k.getTitle()).append("\n").append("\n").append(v.toString());
+        });
         builder.append("\n");
 
         return builder.toString();
