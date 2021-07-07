@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 public class SortedArrayStorage extends AbstractArrayStorage {
-
     private final Comparator<Resume> SORTED_ARRAY_COMPARATOR = Comparator.comparing(Resume::getUuid);
 
     @Override

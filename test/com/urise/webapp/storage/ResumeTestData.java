@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 public class ResumeTestData {
+
     public static void main(String[] args) {
         System.out.println(TEMPLATE_TEST_RESUME);
     }
