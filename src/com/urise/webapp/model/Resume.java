@@ -13,8 +13,8 @@ public class Resume {
     // Unique identifier
     private final String uuid;
     private final String fullName;
-    private EnumMap<ContactType, Set<String>> contactData;
-    private EnumMap<SectionType, Section> sectionData;
+    private Map<ContactType, Set<String>> contactData;
+    private Map<SectionType, Section> sectionData;
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -72,19 +72,19 @@ public class Resume {
         return fullName;
     }
 
-    public EnumMap<ContactType, Set<String>> getContactData() {
+    public Map<ContactType, Set<String>> getContactData() {
         return contactData;
     }
 
-    public void setContactData(EnumMap<ContactType, Set<String>> contactData) {
+    public void setContactData(Map<ContactType, Set<String>> contactData) {
         this.contactData = contactData;
     }
 
-    public EnumMap<SectionType, Section> getSectionData() {
+    public Map<SectionType, Section> getSectionData() {
         return sectionData;
     }
 
-    public void setSectionData(EnumMap<SectionType, Section> sectionData) {
+    public void setSectionData(Map<SectionType, Section> sectionData) {
         this.sectionData = sectionData;
     }
 
