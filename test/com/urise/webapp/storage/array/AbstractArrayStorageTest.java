@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.urise.webapp.storage.ResumeTestData.RESUME_SAVED;
-import static com.urise.webapp.storage.ResumeTestData.TEMPLATE_TEST_RESUME;
+import static com.urise.webapp.storage.ResumeTestData.getResume;
 import static com.urise.webapp.storage.array.AbstractArrayStorage.STORAGE_LIMIT;
 
 public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
@@ -28,8 +28,7 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
         try {
             for (int i = 0; i < STORAGE_LIMIT; i++) {
                 Resume resume = new Resume("uuid" + i);
-                resume.setContactData(TEMPLATE_TEST_RESUME.getContactData());
-                resume.setSectionData(TEMPLATE_TEST_RESUME.getSectionData());
+                getResume("i", "name" + i);
                 storage.save(resume);
             }
         } catch (StorageException e) {

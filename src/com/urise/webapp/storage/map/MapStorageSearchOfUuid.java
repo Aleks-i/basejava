@@ -7,22 +7,22 @@ import java.util.List;
 public class MapStorageSearchOfUuid extends AbstractMapStorage<String> {
 
     @Override
-    protected void updateResume(Resume resume, String uuid) {
+    protected void doUpdate(Resume resume, String uuid) {
         storage.put(uuid, resume);
     }
 
     @Override
-    protected void saveResume(Resume resume, String uuid) {
+    protected void doSave(Resume resume, String uuid) {
         storage.put(uuid, resume);
     }
 
     @Override
-    protected Resume getResume(String uuid) {
+    protected Resume doGet(String uuid) {
         return storage.get(uuid);
     }
 
     @Override
-    protected void deleteResume(String uuid) {
+    protected void doDelete(String uuid) {
         storage.remove(uuid);
     }
 

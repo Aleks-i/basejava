@@ -5,22 +5,22 @@ import com.urise.webapp.model.Resume;
 public class MapStorageSearchOfResume extends AbstractMapStorage<Resume> {
 
     @Override
-    protected void updateResume(Resume resume, Resume searchKey) {
+    protected void doUpdate(Resume resume, Resume searchKey) {
         storage.put(resume.getUuid(), resume);
     }
 
     @Override
-    protected void saveResume(Resume resume, Resume searchKey) {
+    protected void doSave(Resume resume, Resume searchKey) {
         storage.put(resume.getUuid(), resume);
     }
 
     @Override
-    protected Resume getResume(Resume searchKey) {
+    protected Resume doGet(Resume searchKey) {
         return searchKey;
     }
 
     @Override
-    protected void deleteResume(Resume searchKey) {
+    protected void doDelete(Resume searchKey) {
         storage.remove(searchKey.getUuid());
     }
 
