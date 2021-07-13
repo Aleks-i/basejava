@@ -5,7 +5,7 @@ import com.urise.webapp.model.organization.Organization;
 import java.util.List;
 import java.util.Objects;
 
-public class OrganizationSection extends Section {
+public class OrganizationSection extends AbstractSection {
     private final List<Organization> organizations;
 
     public OrganizationSection(List<Organization> organizations) {

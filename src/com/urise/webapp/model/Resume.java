@@ -10,7 +10,7 @@ public class Resume {
     private final String uuid;
     private final String fullName;
     private final Map<ContactType, Set<String>> contacts;
-    private final Map<SectionType, Section> sections;
+    private final Map<SectionType, AbstractSection> sections;
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -32,8 +32,8 @@ public class Resume {
         });
     }
 
-    public void addSection(SectionType sectionType, Section section) {
-        sections.put(sectionType, section);
+    public void addSection(SectionType sectionType, AbstractSection abstractSection) {
+        sections.put(sectionType, abstractSection);
     }
 
     public String getUuid() {
