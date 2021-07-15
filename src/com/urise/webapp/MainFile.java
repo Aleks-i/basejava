@@ -27,15 +27,16 @@ public class MainFile {
             throw new RuntimeException(e);
         }
 
-        writeFileNames(new File(".\\"));
+        printFileNames(new File(".\\src"));
     }
 
-    private static void writeFileNames(File dir) {
+    private static void printFileNames(File dir) {
         for (File file : Objects.requireNonNull(dir.listFiles())) {
             if (file.isDirectory()) {
-                writeFileNames(file);
+                System.out.println("Dir name: " + file.getName());
+                printFileNames(file);
             } else {
-                System.out.println(file.getName());
+                System.out.println("File name: " + file.getName());
             }
         }
     }
