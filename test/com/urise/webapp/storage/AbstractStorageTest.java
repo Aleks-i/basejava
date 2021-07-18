@@ -7,9 +7,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
+
 import static com.urise.webapp.storage.ResumeTestData.*;
 
 public abstract class AbstractStorageTest {
+    protected final static File STORAGEDIR = new File( ".\\storage");
+
     protected final Storage storage;
 
     public AbstractStorageTest(Storage storage) {

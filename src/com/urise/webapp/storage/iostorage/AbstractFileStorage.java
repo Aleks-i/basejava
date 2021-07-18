@@ -1,16 +1,22 @@
-package com.urise.webapp.storage;
+package com.urise.webapp.storage.iostorage;
 
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
+import com.urise.webapp.storage.AbstractStorage;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public abstract class AbstractFileStorage extends AbstractStorage<File> {
     private final File directory;
+
+    protected abstract void doWrite(Resume resume, OutputStream os) throws IOException;
+
+    protected abstract Resume doRead(InputStream is) throws IOException;
 
     public AbstractFileStorage(File directory) {
         Objects.requireNonNull(directory, "directory must not be null");
@@ -36,7 +42,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected void doUpdate(Resume resume, File file) {
         try {
-            doWrite(resume, file);
+            doWrite(resume, new BufferedOutputStream(new FileOutputStream(file)));
         } catch (IOException e) {
             throw  new StorageException("File write error", resume.getUuid(), e);
         }
@@ -52,18 +58,14 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         doUpdate(resume, file);
     }
 
-    protected abstract void doWrite(Resume resume, File file) throws IOException;
-
     @Override
     protected Resume doGet(File file) {
         try {
-            return doRead(file);
+            return doRead(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException e) {
             throw new StorageException("File read error", file.getName(), e);
         }
     }
-
-    protected abstract Resume doRead(File file) throws IOException;
 
     @Override
     protected void doDelete(File file) {
@@ -89,7 +91,9 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         for (File file : files) {
             list.add(doGet(file));
         }
-        return list;
+        return list.stream()
+                .sorted(Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid))
+                .collect(Collectors.toList());
     }
 
     @Override

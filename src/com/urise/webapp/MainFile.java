@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class MainFile {
+    private static final StringBuilder stringBuilder = new StringBuilder("\t");
     public static void main(String[] args) {
         String filePath = ".\\.gitignore";
         File file = new File(filePath);
@@ -27,17 +28,19 @@ public class MainFile {
             throw new RuntimeException(e);
         }
 
-        printFileNames(new File(".\\src"));
+        System.out.println(getFileNames(new File(".\\src"), stringBuilder));
     }
 
-    private static void printFileNames(File dir) {
+    private static StringBuilder getFileNames(File dir, StringBuilder stringBuilder) {
         for (File file : Objects.requireNonNull(dir.listFiles())) {
             if (file.isDirectory()) {
-                System.out.println("Dir name: " + file.getName());
-                printFileNames(file);
+                stringBuilder.append("Dir name: ").append(file.getName()).append("\n").append("\t");
+                getFileNames(file, stringBuilder);
             } else {
-                System.out.println("File name: " + file.getName());
+                stringBuilder.append("File name: ").append(file.getName()).append("\n").append("\t");
             }
+            stringBuilder.delete(0, 3);
         }
+        return stringBuilder;
     }
 }
