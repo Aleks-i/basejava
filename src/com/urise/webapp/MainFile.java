@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 public class MainFile {
-    private static final StringBuilder stringBuilder = new StringBuilder("\t");
     public static void main(String[] args) {
         String filePath = ".\\.gitignore";
         File file = new File(filePath);
@@ -28,19 +28,26 @@ public class MainFile {
             throw new RuntimeException(e);
         }
 
-        System.out.println(getFileNames(new File(".\\src"), stringBuilder));
+        printFileNames(new File(".\\src"), 0);
     }
 
-    private static StringBuilder getFileNames(File dir, StringBuilder stringBuilder) {
+    private static void printFileNames(File dir, int depth) {
         for (File file : Objects.requireNonNull(dir.listFiles())) {
             if (file.isDirectory()) {
-                stringBuilder.append("Dir name: ").append(file.getName()).append("\n").append("\t");
-                getFileNames(file, stringBuilder);
+                System.out.println(getTabulation(depth) + "Dir name: " + file.getName());
+                depth++;
+                printFileNames(file, depth);
             } else {
-                stringBuilder.append("File name: ").append(file.getName()).append("\n").append("\t");
+                System.out.println(getTabulation(depth) + "File name: " + file.getName());
+                continue;
             }
-            stringBuilder.delete(0, 3);
+            depth--;
         }
+    }
+
+    public static StringBuilder getTabulation(int depth) {
+        StringBuilder stringBuilder = new StringBuilder();
+        IntStream.range(0, depth).forEach(s -> stringBuilder.append("\t"));
         return stringBuilder;
     }
 }

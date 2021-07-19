@@ -12,11 +12,10 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public abstract class AbstractPathStorage extends AbstractStorage<Path> {
- /*   private final Path directory;
+    private final Path directory;
 
     protected abstract void doWrite(Resume resume, OutputStream os) throws IOException;
 
@@ -31,47 +30,49 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     }
 
     @Override
-    protected boolean isExist(Path Path) {
-        return Path.exists();
+    protected boolean isExist(Path path) {
+        return Files.exists(path);
     }
 
     @Override
     protected Path getSearchKey(String uuid) {
-        return new Path(directory, uuid);
+        return Paths.get(directory + "/" + uuid);
     }
 
     @Override
-    protected void doUpdate(Resume resume, Path Path) {
+    protected void doUpdate(Resume resume, Path path) {
         try {
-            doWrite(resume, new BufferedOutputStream(new PathOutputStream(Path)));
+            doWrite(resume, new BufferedOutputStream(new FileOutputStream(path.toString())));
         } catch (IOException e) {
             throw  new StorageException("Path write error", resume.getUuid(), e);
         }
     }
 
     @Override
-    protected void doSave(Resume resume, Path Path) {
+    protected void doSave(Resume resume, Path path) {
         try {
-            Path.createNewPath();
+            Files.createFile(path);
         } catch (IOException e) {
-            throw new StorageException("Could't create Path " + Path.getAbsolutePath(), Path.getName(), e);
+            throw new StorageException("Could't create Path " + path.toAbsolutePath(), path.getFileName().toString(), e);
         }
-        doUpdate(resume, Path);
+        doUpdate(resume, path);
     }
 
     @Override
-    protected Resume doGet(Path Path) {
+    protected Resume doGet(Path path) {
         try {
-            return doRead(new BufferedInputStream(new PathInputStream(Path)));
+            return doRead(new BufferedInputStream(new FileInputStream(path.toString())));
         } catch (IOException e) {
-            throw new StorageException("Path read error", Path.getName(), e);
+            throw new StorageException("Path read error", path.getFileName().toString(), e);
         }
     }
 
     @Override
-    protected void doDelete(Path Path) {
-        if (!Path.delete()) {
-            throw new StorageException("Path delete error: ", Path.getName());
+    protected void doDelete(Path path) {
+        try {
+            Files.delete(path);
+        } catch (IOException e) {
+            throw new StorageException("Path delete error: ", path.getFileName().toString());
         }
     }
 
@@ -80,27 +81,29 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
         try {
             Files.list(directory).forEach(this::doDelete);
         } catch (IOException e) {
-            throw new StorageException("Path delete error", null);
+            throw new StorageException("Path clear error", null);
         }
     }
 
     @Override
     public List<Resume> getAllSorted() {
-        Path[] Paths = directory.listPaths();
-        if (Paths == null) {
-            throw new StorageException("Directory read error", null);
+        List<Resume> resumes = new ArrayList<>();
+        try {
+            Files.list(directory).forEach(p -> resumes.add(doGet(p)));
+        } catch (IOException e) {
+            throw new StorageException("Path get all sorted error", null);
         }
-        List<Resume> list = new ArrayList<>(Paths.length);
-        for (Path Path : Paths) {
-            list.add(doGet(Path));
-        }
-        return list.stream()
+        return resumes.stream()
                 .sorted(Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid))
                 .collect(Collectors.toList());
     }
 
     @Override
     public int size() {
-        return Objects.requireNonNull(directory.list(), "Directory read error").length;
-    }*/
+        try {
+            return (int) Files.list(directory).count();
+        } catch (IOException e) {
+            throw new StorageException("Path size error", null);
+        }
+    }
 }
