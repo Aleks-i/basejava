@@ -2,7 +2,8 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.storage.array.ArrayStorageTest;
 import com.urise.webapp.storage.array.SortedArrayStorageTest;
-import com.urise.webapp.storage.io.ObjectStreamStorageTest;
+import com.urise.webapp.storage.io.ObjectStreamFileStorageTest;
+import com.urise.webapp.storage.io.ObjectStreamPathStorageTest;
 import com.urise.webapp.storage.list.ListStorageTest;
 import com.urise.webapp.storage.map.MapStorageSearchOfResumeTest;
 import com.urise.webapp.storage.map.MapStorageSearchOfUuidTest;
@@ -16,7 +17,8 @@ import org.junit.runners.Suite;
         ListStorageTest.class,
         MapStorageSearchOfUuidTest.class,
         MapStorageSearchOfResumeTest.class,
-        ObjectStreamStorageTest.class
+        ObjectStreamPathStorageTest.class,
+        ObjectStreamFileStorageTest.class
 })
 public class AllStorageTest {
 }
