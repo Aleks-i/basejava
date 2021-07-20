@@ -1,9 +1,9 @@
-package com.urise.webapp.storage.iostorage;
+package com.urise.webapp.storage.io;
 
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 import com.urise.webapp.storage.AbstractStorage;
-import com.urise.webapp.storage.iostorage.serializers.Serializer;
+import com.urise.webapp.storage.io.serializers.Serializer;
 
 import java.io.*;
 import java.util.ArrayList;

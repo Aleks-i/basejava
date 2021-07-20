@@ -1,8 +1,7 @@
 package com.urise.webapp.storage.io;
 
 import com.urise.webapp.storage.AbstractStorageTest;
-import com.urise.webapp.storage.iostorage.FileStorage;
-import com.urise.webapp.storage.iostorage.serializers.ObjectStream;
+import com.urise.webapp.storage.io.serializers.ObjectStream;
 
 import java.io.File;
 
