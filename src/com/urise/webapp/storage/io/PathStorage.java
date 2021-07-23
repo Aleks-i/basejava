@@ -31,12 +31,12 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected boolean isExist(Path path) {
-        return Files.exists(path);
+        return Files.isRegularFile(path);
     }
 
     @Override
     protected Path getSearchKey(String uuid) {
-        return directory.resolve(directory.getFileName().toAbsolutePath() + "\\" + uuid);
+        return directory.resolve(uuid);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             Files.createFile(path);
         } catch (IOException e) {
-            throw new StorageException("Could't create Path " + path.toAbsolutePath(), path.getFileName().toString(), e);
+            throw new StorageException("Could't create Path " + path, path.getFileName().toString(), e);
         }
         doUpdate(resume, path);
     }
@@ -99,7 +99,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             return Files.list(directory);
         } catch (IOException e) {
-            throw new StorageException("Directory read error", null);
+            throw new StorageException("Directory read error", e);
         }
     }
 }
