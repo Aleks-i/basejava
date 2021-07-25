@@ -4,6 +4,8 @@ import com.urise.webapp.storage.array.ArrayStorageTest;
 import com.urise.webapp.storage.array.SortedArrayStorageTest;
 import com.urise.webapp.storage.io.ObjectStreamSerializerFileStorageTest;
 import com.urise.webapp.storage.io.ObjectStreamSerializerPathStorageTest;
+import com.urise.webapp.storage.io.XMLStreamSerializerFileStorageTest;
+import com.urise.webapp.storage.io.XMLStreamSerializerPathStorageTest;
 import com.urise.webapp.storage.list.ListStorageTest;
 import com.urise.webapp.storage.map.MapStorageSearchOfResumeTest;
 import com.urise.webapp.storage.map.MapStorageSearchOfUuidTest;
@@ -18,7 +20,9 @@ import org.junit.runners.Suite;
         MapStorageSearchOfUuidTest.class,
         MapStorageSearchOfResumeTest.class,
         ObjectStreamSerializerPathStorageTest.class,
-        ObjectStreamSerializerFileStorageTest.class
+        ObjectStreamSerializerFileStorageTest.class,
+        XMLStreamSerializerPathStorageTest.class,
+        XMLStreamSerializerFileStorageTest.class
 })
 public class AllStorageTest {
 }

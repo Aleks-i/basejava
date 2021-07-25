@@ -1,18 +1,28 @@
 package com.urise.webapp.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.util.*;
 
 /**
  * Initial resume class
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Resume implements Serializable {
     private static final long serialVersionUID = 1L;
     // Unique identifier
-    private final String uuid;
-    private final String fullName;
-    private final Map<ContactType, Set<String>> contacts;
-    private final Map<SectionType, AbstractSection> sections;
+    private String uuid;
+    private String fullName;
+    @XmlTransient
+    private Map<ContactType, Set<String>> contacts;
+    private Map<SectionType, AbstractSection> sections;
+
+    public Resume() {
+    }
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
