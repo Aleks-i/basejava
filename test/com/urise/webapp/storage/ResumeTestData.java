@@ -44,9 +44,10 @@ public class ResumeTestData {
         TEMPLATE_TEST_RESUME.addContactData(ContactType.PHONENUMBER, "+7(921) 855-0482");
         TEMPLATE_TEST_RESUME.addContactData(ContactType.SKYPE, "skype:grigory.kislin");
         TEMPLATE_TEST_RESUME.addContactData(ContactType.EMAIL, "gkislin@yandex.ru");
-        TEMPLATE_TEST_RESUME.addContactData(ContactType.PROFILE, "https://www.linkedin.com/in/gkislin",
-                "https://github.com/gkislin", "https://stackoverflow.com/users/548473");
-        TEMPLATE_TEST_RESUME.addContactData(ContactType.URL, "http://gkislin.ru/");
+        TEMPLATE_TEST_RESUME.addContactData(ContactType.PROFILELINKEDIN, "https://www.linkedin.com/in/gkislin");
+        TEMPLATE_TEST_RESUME.addContactData(ContactType.PROFILEGITHUB,"https://github.com/gkislin");
+        TEMPLATE_TEST_RESUME.addContactData(ContactType.PROFILESTACKOVERFLOW,"https://stackoverflow.com/users/548473");
+        TEMPLATE_TEST_RESUME.addContactData(ContactType.HOMEPAGE, "http://gkislin.ru/");
 
         //text sections
         TEMPLATE_TEST_RESUME.addSection(SectionType.OBJECTIVE, new TextSection(

@@ -17,8 +17,7 @@ public class Resume implements Serializable {
     // Unique identifier
     private String uuid;
     private String fullName;
-    @XmlTransient
-    private Map<ContactType, Set<String>> contacts;
+    private Map<ContactType, String> contacts;
     private Map<SectionType, AbstractSection> sections;
 
     public Resume() {
@@ -37,11 +36,8 @@ public class Resume implements Serializable {
         this.sections = new EnumMap<>(SectionType.class);
     }
 
-    public void addContactData(ContactType contactType, String... contact) {
-        contacts.merge(contactType, Set.of(contact), (a, b) -> {
-            a.addAll(b);
-            return a;
-        });
+    public void addContactData(ContactType contactType, String contact) {
+        contacts.put(contactType, contact);
     }
 
     public void addSection(SectionType sectionType, AbstractSection abstractSection) {
@@ -62,7 +58,7 @@ public class Resume implements Serializable {
         builder.append(fullName).append("\n").append("\n");
 
         contacts.forEach((k, v) -> {
-            v.forEach(contact -> builder.append(k.getTitle()).append(contact).append("\n"));
+            builder.append(k.getTitle()).append(v).append("\n");
         });
 
         sections.forEach((k, v) -> {
