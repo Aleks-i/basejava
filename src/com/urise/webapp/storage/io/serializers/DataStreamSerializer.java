@@ -105,21 +105,18 @@ public class DataStreamSerializer implements StreamSerializer {
 
             for (Map.Entry<SectionType, AbstractSection> entry : resume.getSections().entrySet()) {
                 switch (entry.getKey().name()) {
-                    case "OBJECTIVE":
-                    case "PERSONAL":
+                    case "OBJECTIVE", "PERSONAL" -> {
                         dos.writeUTF(entry.getKey().getTitle());
                         dos.writeUTF(((TextSection) entry.getValue()).getContent());
-                        break;
-                    case "ACHIEVEMENT":
-                    case "QUALIFICATIONS":
+                    }
+                    case "ACHIEVEMENT", "QUALIFICATIONS" -> {
                         dos.writeUTF(entry.getKey().getTitle());
                         writeStringList(((ListSection) entry.getValue()).getItems(), dos);
-                        break;
-                    case "EXPERIENCE":
-                    case "EDUCATION":
+                    }
+                    case "EXPERIENCE", "EDUCATION" -> {
                         dos.writeUTF(entry.getKey().getTitle());
                         writeOrganizationList(((OrganizationSection) entry.getValue()).getOrganizations(), dos);
-                        break;
+                    }
                 }
             }
         }
@@ -136,14 +133,13 @@ public class DataStreamSerializer implements StreamSerializer {
 
             while (true) {
                 SectionType sectionType = getSectionType(dis);
-                if (SectionType.OBJECTIVE.equals(sectionType) || SectionType.PERSONAL.equals(sectionType)) {
-                    resume.addSection(sectionType, new TextSection(dis.readUTF()));
-                } else if (SectionType.ACHIEVEMENT.equals(sectionType) || SectionType.QUALIFICATIONS.equals(sectionType)) {
-                    resume.addSection(sectionType, new ListSection(readStringSection(dis)));
-                } else if (SectionType.EXPERIENCE.equals(sectionType) || SectionType.EDUCATION.equals(sectionType)) {
-                    resume.addSection(sectionType, new OrganizationSection(readOrganizationSection(dis)));
-                } else {
+                if (sectionType == null) {
                     break;
+                }
+                switch (sectionType) {
+                    case OBJECTIVE, PERSONAL -> resume.addSection(sectionType, new TextSection(dis.readUTF()));
+                    case ACHIEVEMENT, QUALIFICATIONS -> resume.addSection(sectionType, new ListSection(readStringSection(dis)));
+                    case EXPERIENCE, EDUCATION -> resume.addSection(sectionType, new OrganizationSection(readOrganizationSection(dis)));
                 }
             }
             return resume;
