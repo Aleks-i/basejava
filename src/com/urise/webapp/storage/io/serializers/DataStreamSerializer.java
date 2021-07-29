@@ -16,8 +16,8 @@ import static com.urise.webapp.util.DateUtil.toStringLocalDate;
 public class DataStreamSerializer implements StreamSerializer {
 
     private void writeStringList(List<String> list, DataOutputStream dos) throws IOException {
-        int sizeListsection = list.size();
-        dos.writeInt(sizeListsection);
+        int sizeListSection = list.size();
+        dos.writeInt(sizeListSection);
         list.forEach(str -> {
             try {
                 dos.writeUTF(str);
@@ -46,8 +46,7 @@ public class DataStreamSerializer implements StreamSerializer {
                     } catch (IOException ignored) {
                     }
                 });
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException ignored) {
             }
         });
     }
@@ -63,7 +62,7 @@ public class DataStreamSerializer implements StreamSerializer {
         }
     }
 
-    private List<String> readStringSection(DataInputStream dis) throws IOException {
+    private List<String> getStringsForListSection(DataInputStream dis) throws IOException {
         int listSize = dis.readInt();
         List<String> stringList = new ArrayList<>();
         for (int i = 0; i < listSize; i++) {
@@ -72,7 +71,7 @@ public class DataStreamSerializer implements StreamSerializer {
         return stringList;
     }
 
-    private List<Organization> readOrganizationSection(DataInputStream dis) throws IOException {
+    private List<Organization> getOrganizationsForOrganizationSection(DataInputStream dis) throws IOException {
         int listOrganizationSize = dis.readInt();
         List<Organization> organizations = new ArrayList<>();
         for (int i = 0; i < listOrganizationSize; i++) {
@@ -138,8 +137,8 @@ public class DataStreamSerializer implements StreamSerializer {
                 }
                 switch (sectionType) {
                     case OBJECTIVE, PERSONAL -> resume.addSection(sectionType, new TextSection(dis.readUTF()));
-                    case ACHIEVEMENT, QUALIFICATIONS -> resume.addSection(sectionType, new ListSection(readStringSection(dis)));
-                    case EXPERIENCE, EDUCATION -> resume.addSection(sectionType, new OrganizationSection(readOrganizationSection(dis)));
+                    case ACHIEVEMENT, QUALIFICATIONS -> resume.addSection(sectionType, new ListSection(getStringsForListSection(dis)));
+                    case EXPERIENCE, EDUCATION -> resume.addSection(sectionType, new OrganizationSection(getOrganizationsForOrganizationSection(dis)));
                 }
             }
             return resume;
