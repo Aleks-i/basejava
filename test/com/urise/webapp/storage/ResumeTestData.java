@@ -3,7 +3,6 @@ package com.urise.webapp.storage;
 import com.urise.webapp.model.*;
 import com.urise.webapp.model.organization.Organization;
 
-import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
 
@@ -45,8 +44,8 @@ public class ResumeTestData {
         TEMPLATE_TEST_RESUME.addContactData(ContactType.SKYPE, "skype:grigory.kislin");
         TEMPLATE_TEST_RESUME.addContactData(ContactType.EMAIL, "gkislin@yandex.ru");
         TEMPLATE_TEST_RESUME.addContactData(ContactType.PROFILELINKEDIN, "https://www.linkedin.com/in/gkislin");
-        TEMPLATE_TEST_RESUME.addContactData(ContactType.PROFILEGITHUB,"https://github.com/gkislin");
-        TEMPLATE_TEST_RESUME.addContactData(ContactType.PROFILESTACKOVERFLOW,"https://stackoverflow.com/users/548473");
+        TEMPLATE_TEST_RESUME.addContactData(ContactType.PROFILEGITHUB, "https://github.com/gkislin");
+        TEMPLATE_TEST_RESUME.addContactData(ContactType.PROFILESTACKOVERFLOW, "https://stackoverflow.com/users/548473");
         TEMPLATE_TEST_RESUME.addContactData(ContactType.HOMEPAGE, "http://gkislin.ru/");
 
         //text sections
@@ -153,14 +152,14 @@ public class ResumeTestData {
                         new Organization.Position(2013, Month.MARCH, 2013, Month.APRIL,
                                 "\"Functional Programming Principles in Scala\" by Martin Odersky", null)),
                 new Organization("luxoft-training", "http://www.luxoft-training.ru/training/catalog/course.html?ID=22366",
-                        null, new Organization.Position(2011, Month.MARCH, 2011, Month.APRIL,
-                        "Курс \"Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.\"", null)),
+                        new Organization.Position(2011, Month.MARCH, 2011, Month.APRIL,
+                                "Курс \"Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.\"", null)),
                 new Organization("siemens", "http://www.siemens.ru/",
                         new Organization.Position(2005, Month.JANUARY, 2005, Month.APRIL,
-                        "3 месяца обучения мобильным IN сетям (Берлин)", null)),
+                                "3 месяца обучения мобильным IN сетям (Берлин)", null)),
                 new Organization("alcatel", "http://www.alcatel.ru/",
                         new Organization.Position(1997, Month.SEPTEMBER, 1998, Month.MARCH,
-                        "6 месяцев обучения цифровым телефонным сетям (Москва)", null)),
+                                "6 месяцев обучения цифровым телефонным сетям (Москва)", null)),
                 new Organization("ifmo", "http://www.ifmo.ru/",
                         new Organization.Position(1993, Month.SEPTEMBER, 1996, Month.JULY,
                                 "Аспирантура (программист С, С++)", null),
@@ -168,7 +167,7 @@ public class ResumeTestData {
                                 "Инженер (программист Fortran, C)", null)),
                 new Organization("mipt", "http://www.school.mipt.ru/",
                         new Organization.Position(1984, Month.SEPTEMBER, 1987, Month.JUNE,
-                        "Закончил с отличием", null))
+                                "Закончил с отличием", null))
         )));
         return TEMPLATE_TEST_RESUME;
     }

@@ -1,4 +1,4 @@
-package com.urise.webapp.util;
+package com.urise.webapp.util.xml;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -7,11 +7,11 @@ import javax.xml.bind.Unmarshaller;
 import java.io.Reader;
 import java.io.Writer;
 
-public class XmlParser {
+public class Parser {
     private final Marshaller marshaller;
     private final Unmarshaller unmarshaller;
 
-    public XmlParser(Class... classesToBeBound) {
+    public Parser(Class... classesToBeBound) {
         try {
             JAXBContext ctx = JAXBContext.newInstance(classesToBeBound);
 

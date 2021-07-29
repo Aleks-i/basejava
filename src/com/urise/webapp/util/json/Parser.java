@@ -1,4 +1,4 @@
-package com.urise.webapp.util;
+package com.urise.webapp.util.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -8,11 +8,10 @@ import java.io.Reader;
 import java.io.Writer;
 import java.time.LocalDate;
 
-public class JSONParser {
+public class Parser {
     private static Gson GSON = new GsonBuilder()
-            .registerTypeAdapter(LocalDate.class, new JsonLocaleDateAdapter())
-            .registerTypeAdapter(AbstractSection.class, new JsonSectionAdapter<>())
-            .enableComplexMapKeySerialization()
+            .registerTypeAdapter(LocalDate.class, new LocaleDateAdapter())
+            .registerTypeAdapter(AbstractSection.class, new SectionAdapter<>())
             .create();
 
     public static <T> T read(Reader reader, Class<T> clazz) {

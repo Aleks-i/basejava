@@ -1,4 +1,4 @@
-package com.urise.webapp.util;
+package com.urise.webapp.util.xml;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.time.LocalDate;
