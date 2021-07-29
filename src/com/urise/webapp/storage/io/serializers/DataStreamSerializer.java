@@ -6,20 +6,30 @@ import com.urise.webapp.model.organization.Organization;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.IntStream;
 
 import static com.urise.webapp.util.DateUtil.toStringLocalDate;
 
 public class DataStreamSerializer implements StreamSerializer {
 
+    private SectionType getSectionType(DataInputStream dis) throws IOException {
+        try {
+            String sectionTitle = dis.readUTF();
+            return Arrays.stream(SectionType.values())
+                    .filter(s -> s.getTitle().equals(sectionTitle))
+                    .findFirst().orElse(null);
+        } catch (EOFException e) {
+            return null;
+        }
+    }
+
     private void writeStringList(List<String> list, DataOutputStream dos) throws IOException {
         int sizeListsection = list.size();
         dos.writeInt(sizeListsection);
-        list.forEach(l -> {
+        list.forEach(str -> {
             try {
-                dos.writeUTF(l);
+                dos.writeUTF(str);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -42,8 +52,7 @@ public class DataStreamSerializer implements StreamSerializer {
                         dos.writeUTF(position.getTitle());
                         String decription = position.getDescription();
                         dos.writeUTF(decription == null ? "null" : decription);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    } catch (IOException ignored) {
                     }
                 });
             } catch (IOException e) {
@@ -53,7 +62,6 @@ public class DataStreamSerializer implements StreamSerializer {
     }
 
     private List<String> readStringSection(DataInputStream dis) throws IOException {
-        dis.readUTF();
         int listSize = dis.readInt();
         List<String> stringList = new ArrayList<>();
         for (int i = 0; i < listSize; i++) {
@@ -63,7 +71,6 @@ public class DataStreamSerializer implements StreamSerializer {
     }
 
     private List<Organization> readOrganizationSection(DataInputStream dis) throws IOException {
-        dis.readUTF();
         int listOrganizationSize = dis.readInt();
         List<Organization> organizations = new ArrayList<>();
         for (int i = 0; i < listOrganizationSize; i++) {
@@ -119,30 +126,24 @@ public class DataStreamSerializer implements StreamSerializer {
     @Override
     public Resume doRead(InputStream is) throws IOException {
         try (DataInputStream dis = new DataInputStream(is)) {
-            String uuid = dis.readUTF();
-            String fullName = dis.readUTF();
-            Resume resume = new Resume(uuid, fullName);
+            Resume resume = new Resume(dis.readUTF(), dis.readUTF());
             int size = dis.readInt();
             for (int i = 0; i < size; i++) {
                 resume.addContactData(ContactType.valueOf(dis.readUTF()), dis.readUTF());
             }
 
-            dis.readUTF();
-            AbstractSection objectiveSection = new TextSection(dis.readUTF());
-            resume.addSection(SectionType.OBJECTIVE, objectiveSection);
-            dis.readUTF();
-            AbstractSection personalSection = new TextSection(dis.readUTF());
-            resume.addSection(SectionType.PERSONAL, personalSection);
-
-            AbstractSection achievementSection = new ListSection(readStringSection(dis));
-            resume.addSection(SectionType.ACHIEVEMENT, achievementSection);
-            AbstractSection qualificationtSection = new ListSection(readStringSection(dis));
-            resume.addSection(SectionType.QUALIFICATIONS, qualificationtSection);
-
-            AbstractSection experienceSection = new OrganizationSection(readOrganizationSection(dis));
-            resume.addSection(SectionType.EXPERIENCE, experienceSection);
-            AbstractSection educationSection = new OrganizationSection(readOrganizationSection(dis));
-            resume.addSection(SectionType.EDUCATION, educationSection);
+            while (true) {
+                SectionType sectionType = getSectionType(dis);
+                if (SectionType.OBJECTIVE.equals(sectionType) || SectionType.PERSONAL.equals(sectionType)) {
+                    resume.addSection(sectionType, new TextSection(dis.readUTF()));
+                } else if (SectionType.ACHIEVEMENT.equals(sectionType) || SectionType.QUALIFICATIONS.equals(sectionType)) {
+                    resume.addSection(sectionType, new ListSection(readStringSection(dis)));
+                } else if (SectionType.EXPERIENCE.equals(sectionType) || SectionType.EDUCATION.equals(sectionType)) {
+                    resume.addSection(sectionType, new OrganizationSection(readOrganizationSection(dis)));
+                } else {
+                    break;
+                }
+            }
             return resume;
         }
     }
