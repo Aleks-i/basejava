@@ -6,23 +6,14 @@ import com.urise.webapp.model.organization.Organization;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.IntStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import static com.urise.webapp.util.DateUtil.toStringLocalDate;
 
 public class DataStreamSerializer implements StreamSerializer {
-
-    private SectionType getSectionType(DataInputStream dis) throws IOException {
-        try {
-            String sectionTitle = dis.readUTF();
-            return Arrays.stream(SectionType.values())
-                    .filter(s -> s.getTitle().equals(sectionTitle))
-                    .findFirst().orElse(null);
-        } catch (EOFException e) {
-            return null;
-        }
-    }
 
     private void writeStringList(List<String> list, DataOutputStream dos) throws IOException {
         int sizeListsection = list.size();
@@ -59,6 +50,17 @@ public class DataStreamSerializer implements StreamSerializer {
                 e.printStackTrace();
             }
         });
+    }
+
+    private SectionType getSectionType(DataInputStream dis) throws IOException {
+        try {
+            String sectionTitle = dis.readUTF();
+            return Arrays.stream(SectionType.values())
+                    .filter(s -> s.getTitle().equals(sectionTitle))
+                    .findFirst().orElse(null);
+        } catch (EOFException e) {
+            return null;
+        }
     }
 
     private List<String> readStringSection(DataInputStream dis) throws IOException {

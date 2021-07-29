@@ -12,7 +12,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 public class XmlStreamSerializer implements StreamSerializer {
-    private Parser parser;
+    private final Parser parser;
 
     public XmlStreamSerializer() {
         parser = new Parser(
