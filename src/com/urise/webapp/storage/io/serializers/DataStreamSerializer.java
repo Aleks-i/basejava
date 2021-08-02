@@ -7,7 +7,10 @@ import com.urise.webapp.util.Writer;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import static com.urise.webapp.util.DateUtil.toStringLocalDate;
 
@@ -24,18 +27,17 @@ public class DataStreamSerializer implements StreamSerializer {
                 dos.writeUTF(entry.getValue());
             }
 
+            dos.writeInt(resume.getSections().size());
             for (Map.Entry<SectionType, AbstractSection> entry : resume.getSections().entrySet()) {
-                switch (entry.getKey().name()) {
-                    case "OBJECTIVE", "PERSONAL" -> {
-                        dos.writeUTF(entry.getKey().getTitle());
+                dos.writeUTF(entry.getKey().name());
+                switch (entry.getKey()) {
+                    case OBJECTIVE, PERSONAL -> {
                         dos.writeUTF(((TextSection) entry.getValue()).getContent());
                     }
-                    case "ACHIEVEMENT", "QUALIFICATIONS" -> {
-                        dos.writeUTF(entry.getKey().getTitle());
-                        writeWithException(((ListSection) entry.getValue()).getItems(), dos, dos :: writeUTF);
+                    case ACHIEVEMENT, QUALIFICATIONS -> {
+                        writeWithException(((ListSection) entry.getValue()).getItems(), dos, dos::writeUTF);
                     }
-                    case "EXPERIENCE", "EDUCATION" -> {
-                        dos.writeUTF(entry.getKey().getTitle());
+                    case EXPERIENCE, EDUCATION -> {
                         writeWithException(((OrganizationSection) entry.getValue()).getOrganizations(), dos, organization -> {
                             dos.writeUTF(organization.getHomePage().getName());
                             dos.writeUTF(organization.getHomePage().getUrl());
@@ -62,11 +64,9 @@ public class DataStreamSerializer implements StreamSerializer {
                 resume.addContactData(ContactType.valueOf(dis.readUTF()), dis.readUTF());
             }
 
-            while (true) {
-                SectionType sectionType = getSectionType(dis);
-                if (sectionType == null) {
-                    break;
-                }
+            int sectionSize = dis.readInt();
+            for (int i = 0; i < sectionSize; i++){
+                SectionType sectionType = SectionType.valueOf(dis.readUTF());
                 switch (sectionType) {
                     case OBJECTIVE, PERSONAL -> resume.addSection(sectionType, new TextSection(dis.readUTF()));
                     case ACHIEVEMENT, QUALIFICATIONS -> resume.addSection(sectionType, new ListSection(getStringsForListSection(dis)));
@@ -81,17 +81,6 @@ public class DataStreamSerializer implements StreamSerializer {
         dos.writeInt(collection.size());
         for (T tCollection : collection) {
             writer.write(tCollection);
-        }
-    }
-
-    private SectionType getSectionType(DataInputStream dis) throws IOException {
-        try {
-            String sectionTitle = dis.readUTF();
-            return Arrays.stream(SectionType.values())
-                    .filter(s -> s.getTitle().equals(sectionTitle))
-                    .findFirst().orElse(null);
-        } catch (EOFException e) {
-            return null;
         }
     }
 
