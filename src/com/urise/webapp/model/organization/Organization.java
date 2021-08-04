@@ -45,10 +45,8 @@ public class Organization implements Serializable {
 
     @Override
     public String toString() {
-        return "Organization{" +
-                "homePage=" + homePage +
-                ", positions=" + positions +
-                '}';
+        return homePage + "\n" +
+                positions;
     }
 
     @Override
@@ -112,12 +110,10 @@ public class Organization implements Serializable {
 
         @Override
         public String toString() {
-            return "Period{" +
-                    "startDate=" + startDate +
+            return "startDate=" + startDate +
                     ", endDate=" + endDate +
                     ", title='" + title + '\'' +
-                    ", description='" + description + '\'' +
-                    '}';
+                    ", description='" + description + '\'';
         }
 
         @Override

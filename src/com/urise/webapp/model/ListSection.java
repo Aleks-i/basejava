@@ -27,9 +27,9 @@ public class ListSection extends AbstractSection {
 
     @Override
     public String toString() {
-        return "ListSection{" +
-                "items=" + items +
-                '}';
+        StringBuilder builder = new StringBuilder();
+        items.forEach(item -> builder.append(item).append("\n"));
+        return builder.toString();
     }
 
     @Override

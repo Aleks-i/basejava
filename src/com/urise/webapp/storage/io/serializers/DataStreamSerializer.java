@@ -3,6 +3,7 @@ package com.urise.webapp.storage.io.serializers;
 import com.urise.webapp.model.*;
 import com.urise.webapp.model.organization.Link;
 import com.urise.webapp.model.organization.Organization;
+import com.urise.webapp.util.Reader;
 import com.urise.webapp.util.Writer;
 
 import java.io.*;
@@ -35,13 +36,13 @@ public class DataStreamSerializer implements StreamSerializer {
                         dos.writeUTF(((TextSection) entry.getValue()).getContent());
                     }
                     case ACHIEVEMENT, QUALIFICATIONS -> {
-                        writeWithException(((ListSection) entry.getValue()).getItems(), dos, dos::writeUTF);
+                        writeCollectionWithException(((ListSection) entry.getValue()).getItems(), dos, dos::writeUTF);
                     }
                     case EXPERIENCE, EDUCATION -> {
-                        writeWithException(((OrganizationSection) entry.getValue()).getOrganizations(), dos, organization -> {
+                        writeCollectionWithException(((OrganizationSection) entry.getValue()).getOrganizations(), dos, organization -> {
                             dos.writeUTF(organization.getHomePage().getName());
                             dos.writeUTF(organization.getHomePage().getUrl());
-                            writeWithException(organization.getPositions(), dos, position -> {
+                            writeCollectionWithException(organization.getPositions(), dos, position -> {
                                 dos.writeUTF(toStringLocalDate(position.getStartDate()));
                                 dos.writeUTF(toStringLocalDate(position.getEndDate()));
                                 dos.writeUTF(position.getTitle());
@@ -55,6 +56,13 @@ public class DataStreamSerializer implements StreamSerializer {
         }
     }
 
+    private <T> void writeCollectionWithException(Collection<T> collection, DataOutputStream dos, Writer<T> writer) throws IOException {
+        dos.writeInt(collection.size());
+        for (T tCollection : collection) {
+            writer.write(tCollection);
+        }
+    }
+
     @Override
     public Resume doRead(InputStream is) throws IOException {
         try (DataInputStream dis = new DataInputStream(is)) {
@@ -65,50 +73,36 @@ public class DataStreamSerializer implements StreamSerializer {
             }
 
             int sectionSize = dis.readInt();
-            for (int i = 0; i < sectionSize; i++){
+            for (int i = 0; i < sectionSize; i++) {
                 SectionType sectionType = SectionType.valueOf(dis.readUTF());
                 switch (sectionType) {
                     case OBJECTIVE, PERSONAL -> resume.addSection(sectionType, new TextSection(dis.readUTF()));
-                    case ACHIEVEMENT, QUALIFICATIONS -> resume.addSection(sectionType, new ListSection(getStringsForListSection(dis)));
-                    case EXPERIENCE, EDUCATION -> resume.addSection(sectionType, new OrganizationSection(getOrganizationsForOrganizationSection(dis)));
+                    case ACHIEVEMENT, QUALIFICATIONS -> resume.addSection(sectionType, new ListSection(readCollectionWithException(dis,
+                            dis::readUTF)));
+                    case EXPERIENCE, EDUCATION -> resume.addSection(sectionType, new OrganizationSection(readCollectionWithException(dis,
+                            () -> new Organization(new Link(dis.readUTF(), dis.readUTF()), readCollectionWithException(dis,
+                                    () -> new Organization.Position(LocalDate.parse(dis.readUTF()),
+                                            LocalDate.parse(dis.readUTF()),
+                                            dis.readUTF(),
+                                            getDescription(dis.readUTF())
+                                            )))
+                            )));
                 }
             }
             return resume;
         }
     }
 
-    private <T> void writeWithException(Collection<T> collection, DataOutputStream dos, Writer<T> writer) throws IOException {
-        dos.writeInt(collection.size());
-        for (T tCollection : collection) {
-            writer.write(tCollection);
-        }
-    }
-
-    private List<String> getStringsForListSection(DataInputStream dis) throws IOException {
+    private <T> List<T> readCollectionWithException(DataInputStream dis, Reader<T> reader) throws IOException {
         int listSize = dis.readInt();
-        List<String> stringList = new ArrayList<>();
+        List<T> list = new ArrayList<>();
         for (int i = 0; i < listSize; i++) {
-            stringList.add(dis.readUTF());
+            list.add(reader.read());
         }
-        return stringList;
+        return list;
     }
 
-    private List<Organization> getOrganizationsForOrganizationSection(DataInputStream dis) throws IOException {
-        int listOrganizationSize = dis.readInt();
-        List<Organization> organizations = new ArrayList<>();
-        for (int i = 0; i < listOrganizationSize; i++) {
-            Link link = new Link(dis.readUTF(), dis.readUTF());
-            int listPositionSize = dis.readInt();
-            List<Organization.Position> positions = new ArrayList<>();
-            for (int j = 0; j < listPositionSize; j++) {
-                LocalDate dateStrat = LocalDate.parse(dis.readUTF());
-                LocalDate dateEnd = LocalDate.parse(dis.readUTF());
-                String title = dis.readUTF();
-                String description = dis.readUTF();
-                positions.add(new Organization.Position(dateStrat, dateEnd, title, description.equals("null") ? null : description));
-            }
-            organizations.add(new Organization(link, positions));
-        }
-        return organizations;
+    private String getDescription(String description) {
+        return description.equals("null") ? null : description;
     }
 }
