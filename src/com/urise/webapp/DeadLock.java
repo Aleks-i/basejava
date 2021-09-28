@@ -2,22 +2,36 @@ package com.urise.webapp;
 
 public class DeadLock {
     public static void main(String[] args) throws InterruptedException {
-        final MainConcurrency LOCK_1 = new MainConcurrency();
-        final MainConcurrency LOCK_2 = new MainConcurrency();
+        final MainConcurrency a = new MainConcurrency("a");
+        final MainConcurrency b = new MainConcurrency("b");
 
-        new Thread(() -> {
+        Thread thread0 = new Thread("thread0") {
+            @Override
+            public void run() {
+                getDeadLock(a, b);
+            }
+        };
+
+        Thread thread1 = new Thread("thread1") {
+            @Override
+            public void run() {
+                getDeadLock(b, a);
+            }
+        };
+
+        thread0.start();
+        thread1.start();
+    }
+
+    public static void getDeadLock(MainConcurrency a, MainConcurrency b) {
+        synchronized (a) {
+            System.out.println("Поток " + Thread.currentThread().getName() + " захватил объект " + a.name);
             try {
-                deadLock(LOCK_1, LOCK_2);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }).start();
-        deadLock(LOCK_2, LOCK_1);
-    }
-
-    public static void deadLock(MainConcurrency a, MainConcurrency b) throws InterruptedException {
-        synchronized (a) {
-            Thread.sleep(1000);
+            System.out.println("Поток " + Thread.currentThread().getName() + " ждёт захвата " + b.name + " объекта.");
             synchronized (b){
                 a.inc();
                 b.inc();

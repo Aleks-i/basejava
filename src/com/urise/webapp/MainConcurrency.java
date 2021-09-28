@@ -6,6 +6,14 @@ import java.util.List;
 public class MainConcurrency {
     public static final int THREADS_NUMBER = 10_000;
     public static int counter;
+    public String name;
+
+    public MainConcurrency(String name) {
+        this.name = name;
+    }
+
+    public MainConcurrency() {
+    }
 
     public static void main(String[] args) throws InterruptedException {
         System.out.println(Thread.currentThread().getName());
@@ -44,6 +52,7 @@ public class MainConcurrency {
     }
 
     public synchronized void inc() {
+        System.out.println(Thread.currentThread().getName());
         counter++;
     }
 }
