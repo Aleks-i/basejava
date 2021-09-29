@@ -5,22 +5,9 @@ public class DeadLock {
         final MainConcurrency a = new MainConcurrency("a");
         final MainConcurrency b = new MainConcurrency("b");
 
-        Thread thread0 = new Thread("thread0") {
-            @Override
-            public void run() {
-                getDeadLock(a, b);
-            }
-        };
+        new Thread(() -> getDeadLock(a, b)).start();
 
-        Thread thread1 = new Thread("thread1") {
-            @Override
-            public void run() {
-                getDeadLock(b, a);
-            }
-        };
-
-        thread0.start();
-        thread1.start();
+        new Thread(() -> getDeadLock(b, a)).start();;
     }
 
     public static void getDeadLock(MainConcurrency a, MainConcurrency b) {
