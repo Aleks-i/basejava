@@ -1,8 +1,9 @@
 package com.urise.webapp;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class MainConcurrency {
     public static final int THREADS_NUMBER = 10_000;
@@ -32,18 +33,27 @@ public class MainConcurrency {
 
         final MainConcurrency mainConcurrency = new MainConcurrency();
         CountDownLatch latch = new CountDownLatch(THREADS_NUMBER);
+        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
- //      List<Thread> threads = new ArrayList<>(THREADS_NUMBER);
+
+        //      List<Thread> threads = new ArrayList<>(THREADS_NUMBER);
 
         for (int i = 0; i < THREADS_NUMBER; i++) {
-            Thread thread = new Thread(() -> {
+            executorService.submit(() ->
+            {
+                for (int j = 0; j < 100; j++) {
+                    mainConcurrency.inc();
+                }
+                latch.countDown();
+            });
+ /*           Thread thread = new Thread(() -> {
                 for (int j = 0; j < 100; j++) {
                     mainConcurrency.inc();
                 }
                 latch.countDown();
             });
             thread.start();
-//            threads.add(thread);
+//            threads.add(thread);*/
         }
  /*       threads.forEach(t -> {
             try {
@@ -52,7 +62,9 @@ public class MainConcurrency {
                 e.printStackTrace();
             }
         });*/
-        latch.await();
+
+        latch.await(10, TimeUnit.SECONDS);
+        executorService.shutdown();
         System.out.println(counter);
     }
 
