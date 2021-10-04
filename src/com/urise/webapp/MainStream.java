@@ -18,11 +18,17 @@ public class MainStream {
     }
 
     private static List<Integer> oddOrEven(List<Integer> integers) {
-        int sum = integers.stream()
-                .mapToInt(Integer::intValue).sum();
+        return integers.stream()
+                .collect(Collectors.teeing(
+                        Collectors.filtering(i -> i % 2 == 0, Collectors.toList()),
+                        Collectors.filtering(i -> i % 2 != 0, Collectors.toList()),
+                        (even, odd) -> odd.size() % 2 != 0 ? even : odd
+                ));
+/*        int rod = integers.stream()
+                .mapToInt(Integer::intValue).sum() % 2;
         return integers
                 .stream()
-                .filter(sum % 2 != 0 ? n -> n % 2 == 0 : n -> n % 2 != 0)
-                .collect(Collectors.toList());
+                .filter(i -> i % 2 != rod)
+                .collect(Collectors.toList());*/
     }
 }
