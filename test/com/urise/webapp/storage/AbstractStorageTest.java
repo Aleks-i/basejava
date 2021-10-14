@@ -35,6 +35,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() {
+        storage.save(RESUME_BEFORE_UPDATE);
         storage.update(RESUME_UPDATED);
         assertGet(RESUME_UPDATED);
     }
@@ -69,9 +70,9 @@ public abstract class AbstractStorageTest {
 
     @Test(expected = NotExistStorageException.class)
     public void delete() {
-        storage.delete(UUID_2);
+        storage.delete(RESUME_2.getUuid());
         assertSize(STORAGE_SIZE_AFTER_DELETE);
-        storage.get(UUID_2);
+        storage.get(RESUME_2.getUuid());
     }
 
     @Test(expected = NotExistStorageException.class)

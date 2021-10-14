@@ -112,7 +112,7 @@ public class SqlStorage implements Storage {
             try {
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
-                    storage.add(new Resume(rs.getString("uuid").trim(), rs.getString("full_name")));
+                    storage.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
                 }
                 return getSortedResumeList(storage);
             } catch (SQLException e) {
