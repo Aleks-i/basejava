@@ -2,7 +2,14 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.sql.SqlStorage;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 public class SqlStorageTest extends AbstractStorageTest {
+    //  option 1
     private static final String URL = "jdbc:postgresql://localhost:5432/resumes";
     private static final String USER = "postgres";
     private static final String PASSWORD = "admin";
@@ -11,7 +18,8 @@ public class SqlStorageTest extends AbstractStorageTest {
         super(new SqlStorage(URL, USER, PASSWORD));
     }
 
-    /*    private static String URL;
+    //  option 2
+/*    private static String URL;
     private static String USER;
     private static String PASSWORD;
     protected static final File PROPS = new File("config\\resumes.properties");
