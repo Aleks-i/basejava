@@ -5,4 +5,8 @@ public class ExistStorageException extends StorageException{
     public ExistStorageException(String uuid) {
         super("ERROR: resume with uuid: \"" + uuid + "\"  exist in the database", uuid);
     }
+
+    public ExistStorageException(Exception e) {
+        super(e);
+    }
 }
