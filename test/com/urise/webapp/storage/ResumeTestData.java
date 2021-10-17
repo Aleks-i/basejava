@@ -6,6 +6,8 @@ import com.urise.webapp.model.organization.Organization;
 import java.time.Month;
 import java.util.List;
 
+import static com.urise.webapp.storage.AbstractStorage.getSortedResumeList;
+
 public class ResumeTestData {
     public static final String UUID_FOR_UPDATE = "9e00b74f-6a07-47df-b335-95da9a998390";
     public static final String UUID_SAVED = "uuidsaved";
@@ -29,7 +31,7 @@ public class ResumeTestData {
     public static final Resume RESUME_BEFORE_UPDATE = new Resume(UUID_FOR_UPDATE, FULL_NAME_1);/*getResume(UUID_1, FULL_NAME_UPDATED);*/
     public static final Resume RESUME_UPDATED = new Resume(UUID_FOR_UPDATE, FULL_NAME_UPDATED);/*getResume(UUID_1, FULL_NAME_UPDATED);*/
     public static final Resume RESUME_NOT_EXIST = new Resume(UUID_NOT_EXIST, FULL_NAME_NOT_EXIST);/*getResume(UUID_NOT_EXIST, FULL_NAME_NOT_EXIST);*/
-    public static final List<Resume> EXPECTED_RESUMES = List.of(RESUME_3, RESUME_1, RESUME_4, RESUME_2);
+    public static final List<Resume> EXPECTED_RESUMES = getSortedResumeList(List.of(RESUME_3, RESUME_1, RESUME_4, RESUME_2));
 
     public static Resume getResume(String uuid, String fullName) {
         Resume TEMPLATE_TEST_RESUME = new Resume(uuid, fullName);

@@ -7,6 +7,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
 import static com.urise.webapp.storage.ResumeTestData.*;
 
 public abstract class AbstractStorageTest {
