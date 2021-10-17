@@ -1,6 +1,8 @@
 package com.urise.webapp.sql;
 
 import com.urise.webapp.exception.ExistStorageException;
+import com.urise.webapp.exception.StorageException;
+import org.postgresql.util.PSQLException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,12 +16,14 @@ public class SqlHelper {
         connectionFactory = () -> DriverManager.getConnection(dbUrl, dbUser, dbPassword);
     }
 
-    public <T> T executeBlockCode(SqlHelperBlockCode<T> sqlHelperBlockCode, String query) {
+    public <T> T execute(String query, Executor<T> executor) {
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement preparedStatement = conn.prepareStatement(query)) {
-            return sqlHelperBlockCode.execute(preparedStatement);
+            return executor.execute(preparedStatement);
+        } catch (PSQLException psqlException) {
+          throw new ExistStorageException(psqlException);
         } catch (SQLException e) {
-            throw new ExistStorageException(e);
+            throw new StorageException(e);
         }
     }
 }

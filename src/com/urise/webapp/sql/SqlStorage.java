@@ -1,13 +1,11 @@
 package com.urise.webapp.sql;
 
-import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
 import com.urise.webapp.storage.AbstractStorage;
 import com.urise.webapp.storage.Storage;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -26,114 +24,83 @@ public class SqlStorage implements Storage {
     @Override
     public void clear() {
         LOG.info("Clear");
-        helper.executeBlockCode(ps -> {
-            try {
-                ps.execute();
-            } catch (SQLException e) {
-                throw new NotExistStorageException(e);
-            }
+        helper.execute("DELETE FROM resume", ps -> {
+            ps.execute();
             return null;
-        }, "DELETE FROM resume");
+        });
     }
 
     @Override
     public void update(Resume resume) {
         LOG.info("Update resume id: " + resume.getUuid());
-        helper.executeBlockCode(ps -> {
-            String uuid = resume.getUuid();
-            try {
-                ps.setString(1, uuid);
-                ps.setString(2, resume.getFullName());
-                ps.setString(3, uuid);
-                int affectedRecords = ps.executeUpdate();
-                if (affectedRecords == 0) {
-                    throw new NotExistStorageException("Резюме с id " + resume.getUuid() + " в базе даннх отсутствует");
-                }
-            } catch (SQLException e) {
-                throw new NotExistStorageException(e);
+        helper.execute("UPDATE resume SET full_name =? WHERE uuid =?", ps -> {
+            ps.setString(1, resume.getFullName());
+            ps.setString(2, resume.getUuid());
+            if (ps.executeUpdate() == 0) {
+                throw new NotExistStorageException("Резюме с id " + resume.getUuid() + " в базе даннх отсутствует");
             }
             return null;
-        }, "UPDATE resume SET uuid =?, full_name =? WHERE uuid =?");
+        });
     }
 
     @Override
     public void save(Resume resume) {
         LOG.info("Save resume id " + resume.getUuid());
-        helper.executeBlockCode(ps -> {
-            try {
-                ps.setString(1, resume.getUuid());
-                ps.setString(2, resume.getFullName());
-                ps.execute();
-            } catch (SQLException e) {
-                throw new ExistStorageException(e);
-            }
+        helper.execute("INSERT INTO resume (uuid, full_name) VALUES (?, ?)", ps -> {
+            ps.setString(1, resume.getUuid());
+            ps.setString(2, resume.getFullName());
+            ps.execute();
             return null;
-        }, "INSERT INTO resume (uuid, full_name) VALUES (?, ?)");
+        });
     }
 
     @Override
     public Resume get(String uuid) {
         LOG.info("Get " + uuid);
-        return helper.executeBlockCode(ps -> {
-            try {
-                ps.setString(1, uuid);
-                ResultSet rs = ps.executeQuery();
-                if (!rs.next()) {
-                    throw new NotExistStorageException(uuid);
-                }
-                return new Resume(uuid, rs.getString("full_name"));
-            } catch (SQLException e) {
-                throw new ExistStorageException(e);
+        return helper.execute("SELECT * FROM resume r WHERE r.uuid =?", ps -> {
+            ps.setString(1, uuid);
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                throw new NotExistStorageException(uuid);
             }
-        }, "SELECT * FROM resume r WHERE r.uuid =?");
+            return new Resume(uuid, rs.getString("full_name"));
+        });
     }
 
     @Override
     public void delete(String uuid) {
         LOG.info("Delete " + uuid);
-        helper.executeBlockCode(ps -> {
-            try {
-                ps.setString(1, uuid);
-                int affectedRecords = ps.executeUpdate();
-                if (affectedRecords == 0) {
-                    throw new NotExistStorageException("Резюме с id " + uuid + " в базе даннх отсутствует");
-                }
-            } catch (SQLException e) {
-                throw new ExistStorageException(e);
+        helper.execute("DELETE FROM resume WHERE uuid =?", ps -> {
+            ps.setString(1, uuid);
+            int affectedRecords = ps.executeUpdate();
+            if (affectedRecords == 0) {
+                throw new NotExistStorageException("Резюме с id " + uuid + " в базе даннх отсутствует");
             }
             return null;
-        }, "DELETE FROM resume WHERE uuid =?");
+        });
     }
 
     @Override
     public List<Resume> getAllSorted() {
         LOG.info("GetAllSorted");
-        return helper.executeBlockCode(ps -> {
-            try {
-                ResultSet rs = ps.executeQuery();
-                while (rs.next()) {
-                    storage.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
-                }
-                return getSortedResumeList(storage);
-            } catch (SQLException e) {
-                throw new ExistStorageException(e);
+        return helper.execute("SELECT * FROM resume", ps -> {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                storage.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
             }
-        }, "SELECT * FROM resume");
+            return getSortedResumeList(storage);
+        });
     }
 
     @Override
     public int size() {
         LOG.info("Storage size");
-        return helper.executeBlockCode(ps -> {
-            try {
-                ResultSet rs = ps.executeQuery();
-                if (!rs.next()) {
-                    throw new NotExistStorageException("Storage is empty");
-                }
-                return rs.getInt(1);
-            } catch (SQLException e) {
-                throw new ExistStorageException(e);
+        return helper.execute("SELECT COUNT(*) from resume", ps -> {
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                throw new NotExistStorageException("Storage is empty");
             }
-        }, "SELECT COUNT(*) from resume");
+            return rs.getInt(1);
+        });
     }
 }
