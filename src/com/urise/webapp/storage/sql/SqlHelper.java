@@ -1,8 +1,7 @@
-package com.urise.webapp.sql;
+package com.urise.webapp.storage.sql;
 
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.StorageException;
-import org.postgresql.util.PSQLException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

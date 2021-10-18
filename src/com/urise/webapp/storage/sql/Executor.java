@@ -1,4 +1,4 @@
-package com.urise.webapp.sql;
+package com.urise.webapp.storage.sql;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

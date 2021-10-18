@@ -1,4 +1,4 @@
-package com.urise.webapp.sql;
+package com.urise.webapp.storage.sql;
 
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
@@ -9,8 +9,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-
-import static com.urise.webapp.storage.AbstractStorage.getSortedResumeList;
 
 public class SqlStorage implements Storage {
     protected static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
@@ -82,8 +80,8 @@ public class SqlStorage implements Storage {
     @Override
     public List<Resume> getAllSorted() {
         LOG.info("GetAllSorted");
-        List<Resume> storage = new ArrayList<>();
         return helper.execute("SELECT * FROM resume ORDER BY full_name, uuid", ps -> {
+            List<Resume> storage = new ArrayList<>();
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 storage.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
