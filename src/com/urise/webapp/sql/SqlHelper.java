@@ -1,4 +1,4 @@
-package com.urise.webapp.storage.sql;
+package com.urise.webapp.sql;
 
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.StorageException;

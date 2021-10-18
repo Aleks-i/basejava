@@ -2,6 +2,7 @@ package com.urise.webapp.storage.sql;
 
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
+import com.urise.webapp.sql.SqlHelper;
 import com.urise.webapp.storage.AbstractStorage;
 import com.urise.webapp.storage.Storage;
 
@@ -31,7 +32,7 @@ public class SqlStorage implements Storage {
     public void update(Resume resume) {
         String uuid = resume.getUuid();
         LOG.info("Update resume id: " + uuid);
-        helper.execute("UPDATE resume SET full_name =? WHERE uuid =?", ps -> {
+        helper.<Void>execute("UPDATE resume SET full_name =? WHERE uuid =?", ps -> {
             ps.setString(1, resume.getFullName());
             ps.setString(2, uuid);
             if (ps.executeUpdate() == 0) {
@@ -44,7 +45,7 @@ public class SqlStorage implements Storage {
     @Override
     public void save(Resume resume) {
         LOG.info("Save resume id " + resume.getUuid());
-        helper.execute("INSERT INTO resume (uuid, full_name) VALUES (?, ?)", ps -> {
+        helper.<Void>execute("INSERT INTO resume (uuid, full_name) VALUES (?, ?)", ps -> {
             ps.setString(1, resume.getUuid());
             ps.setString(2, resume.getFullName());
             ps.execute();
@@ -68,7 +69,7 @@ public class SqlStorage implements Storage {
     @Override
     public void delete(String uuid) {
         LOG.info("Delete " + uuid);
-        helper.execute("DELETE FROM resume WHERE uuid =?", ps -> {
+        helper.<Void>execute("DELETE FROM resume WHERE uuid =?", ps -> {
             ps.setString(1, uuid);
             if (ps.executeUpdate() == 0) {
                 throw new NotExistStorageException("Резюме с id " + uuid + " в базе даннх отсутствует");
