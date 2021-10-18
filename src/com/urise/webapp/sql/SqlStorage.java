@@ -15,7 +15,6 @@ import static com.urise.webapp.storage.AbstractStorage.getSortedResumeList;
 public class SqlStorage implements Storage {
     protected static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
     SqlHelper helper;
-    List<Resume> storage = new ArrayList<>();
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
         this.helper = new SqlHelper(dbUrl, dbUser, dbPassword);
@@ -32,10 +31,11 @@ public class SqlStorage implements Storage {
 
     @Override
     public void update(Resume resume) {
-        LOG.info("Update resume id: " + resume.getUuid());
+        String uuid = resume.getUuid();
+        LOG.info("Update resume id: " + uuid);
         helper.execute("UPDATE resume SET full_name =? WHERE uuid =?", ps -> {
             ps.setString(1, resume.getFullName());
-            ps.setString(2, resume.getUuid());
+            ps.setString(2, uuid);
             if (ps.executeUpdate() == 0) {
                 throw new NotExistStorageException("Резюме с id " + resume.getUuid() + " в базе даннх отсутствует");
             }
@@ -72,8 +72,7 @@ public class SqlStorage implements Storage {
         LOG.info("Delete " + uuid);
         helper.execute("DELETE FROM resume WHERE uuid =?", ps -> {
             ps.setString(1, uuid);
-            int affectedRecords = ps.executeUpdate();
-            if (affectedRecords == 0) {
+            if (ps.executeUpdate() == 0) {
                 throw new NotExistStorageException("Резюме с id " + uuid + " в базе даннх отсутствует");
             }
             return null;
@@ -83,12 +82,13 @@ public class SqlStorage implements Storage {
     @Override
     public List<Resume> getAllSorted() {
         LOG.info("GetAllSorted");
-        return helper.execute("SELECT * FROM resume", ps -> {
+        List<Resume> storage = new ArrayList<>();
+        return helper.execute("SELECT * FROM resume ORDER BY full_name, uuid", ps -> {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 storage.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
             }
-            return getSortedResumeList(storage);
+            return storage;
         });
     }
 
@@ -97,9 +97,7 @@ public class SqlStorage implements Storage {
         LOG.info("Storage size");
         return helper.execute("SELECT COUNT(*) from resume", ps -> {
             ResultSet rs = ps.executeQuery();
-            if (!rs.next()) {
-                throw new NotExistStorageException("Storage is empty");
-            }
+            rs.next();
             return rs.getInt(1);
         });
     }

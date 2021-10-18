@@ -5,12 +5,13 @@ import com.urise.webapp.model.organization.Organization;
 
 import java.time.Month;
 import java.util.List;
+import java.util.UUID;
 
 import static com.urise.webapp.storage.AbstractStorage.getSortedResumeList;
 
 public class ResumeTestData {
     public static final String UUID_FOR_UPDATE = "9e00b74f-6a07-47df-b335-95da9a998390";
-    public static final String UUID_SAVED = "uuidsaved";
+    public static final String UUID_SAVED = "9e00b74f-6a07-47df-b335-95da9a998391";
     public static final String UUID_NOT_EXIST = "dummy";
     public static final String FULL_NAME_1 = "Petrov";
     public static final String FULL_NAME_2 = "Sidorov";
@@ -23,10 +24,10 @@ public class ResumeTestData {
     public static final int STORAGE_SIZE_EXPECTED = 4;
     public static final int STORAGE_SIZE_AFTER_DELETE = 3;
     public static final int STORAGE_SIZE_AFTER_SAVE = 5;
-    public static final Resume RESUME_1 = new Resume(FULL_NAME_1);/*getResume(UUID_1, FULL_NAME_1);*/
-    public static final Resume RESUME_2 = new Resume(FULL_NAME_2);/*getResume(UUID_2, FULL_NAME_2);*/
-    public static final Resume RESUME_3 = new Resume(FULL_NAME_3);/*getResume(UUID_3, FULL_NAME_3);*/
-    public static final Resume RESUME_4 = new Resume(FULL_NAME_4);/*getResume(UUID_4, FULL_NAME_4);*/
+    public static final Resume RESUME_1 = new Resume(UUID.randomUUID().toString(), FULL_NAME_1);/*getResume(UUID_1, FULL_NAME_1);*/
+    public static final Resume RESUME_2 = new Resume(UUID.randomUUID().toString(), FULL_NAME_2);/*getResume(UUID_2, FULL_NAME_2);*/
+    public static final Resume RESUME_3 = new Resume(UUID.randomUUID().toString(), FULL_NAME_3);/*getResume(UUID_3, FULL_NAME_3);*/
+    public static final Resume RESUME_4 = new Resume(UUID.randomUUID().toString(), FULL_NAME_4);/*getResume(UUID_4, FULL_NAME_4);*/
     public static final Resume RESUME_SAVED = new Resume(UUID_SAVED, FULL_NAME_SAVED);/*getResume(UUID_SAVED, FULL_NAME_SAVED);*/
     public static final Resume RESUME_BEFORE_UPDATE = new Resume(UUID_FOR_UPDATE, FULL_NAME_1);/*getResume(UUID_1, FULL_NAME_UPDATED);*/
     public static final Resume RESUME_UPDATED = new Resume(UUID_FOR_UPDATE, FULL_NAME_UPDATED);/*getResume(UUID_1, FULL_NAME_UPDATED);*/

@@ -6,6 +6,7 @@ import com.urise.webapp.storage.io.*;
 import com.urise.webapp.storage.list.ListStorageTest;
 import com.urise.webapp.storage.map.MapStorageSearchOfResumeTest;
 import com.urise.webapp.storage.map.MapStorageSearchOfUuidTest;
+import com.urise.webapp.storage.sql.SqlStorageTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
