@@ -125,8 +125,7 @@ public class SqlStorage implements Storage {
         LOG.info("GetAllSorted");
         return getSortedResumeList(new ArrayList<>(helper.execute("" +
                 "SELECT * FROM resume " +
-                "   LEFT JOIN contact c on resume.uuid = c.resume_uuid" +
-                "       ORDER BY full_name, uuid", ps -> {
+                "   LEFT JOIN contact c on resume.uuid = c.resume_uuid", ps -> {
             Map<String, Resume> storage = new HashMap<>();
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
