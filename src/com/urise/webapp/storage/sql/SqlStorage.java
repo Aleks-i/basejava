@@ -10,13 +10,13 @@ import com.urise.webapp.storage.Storage;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
-import static com.urise.webapp.storage.AbstractStorage.RESUME_COMPARATOR;
+import static com.urise.webapp.storage.AbstractStorage.getSortedResumeList;
 
 public class SqlStorage implements Storage {
     protected static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
@@ -40,7 +40,7 @@ public class SqlStorage implements Storage {
         String uuid = resume.getUuid();
         LOG.info("Update resume id: " + uuid);
         helper.transactionExecute(conn -> {
-                        try (PreparedStatement ps = conn.prepareStatement("UPDATE resume SET full_name =? WHERE uuid =?")) {
+            try (PreparedStatement ps = conn.prepareStatement("UPDATE resume SET full_name =? WHERE uuid =?")) {
                 ps.setString(1, resume.getFullName());
                 ps.setString(2, uuid);
                 if (ps.executeUpdate() == 0) {
@@ -137,9 +137,7 @@ public class SqlStorage implements Storage {
             }
             return storage;
         });
-        return storage.values().stream()
-                .sorted(RESUME_COMPARATOR)
-                .collect(Collectors.toList());
+        return getSortedResumeList(new ArrayList<>(storage.values()));
     }
 
     @Override
