@@ -9,6 +9,7 @@ import com.urise.webapp.storage.Storage;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,17 +38,14 @@ public class SqlStorage implements Storage {
         LOG.info("Update resume id: " + uuid);
         helper.transactionExecute(conn -> {
             try (PreparedStatement ps = conn.prepareStatement("UPDATE resume SET full_name =? WHERE uuid =?")) {
-                ps.setString(1, resume.getFullName());
-                ps.setString(2, uuid);
+                setParamPreparedStatement(ps, resume.getFullName(), uuid);
                 if (ps.executeUpdate() == 0) {
                     throw new NotExistStorageException("Резюме с id " + resume.getUuid() + " в базе даннх отсутствует");
                 }
             }
             try (PreparedStatement ps = conn.prepareStatement("UPDATE contact SET value =? WHERE resume_uuid =? AND type =?")) {
                 for (Map.Entry<ContactType, String> entry : resume.getContacts().entrySet()) {
-                    ps.setString(1, entry.getValue());
-                    ps.setString(2, resume.getUuid());
-                    ps.setString(3, entry.getKey().name());
+                    setParamPreparedStatement(ps, entry.getValue(), resume.getUuid(), entry.getKey().name());
                     ps.execute();
                     return null;
                 }
@@ -61,15 +59,12 @@ public class SqlStorage implements Storage {
         LOG.info("Save resume id " + resume.getUuid());
         helper.transactionExecute(conn -> {
                     try (PreparedStatement ps = conn.prepareStatement("INSERT INTO resume (uuid, full_name) VALUES (?, ?)")) {
-                        ps.setString(1, resume.getUuid());
-                        ps.setString(2, resume.getFullName());
+                        setParamPreparedStatement(ps, resume.getUuid(), resume.getFullName());
                         ps.execute();
                     }
                     try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES (?, ?, ?)")) {
                         for (Map.Entry<ContactType, String> entry : resume.getContacts().entrySet()) {
-                            ps.setString(1, resume.getUuid());
-                            ps.setString(2, entry.getKey().name());
-                            ps.setString(3, entry.getValue());
+                            setParamPreparedStatement(ps, resume.getUuid(), entry.getKey().name(), entry.getValue());
                             ps.addBatch();
                         }
                         ps.executeBatch();
@@ -148,5 +143,12 @@ public class SqlStorage implements Storage {
             rs.next();
             return rs.getInt(1);
         });
+    }
+
+    private void setParamPreparedStatement(PreparedStatement ps, String... params) throws SQLException {
+        for (int i = 0; i < params.length; i++) {
+            int parameterIndex = i + 1;
+            ps.setString(parameterIndex, params[i]);
+        }
     }
 }
