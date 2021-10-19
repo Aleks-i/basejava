@@ -123,11 +123,11 @@ public class SqlStorage implements Storage {
     @Override
     public List<Resume> getAllSorted() {
         LOG.info("GetAllSorted");
-        Map<String, Resume> storage = new HashMap<>();
-        helper.execute("" +
+        return getSortedResumeList(new ArrayList<>(helper.execute("" +
                 "SELECT * FROM resume " +
                 "   LEFT JOIN contact c on resume.uuid = c.resume_uuid" +
                 "       ORDER BY full_name, uuid", ps -> {
+            Map<String, Resume> storage = new HashMap<>();
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 String uuid = rs.getString("uuid");
@@ -136,8 +136,7 @@ public class SqlStorage implements Storage {
                         rs.getString("value"));
             }
             return storage;
-        });
-        return getSortedResumeList(new ArrayList<>(storage.values()));
+        }).values()));
     }
 
     @Override
