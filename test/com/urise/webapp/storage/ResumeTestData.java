@@ -1,9 +1,7 @@
 package com.urise.webapp.storage;
 
 import com.urise.webapp.model.*;
-import com.urise.webapp.model.organization.Organization;
 
-import java.time.Month;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,13 +35,13 @@ public class ResumeTestData {
     public static Resume getResume(String uuid, String fullName) {
         Resume TEMPLATE_TEST_RESUME = new Resume(uuid, fullName);
 
-        TEMPLATE_TEST_RESUME.addContactData(ContactType.PHONENUMBER, "+7(921) 855-0482");
+        TEMPLATE_TEST_RESUME.addContactData(ContactType.PHONE_NUMBER, "+7(921) 855-0482");
         TEMPLATE_TEST_RESUME.addContactData(ContactType.SKYPE, "skype:grigory.kislin");
         TEMPLATE_TEST_RESUME.addContactData(ContactType.EMAIL, "gkislin@yandex.ru");
  //       TEMPLATE_TEST_RESUME.addContactData(ContactType.PROFILELINKEDIN, "https://www.linkedin.com/in/gkislin");
-        TEMPLATE_TEST_RESUME.addContactData(ContactType.PROFILEGITHUB, "https://github.com/gkislin");
-        TEMPLATE_TEST_RESUME.addContactData(ContactType.PROFILESTACKOVERFLOW, "https://stackoverflow.com/users/548473");
-        TEMPLATE_TEST_RESUME.addContactData(ContactType.HOMEPAGE, "http://gkislin.ru/");
+        TEMPLATE_TEST_RESUME.addContactData(ContactType.PROFILE_GITHUB, "https://github.com/gkislin");
+        TEMPLATE_TEST_RESUME.addContactData(ContactType.PROFILE_STACKOVERFLOW, "https://stackoverflow.com/users/548473");
+        TEMPLATE_TEST_RESUME.addContactData(ContactType.HOME_PAGE, "http://gkislin.ru/");
 
 /*        //text sections
         TEMPLATE_TEST_RESUME.addSection(SectionType.OBJECTIVE, new TextSection(
