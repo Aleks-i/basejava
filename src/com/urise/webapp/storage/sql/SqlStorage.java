@@ -11,12 +11,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-
-import static com.urise.webapp.storage.AbstractStorage.getSortedResumeList;
 
 public class SqlStorage implements Storage {
     protected static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
@@ -47,7 +45,16 @@ public class SqlStorage implements Storage {
                     throw new NotExistStorageException("Резюме с id " + resume.getUuid() + " в базе даннх отсутствует");
                 }
             }
-            try (PreparedStatement ps = conn.prepareStatement("UPDATE contact WHERE resume_uuid =? SET type =? AND value =?")) {
+            for (ContactType contactType : ContactType.values()) {
+                if (!resume.getContacts().containsKey(contactType)) {
+                    try (PreparedStatement ps = conn.prepareStatement("DELETE FROM contact WHERE resume_uuid =? AND type =?")) {
+                        ps.setString(1, uuid);
+                        ps.setString(2, contactType.name());
+                        ps.executeUpdate();
+                    }
+                }
+            }
+            try (PreparedStatement ps = conn.prepareStatement("UPDATE contact SET value =? WHERE type =? AND resume_uuid =?")) {
                 addContacts(resume, ps);
             }
             return null;
@@ -63,7 +70,7 @@ public class SqlStorage implements Storage {
                         ps.setString(2, resume.getFullName());
                         ps.execute();
                     }
-                    try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES (?, ?, ?)")) {
+                    try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (value, type, resume_uuid) VALUES (?, ?, ?)")) {
                         addContacts(resume, ps);
                     }
                     return null;
@@ -73,9 +80,9 @@ public class SqlStorage implements Storage {
 
     private void addContacts(Resume resume, PreparedStatement ps) throws SQLException {
         for (Map.Entry<ContactType, String> entry : resume.getContacts().entrySet()) {
-            ps.setString(1, resume.getUuid());
+            ps.setString(1, entry.getValue());
             ps.setString(2, entry.getKey().name());
-            ps.setString(3, entry.getValue());
+            ps.setString(3, resume.getUuid());
             ps.addBatch();
         }
         ps.executeBatch();
@@ -98,11 +105,10 @@ public class SqlStorage implements Storage {
 
             do {
                 String value = rs.getString("value");
-                if (value == null) {
-                    continue;
+                if (value != null) {
+                    ContactType contactType = ContactType.valueOf(rs.getString("type"));
+                    resume.addContactData(contactType, value);
                 }
-                ContactType contactType = ContactType.valueOf(rs.getString("type"));
-                resume.addContactData(contactType, value);
             } while (rs.next());
             return resume;
         });
@@ -123,10 +129,11 @@ public class SqlStorage implements Storage {
     @Override
     public List<Resume> getAllSorted() {
         LOG.info("GetAllSorted");
-        return getSortedResumeList(new ArrayList<>(helper.execute("" +
+        return new ArrayList<>((helper.execute("" +
                 "SELECT * FROM resume " +
-                "   LEFT JOIN contact c on resume.uuid = c.resume_uuid", ps -> {
-            Map<String, Resume> storage = new HashMap<>();
+                "   LEFT JOIN contact c on resume.uuid = c.resume_uuid" +
+                "       ORDER BY full_name, uuid", ps -> {
+            Map<String, Resume> storage = new LinkedHashMap<>();
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 String uuid = rs.getString("uuid");
