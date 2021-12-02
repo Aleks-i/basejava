@@ -3,6 +3,7 @@ out
 *.iml
 log
 storage
+META-INF
 
 
 
