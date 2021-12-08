@@ -1,7 +1,7 @@
 package com.urise.webapp.util;
 
-import com.urise.webapp.storage.sql.SqlStorage;
 import com.urise.webapp.storage.Storage;
+import com.urise.webapp.storage.sql.SqlStorage;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,7 +10,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class Config {
-    private static final File PROPS = new File("config\\resumes.properties");
+    private static final File PROPS = new File("D:\\Programs\\basejava\\config\\resumes.properties");
     private static final Config INSTANCE = new Config();
 
     private final File storageDir;
