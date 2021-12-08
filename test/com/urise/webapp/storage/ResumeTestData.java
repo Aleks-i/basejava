@@ -28,7 +28,7 @@ public class ResumeTestData {
     public static final Resume RESUME_4 = getResume(UUID.randomUUID().toString(), FULL_NAME_4);
     public static final Resume RESUME_SAVED = new Resume(UUID_SAVED, FULL_NAME_SAVED);
     public static final Resume RESUME_BEFORE_UPDATE = getResume(UUID_FOR_UPDATE, FULL_NAME_1);
-    public static final Resume RESUME_UPDATED = new Resume(UUID_FOR_UPDATE, FULL_NAME_UPDATED);
+    public static final Resume RESUME_UPDATED = getResume(UUID_FOR_UPDATE, FULL_NAME_UPDATED);
     public static final Resume RESUME_NOT_EXIST = getResume(UUID_NOT_EXIST, FULL_NAME_NOT_EXIST);
     public static final List<Resume> EXPECTED_RESUMES = getSortedResumeList(List.of(RESUME_3, RESUME_1, RESUME_4, RESUME_2));
 
@@ -38,12 +38,12 @@ public class ResumeTestData {
         TEMPLATE_TEST_RESUME.addContactData(ContactType.PHONE_NUMBER, "+7(921) 855-0482");
         TEMPLATE_TEST_RESUME.addContactData(ContactType.SKYPE, "skype:grigory.kislin");
         TEMPLATE_TEST_RESUME.addContactData(ContactType.EMAIL, "gkislin@yandex.ru");
- //       TEMPLATE_TEST_RESUME.addContactData(ContactType.PROFILELINKEDIN, "https://www.linkedin.com/in/gkislin");
+        TEMPLATE_TEST_RESUME.addContactData(ContactType.PROFILE_LINKEDIN, "https://www.linkedin.com/in/gkislin");
         TEMPLATE_TEST_RESUME.addContactData(ContactType.PROFILE_GITHUB, "https://github.com/gkislin");
         TEMPLATE_TEST_RESUME.addContactData(ContactType.PROFILE_STACKOVERFLOW, "https://stackoverflow.com/users/548473");
         TEMPLATE_TEST_RESUME.addContactData(ContactType.HOME_PAGE, "http://gkislin.ru/");
 
-/*        //text sections
+        //text sections
         TEMPLATE_TEST_RESUME.addSection(SectionType.OBJECTIVE, new TextSection(
                 "Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям")
         );
@@ -95,7 +95,7 @@ public class ResumeTestData {
         )
         ));
 
-        TEMPLATE_TEST_RESUME.addSection(SectionType.EXPERIENCE, new OrganizationSection(List.of(
+/*        TEMPLATE_TEST_RESUME.addSection(SectionType.EXPERIENCE, new OrganizationSection(List.of(
                 new Organization("javaops", "http://javaops.ru/",
                         new Organization.Position(2013, Month.OCTOBER, "Автор проекта.",
                                 "Создание, организация и проведение Java онлайн проектов и стажировок.")),
