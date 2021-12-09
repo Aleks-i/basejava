@@ -188,7 +188,7 @@ public class SqlStorage implements Storage {
                 return new TextSection(content);
             case ACHIEVEMENT:
             case QUALIFICATIONS:
-                return new ListSection(content);
+                return new ListSection(content.split("\n"));
         }
         throw new StorageException("not exist section type");
     }
