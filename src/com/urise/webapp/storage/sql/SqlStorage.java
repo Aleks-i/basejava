@@ -84,82 +84,68 @@ public class SqlStorage implements Storage {
     @Override
     public Resume get(String uuid) {
         LOG.info("Get " + uuid);
-        String queryResume = " SELECT * FROM resume r WHERE r.uuid =?";
-        Resume resume = helper.execute(queryResume, ps -> {
-            ps.setString(1, uuid);
-            ResultSet rs = ps.executeQuery();
-            if (!rs.next()) {
-                throw new NotExistStorageException(uuid);
+        return helper.transactionExecute(conn -> {
+            Resume resume;
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume r WHERE r.uuid =?")) {
+                ps.setString(1, uuid);
+                ResultSet rs = ps.executeQuery();
+                if (!rs.next()) {
+                    throw new NotExistStorageException(uuid);
+                }
+                resume = new Resume(uuid, rs.getString("full_name"));
             }
-            return new Resume(uuid, rs.getString("full_name"));
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact c WHERE c.resume_uuid =?")) {
+                ps.setString(1, uuid);
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    resume.addContactData(ContactType.valueOf(rs.getString("type")),
+                            rs.getString("value"));
+                }
+            }
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM section c WHERE c.resume_uuid =?")) {
+                ps.setString(1, uuid);
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    SectionType sectionType = SectionType.valueOf(rs.getString("type"));
+                    resume.addSection(sectionType,
+                            getSection(sectionType, rs.getString("value")));
+                }
+            }
+            return resume;
         });
-
-        String queryContacts = "SELECT * FROM contact c WHERE c.resume_uuid =?";
-        helper.execute(queryContacts, ps -> {
-            ps.setString(1, uuid);
-            ResultSet rs = ps.executeQuery();
-            if (!rs.isBeforeFirst()) {
-                throw new NotExistStorageException("Resume has no contacts");
-            }
-            while (rs.next()) {
-                resume.addContactData(ContactType.valueOf(rs.getString("type")),
-                        rs.getString("value"));
-            }
-            return null;
-        });
-        
-        String querySections = " SELECT * FROM section c WHERE c.resume_uuid =?";
-        helper.execute(querySections, ps -> {
-            ps.setString(1, uuid);
-            ResultSet rs = ps.executeQuery();
-            if (!rs.isBeforeFirst()) {
-                throw new NotExistStorageException("Resume has no sections");
-            }
-            while (rs.next()) {
-                SectionType sectionType = SectionType.valueOf(rs.getString("type"));
-                resume.addSection(sectionType,
-                        getSection(sectionType, rs.getString("value")));
-            }
-            return null;
-        });
-        return resume;
     }
 
     @Override
     public List<Resume> getAllSorted() {
         LOG.info("GetAllSorted");
-        Map<String, Resume> storage = new LinkedHashMap<>();
-        String queryResumes = "SELECT * FROM resume ORDER BY full_name, uuid";
-        helper.execute(queryResumes, ps -> {
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                String uuid = rs.getString("uuid");
-                Resume resume = new Resume(uuid, rs.getString("full_name"));
-                storage.putIfAbsent(uuid, resume);
+        return helper.transactionExecute(conn -> {
+            Map<String, Resume> storage = new LinkedHashMap<>();
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume ORDER BY full_name, uuid")) {
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    String uuid = rs.getString("uuid");
+                    Resume resume = new Resume(uuid, rs.getString("full_name"));
+                    storage.putIfAbsent(uuid, resume);
+                }
             }
-            return null;
-        });
-
-        String queryContacts = "SELECT * FROM contact c";
-        helper.execute(queryContacts, ps -> {
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                storage.get(rs.getString("resume_uuid")).addContactData(ContactType.valueOf(rs.getString("type")), rs.getString("value"));
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact c")) {
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    storage.get(rs.getString("resume_uuid"))
+                            .addContactData(ContactType.valueOf(rs.getString("type")),
+                                    rs.getString("value"));
+                }
             }
-            return null;
-        });
-
-        String querySections = "SELECT * FROM section c";
-        helper.execute(querySections, ps -> {
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                SectionType sectionType = SectionType.valueOf(rs.getString("type"));
-                storage.get(rs.getString("resume_uuid")).addSection(sectionType,
-                        getSection(SectionType.valueOf(rs.getString("type")), rs.getString("value")));
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM section c")) {
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    SectionType sectionType = SectionType.valueOf(rs.getString("type"));
+                    storage.get(rs.getString("resume_uuid")).addSection(sectionType,
+                            getSection(SectionType.valueOf(rs.getString("type")), rs.getString("value")));
+                }
             }
-            return null;
+            return new ArrayList<>(storage.values());
         });
-        return new ArrayList<>(storage.values());
     }
 
     @Override
