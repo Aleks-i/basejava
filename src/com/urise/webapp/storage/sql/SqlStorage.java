@@ -55,12 +55,12 @@ public class SqlStorage implements Storage {
                 ps.setString(1, uuid);
                 ps.executeUpdate();
             }
-            try (PreparedStatement ps = conn.prepareStatement("DELETE FROM text_list_section WHERE resume_uuid =?")) {
+            try (PreparedStatement ps = conn.prepareStatement("DELETE FROM section WHERE resume_uuid =?")) {
                 ps.setString(1, uuid);
                 ps.executeUpdate();
             }
             addContacts(resume, conn);
-            addTextListSections(resume, conn);
+            addSections(resume, conn);
             return null;
         });
     }
@@ -75,122 +75,91 @@ public class SqlStorage implements Storage {
                         ps.execute();
                     }
                     addContacts(resume, conn);
-                    addTextListSections(resume, conn);
+                    addSections(resume, conn);
                     return null;
                 }
         );
     }
 
-    private void addContacts(Resume resume, Connection conn) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (type_contact, value_contact, resume_uuid) VALUES (?, ?, ?)")) {
-            for (Map.Entry<ContactType, String> entry : resume.getContacts().entrySet()) {
-                ps.setString(1, entry.getKey().name());
-                ps.setString(2, entry.getValue());
-                ps.setString(3, resume.getUuid());
-                ps.addBatch();
-            }
-            ps.executeBatch();
-        }
-    }
-
-    private void addTextListSections(Resume resume, Connection conn) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO text_list_section (type_text, value_text, resume_uuid) VALUES (?, ?, ?)")) {
-            for (Map.Entry<SectionType, AbstractSection> entry : resume.getSections().entrySet()) {
-                StringBuilder contenet = new StringBuilder();
-                if (entry.getKey().equals(SectionType.ACHIEVEMENT) || entry.getKey().equals(SectionType.QUALIFICATIONS)) {
-                    ((ListSection) entry.getValue()).getItems().forEach(i -> contenet.append(i).append("\n"));
-                } else {
-                    contenet.append(((TextSection) entry.getValue()).getContent());
-                }
-                ps.setString(1, entry.getKey().name());
-                ps.setString(2, contenet.toString().trim());
-                ps.setString(3, resume.getUuid());
-                ps.addBatch();
-            }
-            ps.executeBatch();
-        }
-    }
-
     @Override
     public Resume get(String uuid) {
         LOG.info("Get " + uuid);
-        String query = " SELECT * FROM resume r LEFT JOIN contact c ON r.uuid = c.resume_uuid " +
-                "                                       LEFT JOIN text_list_section t ON r.uuid = t.resume_uuid " +
-                "                                       WHERE r.uuid =?";
-        return helper.execute(query, ps -> {
+        String queryResume = " SELECT * FROM resume r WHERE r.uuid =?";
+        Resume resume = helper.execute(queryResume, ps -> {
+            ps.setString(1, uuid);
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                throw new NotExistStorageException(uuid);
+            }
+            return new Resume(uuid, rs.getString("full_name"));
+        });
+
+        String queryContacts = "SELECT * FROM contact c WHERE c.resume_uuid =?";
+        helper.execute(queryContacts, ps -> {
             ps.setString(1, uuid);
             ResultSet rs = ps.executeQuery();
             if (!rs.isBeforeFirst()) {
-                throw new NotExistStorageException(uuid);
+                throw new NotExistStorageException("Resume has no contacts");
             }
-            Resume resume = null;
             while (rs.next()) {
-                String fullName = rs.getString("full_name");
-                if (resume == null && fullName != null) {
-                    resume = new Resume(uuid, fullName);
-                }
-                String contact = rs.getString("value_contact");
-                if (contact != null) {
-                    resume.addContactData(ContactType.valueOf(rs.getString("type_contact")),
-                            rs.getString("value_contact"));
-                }
-                String textListSection = rs.getString("value_text");
-                if (textListSection != null) {
-                    SectionType sectionType = SectionType.valueOf(rs.getString("type_text"));
-                    resume.addSection(sectionType,
-                            getSection(sectionType, rs.getString("value_text")));
-                }
+                resume.addContactData(ContactType.valueOf(rs.getString("type")),
+                        rs.getString("value"));
             }
-            return resume;
+            return null;
         });
+        
+        String querySections = " SELECT * FROM section c WHERE c.resume_uuid =?";
+        helper.execute(querySections, ps -> {
+            ps.setString(1, uuid);
+            ResultSet rs = ps.executeQuery();
+            if (!rs.isBeforeFirst()) {
+                throw new NotExistStorageException("Resume has no sections");
+            }
+            while (rs.next()) {
+                SectionType sectionType = SectionType.valueOf(rs.getString("type"));
+                resume.addSection(sectionType,
+                        getSection(sectionType, rs.getString("value")));
+            }
+            return null;
+        });
+        return resume;
     }
 
     @Override
     public List<Resume> getAllSorted() {
         LOG.info("GetAllSorted");
         Map<String, Resume> storage = new LinkedHashMap<>();
-        String queryResumes = "SELECT * FROM resume LEFT JOIN text_list_section t ON resume.uuid = t.resume_uuid " +
-                "                                       ORDER BY full_name, uuid";
+        String queryResumes = "SELECT * FROM resume ORDER BY full_name, uuid";
         helper.execute(queryResumes, ps -> {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 String uuid = rs.getString("uuid");
                 Resume resume = new Resume(uuid, rs.getString("full_name"));
                 storage.putIfAbsent(uuid, resume);
-                String textListSection = rs.getString("value_text");
-                if (textListSection != null) {
-                    SectionType sectionType = SectionType.valueOf(rs.getString("type_text"));
-                    storage.get(uuid).addSection(sectionType,
-                            getSection(sectionType, rs.getString("value_text")));
-                }
             }
-            return storage;
+            return null;
         });
 
         String queryContacts = "SELECT * FROM contact c";
         helper.execute(queryContacts, ps -> {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                String resumeUuid = rs.getString("resume_uuid");
-                String typeContact = rs.getString("type_contact");
-                String valueContact = rs.getString("value_contact");
-                storage.get(resumeUuid).addContactData(ContactType.valueOf(typeContact), valueContact);
+                storage.get(rs.getString("resume_uuid")).addContactData(ContactType.valueOf(rs.getString("type")), rs.getString("value"));
+            }
+            return null;
+        });
+
+        String querySections = "SELECT * FROM section c";
+        helper.execute(querySections, ps -> {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                SectionType sectionType = SectionType.valueOf(rs.getString("type"));
+                storage.get(rs.getString("resume_uuid")).addSection(sectionType,
+                        getSection(SectionType.valueOf(rs.getString("type")), rs.getString("value")));
             }
             return null;
         });
         return new ArrayList<>(storage.values());
-    }
-
-    private AbstractSection getSection(SectionType sectionType, String content) {
-        switch (sectionType) {
-            case OBJECTIVE:
-            case PERSONAL:
-                return new TextSection(content);
-            case ACHIEVEMENT:
-            case QUALIFICATIONS:
-                return new ListSection(content.split("\n"));
-        }
-        throw new StorageException("not exist section type");
     }
 
     @Override
@@ -213,5 +182,46 @@ public class SqlStorage implements Storage {
             rs.next();
             return rs.getInt(1);
         });
+    }
+
+    private void addContacts(Resume resume, Connection conn) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (type, value, resume_uuid) VALUES (?, ?, ?)")) {
+            for (Map.Entry<ContactType, String> entry : resume.getContacts().entrySet()) {
+                ps.setString(1, entry.getKey().name());
+                ps.setString(2, entry.getValue());
+                ps.setString(3, resume.getUuid());
+                ps.addBatch();
+            }
+            ps.executeBatch();
+        }
+    }
+
+    private void addSections(Resume resume, Connection conn) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO section (type, value, resume_uuid) VALUES (?, ?, ?)")) {
+            for (Map.Entry<SectionType, AbstractSection> entry : resume.getSections().entrySet()) {
+                String contenet = null;
+                switch (entry.getKey()) {
+                    case OBJECTIVE, PERSONAL -> contenet = (((TextSection) entry.getValue()).getContent());
+                    case ACHIEVEMENT, QUALIFICATIONS -> contenet = String.join("\n", ((ListSection) entry.getValue()).getItems());
+                }
+                ps.setString(1, entry.getKey().name());
+                ps.setString(2, contenet.trim());
+                ps.setString(3, resume.getUuid());
+                ps.addBatch();
+            }
+            ps.executeBatch();
+        }
+    }
+
+    private AbstractSection getSection(SectionType sectionType, String content) {
+        switch (sectionType) {
+            case OBJECTIVE, PERSONAL -> {
+                return new TextSection(content);
+            }
+            case ACHIEVEMENT, QUALIFICATIONS -> {
+                return new ListSection(content.split("\n"));
+            }
+        }
+        throw new StorageException("not exist section type");
     }
 }

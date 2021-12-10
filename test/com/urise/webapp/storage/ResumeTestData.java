@@ -26,7 +26,7 @@ public class ResumeTestData {
     public static final Resume RESUME_2 = getResume(UUID.randomUUID().toString(), FULL_NAME_2);
     public static final Resume RESUME_3 = getResume(UUID.randomUUID().toString(), FULL_NAME_3);
     public static final Resume RESUME_4 = getResume(UUID.randomUUID().toString(), FULL_NAME_4);
-    public static final Resume RESUME_SAVED = new Resume(UUID_SAVED, FULL_NAME_SAVED);
+    public static final Resume RESUME_SAVED = getResume(UUID_SAVED, FULL_NAME_SAVED);
     public static final Resume RESUME_BEFORE_UPDATE = getResume(UUID_FOR_UPDATE, FULL_NAME_1);
     public static final Resume RESUME_UPDATED = getResume(UUID_FOR_UPDATE, FULL_NAME_UPDATED);
     public static final Resume RESUME_NOT_EXIST = getResume(UUID_NOT_EXIST, FULL_NAME_NOT_EXIST);
