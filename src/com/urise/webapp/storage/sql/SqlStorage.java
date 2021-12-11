@@ -95,14 +95,15 @@ public class SqlStorage implements Storage {
                 resume = new Resume(uuid, rs.getString("full_name"));
             }
 
+            Map<String, Resume> storage = Map.of(resume.getUuid(), resume);
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact c WHERE c.resume_uuid =?")) {
                 ps.setString(1, uuid);
-                getContacts(ps.executeQuery(), Map.of(resume.getUuid(), resume));
+                getContacts(ps.executeQuery(), storage);
             }
 
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM section c WHERE c.resume_uuid =?")) {
                 ps.setString(1, uuid);
-                getSections(ps.executeQuery(), Map.of(resume.getUuid(), resume));
+                getSections(ps.executeQuery(), storage);
             }
             return resume;
         });
