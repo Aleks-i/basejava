@@ -7,6 +7,7 @@ import com.urise.webapp.storage.list.ListStorageTest;
 import com.urise.webapp.storage.map.MapStorageSearchOfResumeTest;
 import com.urise.webapp.storage.map.MapStorageSearchOfUuidTest;
 import com.urise.webapp.storage.sql.SqlStorageTest;
+import com.urise.webapp.util.json.ParserTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -25,7 +26,8 @@ import org.junit.runners.Suite;
         JSONStreamSerializerPathStorageTest.class,
         DataStreamtreamSerializerFileStorageTest.class,
         DataStreamSerializerPathStorageTest.class,
-        SqlStorageTest.class
+        SqlStorageTest.class,
+        ParserTest.class
 })
 public class AllStorageTest {
 }

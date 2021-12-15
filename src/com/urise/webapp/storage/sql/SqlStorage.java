@@ -1,11 +1,14 @@
 package com.urise.webapp.storage.sql;
 
 import com.urise.webapp.exception.NotExistStorageException;
-import com.urise.webapp.exception.StorageException;
-import com.urise.webapp.model.*;
+import com.urise.webapp.model.AbstractSection;
+import com.urise.webapp.model.ContactType;
+import com.urise.webapp.model.Resume;
+import com.urise.webapp.model.SectionType;
 import com.urise.webapp.sql.SqlHelper;
 import com.urise.webapp.storage.AbstractStorage;
 import com.urise.webapp.storage.Storage;
+import com.urise.webapp.util.json.Parser;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -98,12 +101,12 @@ public class SqlStorage implements Storage {
             Map<String, Resume> storage = Map.of(resume.getUuid(), resume);
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact c WHERE c.resume_uuid =?")) {
                 ps.setString(1, uuid);
-                getContacts(ps.executeQuery(), storage);
+                addContacts(ps.executeQuery(), storage);
             }
 
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM section c WHERE c.resume_uuid =?")) {
                 ps.setString(1, uuid);
-                getSections(ps.executeQuery(), storage);
+                addSections(ps.executeQuery(), storage);
             }
             return resume;
         });
@@ -124,11 +127,11 @@ public class SqlStorage implements Storage {
             }
 
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact c")) {
-                getContacts(ps.executeQuery(), storage);
+                addContacts(ps.executeQuery(), storage);
             }
 
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM section c")) {
-                getSections(ps.executeQuery(), storage);
+                addSections(ps.executeQuery(), storage);
             }
             return new ArrayList<>(storage.values());
         });
@@ -171,13 +174,8 @@ public class SqlStorage implements Storage {
     private void insertSections(Resume resume, Connection conn) throws SQLException {
         try (PreparedStatement ps = conn.prepareStatement("INSERT INTO section (type, value, resume_uuid) VALUES (?, ?, ?)")) {
             for (Map.Entry<SectionType, AbstractSection> entry : resume.getSections().entrySet()) {
-                String contenet = null;
-                switch (entry.getKey()) {
-                    case OBJECTIVE, PERSONAL -> contenet = (((TextSection) entry.getValue()).getContent());
-                    case ACHIEVEMENT, QUALIFICATIONS -> contenet = String.join("\n", ((ListSection) entry.getValue()).getItems());
-                }
                 ps.setString(1, entry.getKey().name());
-                ps.setString(2, contenet);
+                ps.setString(2, Parser.write(entry.getValue(), AbstractSection.class));
                 ps.setString(3, resume.getUuid());
                 ps.addBatch();
             }
@@ -185,7 +183,7 @@ public class SqlStorage implements Storage {
         }
     }
 
-    private void getContacts(ResultSet rs, Map<String, Resume> storage) throws SQLException {
+    private void addContacts(ResultSet rs, Map<String, Resume> storage) throws SQLException {
         while (rs.next()) {
             storage.get(rs.getString("resume_uuid"))
                     .addContactData(ContactType.valueOf(rs.getString("type")),
@@ -193,16 +191,11 @@ public class SqlStorage implements Storage {
         }
     }
 
-    private void getSections(ResultSet rs, Map<String, Resume> storage) throws SQLException {
+    private void addSections(ResultSet rs, Map<String, Resume> storage) throws SQLException {
         while (rs.next()) {
             SectionType sectionType = SectionType.valueOf(rs.getString("type"));
             String content = rs.getString("value");
-            switch (sectionType) {
-                case OBJECTIVE, PERSONAL -> storage.get(rs.getString("resume_uuid"))
-                        .addSection(sectionType, new TextSection(content));
-                case ACHIEVEMENT, QUALIFICATIONS -> storage.get(rs.getString("resume_uuid"))
-                        .addSection(sectionType, new ListSection(content.split("\n")));
-            }
+            storage.get(rs.getString("resume_uuid")).addSection(sectionType, Parser.read(content, AbstractSection.class));
         }
     }
 }

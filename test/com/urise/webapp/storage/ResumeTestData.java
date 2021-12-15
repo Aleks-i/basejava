@@ -1,7 +1,9 @@
 package com.urise.webapp.storage;
 
 import com.urise.webapp.model.*;
+import com.urise.webapp.model.organization.Organization;
 
+import java.time.Month;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,11 +28,11 @@ public class ResumeTestData {
     public static final Resume RESUME_2 = getResume(UUID.randomUUID().toString(), FULL_NAME_2);
     public static final Resume RESUME_3 = new Resume(UUID.randomUUID().toString(), FULL_NAME_3);
     public static final Resume RESUME_4 = getResume(UUID.randomUUID().toString(), FULL_NAME_4);
+    public static final List<Resume> EXPECTED_RESUMES = getSortedResumeList(List.of(RESUME_3, RESUME_1, RESUME_4, RESUME_2));
     public static final Resume RESUME_SAVED = getResume(UUID_SAVED, FULL_NAME_SAVED);
     public static final Resume RESUME_BEFORE_UPDATE = getResume(UUID_FOR_UPDATE, FULL_NAME_1);
     public static final Resume RESUME_UPDATED = getResume(UUID_FOR_UPDATE, FULL_NAME_UPDATED);
     public static final Resume RESUME_NOT_EXIST = getResume(UUID_NOT_EXIST, FULL_NAME_NOT_EXIST);
-    public static final List<Resume> EXPECTED_RESUMES = getSortedResumeList(List.of(RESUME_3, RESUME_1, RESUME_4, RESUME_2));
 
     public static Resume getResume(String uuid, String fullName) {
         Resume TEMPLATE_TEST_RESUME = new Resume(uuid, fullName);
@@ -95,7 +97,7 @@ public class ResumeTestData {
         )
         ));
 
-/*        TEMPLATE_TEST_RESUME.addSection(SectionType.EXPERIENCE, new OrganizationSection(List.of(
+        TEMPLATE_TEST_RESUME.addSection(SectionType.EXPERIENCE, new OrganizationSection(List.of(
                 new Organization("javaops", "http://javaops.ru/",
                         new Organization.Position(2013, Month.OCTOBER, "Автор проекта.",
                                 "Создание, организация и проведение Java онлайн проектов и стажировок.")),
@@ -163,7 +165,7 @@ public class ResumeTestData {
                 new Organization("mipt", "http://www.school.mipt.ru/",
                         new Organization.Position(1984, Month.SEPTEMBER, 1987, Month.JUNE,
                                 "Закончил с отличием", null))
-        )));*/
+        )));
         return TEMPLATE_TEST_RESUME;
     }
 }
