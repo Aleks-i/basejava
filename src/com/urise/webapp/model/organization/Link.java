@@ -31,8 +31,7 @@ public class Link implements Serializable {
 
     @Override
     public String toString() {
-        return name + '\'' +
-                url + '\'';
+        return "<a href='" + url + "'>" + name + "</a>" + "'<br>";
     }
 
     @Override

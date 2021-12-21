@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import static com.urise.webapp.util.ResumesForTestWeb.*;
+
 public class SqlStorage implements Storage {
     protected static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
     SqlHelper helper;
@@ -31,6 +33,11 @@ public class SqlStorage implements Storage {
             throw new IllegalStateException(e);
         }
         this.helper = new SqlHelper(dbUrl, dbUser, dbPassword);
+        clear();
+        save(RESUME_1);
+        save(RESUME_2);
+        save(RESUME_3);
+        save(RESUME_4);
     }
 
     @Override

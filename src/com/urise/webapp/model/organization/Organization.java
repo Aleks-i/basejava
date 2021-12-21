@@ -13,8 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static com.urise.webapp.util.DateUtil.NOW;
-import static com.urise.webapp.util.DateUtil.of;
+import static com.urise.webapp.util.DateUtil.*;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Serializable {
@@ -45,8 +44,9 @@ public class Organization implements Serializable {
 
     @Override
     public String toString() {
-        return homePage + "\n" +
-                positions;
+        StringBuilder sb = new StringBuilder();
+        positions.forEach(p -> sb.append(p.toString()));
+        return homePage + "\n" + sb;
     }
 
     @Override
@@ -100,6 +100,15 @@ public class Organization implements Serializable {
             return endDate;
         }
 
+        public String getStartDatetoHtml() {
+            return toHtmlLocalDate(startDate);
+        }
+
+        public String getEndDatetoHtml() {
+            return toHtmlLocalDate(endDate);
+        }
+
+
         public String getTitle() {
             return title;
         }
@@ -110,10 +119,9 @@ public class Organization implements Serializable {
 
         @Override
         public String toString() {
-            return "startDate=" + startDate +
-                    ", endDate=" + endDate +
-                    ", title='" + title + '\'' +
-                    ", description='" + description + '\'';
+            return startDate + " - " + endDate + "<br>" +
+                    title + "<br>" +
+                    (description == null ? "<br><br>" : description + "<br><br>");
         }
 
         @Override

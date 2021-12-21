@@ -32,7 +32,7 @@ public enum ContactType {
             return toLink(value);
         }
     },
-    HOME_PAGE("Сайт") {
+    HOME_PAGE("Домашняя страница") {
         @Override
         public String toHtml0(String value) {
             return toLink(value);
