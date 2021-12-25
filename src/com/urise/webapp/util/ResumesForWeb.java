@@ -5,8 +5,9 @@ import com.urise.webapp.model.organization.Organization;
 
 import java.time.Month;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class ResumesForTestWeb {
+public class ResumesForWeb {
     public static final String FULL_NAME_1 = "Petrov";
     public static final String FULL_NAME_2 = "Sidorov";
     public static final String FULL_NAME_3 = "Ivanov";
@@ -149,5 +150,23 @@ public class ResumesForTestWeb {
                                 "Закончил с отличием", null))
         )));
         return TEMPLATE_TEST_RESUME;
+    }
+
+    public static void convertListSectionForEditJsp(Resume resume) {
+        convertListSection(resume, SectionType.ACHIEVEMENT);
+        convertListSection(resume, SectionType.QUALIFICATIONS);
+    }
+
+    private static void convertListSection(Resume resume, SectionType sectionType) {
+        ListSection listSection = (ListSection) resume.getSections().get(sectionType);
+        listSection.setItems(List.of(listSection.getItems().stream()
+                .map(String::new)
+                .collect(Collectors.joining("\n\n"))));
+    }
+
+    public static List<String> convertContentListSectionForDB(String contet) {
+        return contet.lines()
+                .filter(s -> s.trim().length() > 0)
+                .collect(Collectors.toList());
     }
 }

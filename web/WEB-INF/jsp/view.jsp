@@ -15,8 +15,6 @@
     <h2>${resume.fullName}&nbsp;<a href="resume?uuid=${resume.uuid}&action=edit"><img src="img/pencil.png"></a></h2>
     <p>
         <c:forEach var="contactEntry" items="${resume.contacts}">
-            <jsp:useBean id="contactEntry"
-                         type="java.util.Map.Entry<com.urise.webapp.model.ContactType, java.lang.String>"/>
             ${contactEntry.getKey().toHtml(contactEntry.getValue())}
         <br/>
         </c:forEach>
@@ -51,8 +49,7 @@
         <tr>
             <td colspan="2">
                 <ul>
-                    <c:forEach items="${sections.get(SectionType.ACHIEVEMENT).getItems()}"
-                               var="itemsAchievement">
+                    <c:forEach items="${sections.get(SectionType.ACHIEVEMENT).getItems()}" var="itemsAchievement">
                         <li>${itemsAchievement}</li>
                     </c:forEach>
                 </ul>

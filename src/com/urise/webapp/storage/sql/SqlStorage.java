@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import static com.urise.webapp.util.ResumesForTestWeb.*;
+import static com.urise.webapp.util.ResumesForWeb.*;
 
 public class SqlStorage implements Storage {
     protected static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());

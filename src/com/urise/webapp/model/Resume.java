@@ -36,6 +36,10 @@ public class Resume implements Serializable {
         this.fullName = fullName;
         this.contacts = new EnumMap<>(ContactType.class);
         this.sections = new EnumMap<>(SectionType.class);
+        this.addSection(SectionType.PERSONAL, new TextSection(""));
+        this.addSection(SectionType.PERSONAL, new TextSection(""));
+        this.addSection(SectionType.ACHIEVEMENT, new ListSection(""));
+        this.addSection(SectionType.QUALIFICATIONS, new ListSection(""));
     }
 
     public void addContactData(ContactType contactType, String contact) {

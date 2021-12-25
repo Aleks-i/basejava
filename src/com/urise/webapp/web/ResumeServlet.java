@@ -1,7 +1,6 @@
 package com.urise.webapp.web;
 
-import com.urise.webapp.model.ContactType;
-import com.urise.webapp.model.Resume;
+import com.urise.webapp.model.*;
 import com.urise.webapp.storage.Storage;
 import com.urise.webapp.util.Config;
 
@@ -11,6 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
+import static com.urise.webapp.util.ResumesForWeb.convertContentListSectionForDB;
+import static com.urise.webapp.util.ResumesForWeb.convertListSectionForEditJsp;
 
 public class ResumeServlet extends HttpServlet {
     private Storage storage;
@@ -37,7 +39,13 @@ public class ResumeServlet extends HttpServlet {
                 response.sendRedirect("resume");
                 return;
             }
-            case "view", "edit" -> resume = storage.get(uuid);
+            case "view" -> {
+                resume = storage.get(uuid);
+            }
+            case "edit" -> {
+                resume = storage.get(uuid);
+                convertListSectionForEditJsp(resume);
+            }
             default -> throw new IllegalArgumentException("Action " + action + " is illegal");
         }
         request.setAttribute("resume", resume);
@@ -51,6 +59,9 @@ public class ResumeServlet extends HttpServlet {
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
         Resume resume = storage.get(uuid);
+        if (fullName.trim().length() == 0) {
+            fullName = resume.getFullName();
+        }
         resume.setFullName(fullName);
         for (ContactType contactType : ContactType.values()) {
             String value = request.getParameter(contactType.name());
@@ -60,7 +71,11 @@ public class ResumeServlet extends HttpServlet {
                 resume.getContacts().remove(contactType);
             }
         }
+        resume.addSection(SectionType.OBJECTIVE, new TextSection(request.getParameter("textSectionObjective")));
+        resume.addSection(SectionType.PERSONAL, new TextSection(request.getParameter("textSectionPersonal")));
+        resume.addSection(SectionType.ACHIEVEMENT, new ListSection(convertContentListSectionForDB(request.getParameter("listSectionAchievement"))));
+        resume.addSection(SectionType.QUALIFICATIONS, new ListSection(convertContentListSectionForDB(request.getParameter("listSectionQualifications"))));
         storage.update(resume);
-        response.sendRedirect("resume");
+        response.sendRedirect("resume?uuid=" + resume.getUuid() + "&action=view");
     }
 }

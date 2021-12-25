@@ -25,6 +25,10 @@ public class ListSection extends AbstractSection {
         return items;
     }
 
+    public void setItems(List<String> items) {
+        this.items = items;
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
