@@ -1,5 +1,6 @@
 package com.urise.webapp.web;
 
+import com.urise.webapp.exception.EmptyFieldException;
 import com.urise.webapp.model.*;
 import com.urise.webapp.storage.Storage;
 import com.urise.webapp.util.Config;
@@ -46,6 +47,9 @@ public class ResumeServlet extends HttpServlet {
                 resume = storage.get(uuid);
                 convertListSectionForEditJsp(resume);
             }
+            case "save" -> {
+                resume = new Resume();
+            }
             default -> throw new IllegalArgumentException("Action " + action + " is illegal");
         }
         request.setAttribute("resume", resume);
@@ -58,9 +62,9 @@ public class ResumeServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
-        Resume resume = storage.get(uuid);
+        Resume resume = uuid.length() == 0 ? new Resume("") : storage.get(uuid);
         if (fullName.trim().length() == 0) {
-            fullName = resume.getFullName();
+            throw new EmptyFieldException("The name cannot be empty");
         }
         resume.setFullName(fullName);
         for (ContactType contactType : ContactType.values()) {
@@ -75,7 +79,11 @@ public class ResumeServlet extends HttpServlet {
         resume.addSection(SectionType.PERSONAL, new TextSection(request.getParameter("textSectionPersonal")));
         resume.addSection(SectionType.ACHIEVEMENT, new ListSection(convertContentListSectionForDB(request.getParameter("listSectionAchievement"))));
         resume.addSection(SectionType.QUALIFICATIONS, new ListSection(convertContentListSectionForDB(request.getParameter("listSectionQualifications"))));
-        storage.update(resume);
+        if (uuid.length() == 0) {
+            storage.save(resume);
+        } else {
+            storage.update(resume);
+        }
         response.sendRedirect("resume?uuid=" + resume.getUuid() + "&action=view");
     }
 }

@@ -29,6 +29,10 @@
             </tr>
         </c:forEach>
     </table>
+    <br>
+    <tr>
+        <td><a href="resume?action=save"><img src="img/add.png"></a></td>
+    </tr>
 </section>
 <jsp:include page="fragments/footer.jsp"/>
 </body>

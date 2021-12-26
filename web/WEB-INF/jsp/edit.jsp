@@ -96,7 +96,7 @@
             </c:forEach>
         </c:forEach>
         <hr>
-        <button type="submit"><img src="img/add.png"></button>
+        <button type="submit">Сохранить</button>
         <button type="reset" onclick="window.history.back()">Отменить</button>
     </form>
 </section>

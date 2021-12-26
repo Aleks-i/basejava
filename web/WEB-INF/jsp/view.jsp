@@ -15,104 +15,119 @@
     <h2>${resume.fullName}&nbsp;<a href="resume?uuid=${resume.uuid}&action=edit"><img src="img/pencil.png"></a></h2>
     <p>
         <c:forEach var="contactEntry" items="${resume.contacts}">
+        <c:if test="${contactEntry.value.toString().length() > 0}">
             ${contactEntry.getKey().toHtml(contactEntry.getValue())}
         <br/>
+        </c:if>
         </c:forEach>
     <p>
     <table cellpadding="2">
         <c:set var="sections" value="${resume.getSections()}"/>
-        <tr>
-            <td colspan="2">
-                <h2>${SectionType.OBJECTIVE.title}</h2>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <h4>${sections.get(SectionType.OBJECTIVE)}</h4>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <h2>${SectionType.PERSONAL.title}</h2>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                ${sections.get(SectionType.PERSONAL)}
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <h2>${SectionType.ACHIEVEMENT.title}</h2>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <ul>
-                    <c:forEach items="${sections.get(SectionType.ACHIEVEMENT).getItems()}" var="itemsAchievement">
-                        <li>${itemsAchievement}</li>
-                    </c:forEach>
-                </ul>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <h2>${SectionType.QUALIFICATIONS.title}</h2>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <ul>
-                    <c:forEach items="${sections.get(SectionType.QUALIFICATIONS).getItems()}"
-                               var="itemsQualifications">
-                        <li>${itemsQualifications}</li>
-                    </c:forEach>
-                </ul>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <h2>${SectionType.EXPERIENCE.title}</h2>
-            </td>
-        </tr>
-        <c:forEach items="${sections.get(SectionType.EXPERIENCE).getOrganizations()}"
-                   var="itemOrganizationEducation">
+        <c:if test="${sections.get(SectionType.OBJECTIVE).getContent().length() != 0}">
             <tr>
                 <td colspan="2">
-                    <h3>
-                        <a href=${itemOrganizationEducation.getHomePage().getUrl()}>${itemOrganizationEducation.getHomePage().getName()}</a>
-                    </h3>
+                    <h2>${SectionType.OBJECTIVE.title}</h2>
                 </td>
             </tr>
-            <c:forEach items="${itemOrganizationEducation.getPositions()}" var="itemPosition">
-                <tr>
-                    <td width="15%" style="vertical-align: top">${itemPosition.getStartDatetoHtml()}
-                        - ${itemPosition.getEndDatetoHtml()}</td>
-                    <td><b>${itemPosition.getTitle()}</b>.<br>${itemPosition.getDescription()}</td>
-                </tr>
-            </c:forEach>
-        </c:forEach>
-        <tr>
-            <td colspan="2">
-                <h2>${SectionType.EDUCATION.title}</h2>
-            </td>
-        </tr>
-        <c:forEach items="${sections.get(SectionType.EDUCATION).getOrganizations()}" var="itemOrganizationEducation">
             <tr>
                 <td colspan="2">
-                    <h3>
-                        <a href=${itemOrganizationEducation.getHomePage().getUrl()}>${itemOrganizationEducation.getHomePage().getName()}</a>
-                    </h3>
+                    <h4>${sections.get(SectionType.OBJECTIVE)}</h4>
                 </td>
             </tr>
-            <c:forEach items="${itemOrganizationEducation.getPositions()}" var="itemPosition">
+        </c:if>
+        <c:if test="${sections.get(SectionType.PERSONAL).getContent().length() != 0}">
+            <tr>
+                <td colspan="2">
+                    <h2>${SectionType.PERSONAL.title}</h2>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                        ${sections.get(SectionType.PERSONAL)}
+                </td>
+            </tr>
+        </c:if>
+        <c:if test="${!sections.get(SectionType.ACHIEVEMENT).getItems().isEmpty()}">
+            <tr>
+                <td colspan="2">
+                    <h2>${SectionType.ACHIEVEMENT.title}</h2>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <ul>
+                        <c:forEach items="${sections.get(SectionType.ACHIEVEMENT).getItems()}" var="itemsAchievement">
+                            <li>${itemsAchievement}</li>
+                        </c:forEach>
+                    </ul>
+                </td>
+            </tr>
+        </c:if>
+        <c:if test="${!sections.get(SectionType.QUALIFICATIONS).getItems().isEmpty()}">
+            <tr>
+                <td colspan="2">
+                    <h2>${SectionType.QUALIFICATIONS.title}</h2>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <ul>
+                        <c:forEach items="${sections.get(SectionType.QUALIFICATIONS).getItems()}"
+                                   var="itemsQualifications">
+                            <li>${itemsQualifications}</li>
+                        </c:forEach>
+                    </ul>
+                </td>
+            </tr>
+        </c:if>
+        <c:if test="${sections.get(SectionType.EXPERIENCE).getOrganizations().size() > 0}">
+            <tr>
+                <td colspan="2">
+                    <h2>${SectionType.EXPERIENCE.title}</h2>
+                </td>
+            </tr>
+            <c:forEach items="${sections.get(SectionType.EXPERIENCE).getOrganizations()}"
+                       var="itemOrganizationEducation">
                 <tr>
-                    <td width="15%" style="vertical-align: top">${itemPosition.getStartDatetoHtml()}
-                        - ${itemPosition.getEndDatetoHtml()}</td>
-                    <td><b>${itemPosition.getTitle()}</b></td>
+                    <td colspan="2">
+                        <h3>
+                            <a href=${itemOrganizationEducation.getHomePage().getUrl()}>${itemOrganizationEducation.getHomePage().getName()}</a>
+                        </h3>
+                    </td>
                 </tr>
+                <c:forEach items="${itemOrganizationEducation.getPositions()}" var="itemPosition">
+                    <tr>
+                        <td width="15%" style="vertical-align: top">${itemPosition.getStartDatetoHtml()}
+                            - ${itemPosition.getEndDatetoHtml()}</td>
+                        <td><b>${itemPosition.getTitle()}</b>.<br>${itemPosition.getDescription()}</td>
+                    </tr>
+                </c:forEach>
             </c:forEach>
-        </c:forEach>
+        </c:if>
+        <c:if test="${sections.get(SectionType.EDUCATION).getOrganizations().size() > 0}">
+            <tr>
+                <td colspan="2">
+                    <h2>${SectionType.EDUCATION.title}</h2>
+                </td>
+            </tr>
+            <c:forEach items="${sections.get(SectionType.EDUCATION).getOrganizations()}"
+                       var="itemOrganizationEducation">
+                <tr>
+                    <td colspan="2">
+                        <h3>
+                            <a href=${itemOrganizationEducation.getHomePage().getUrl()}>${itemOrganizationEducation.getHomePage().getName()}</a>
+                        </h3>
+                    </td>
+                </tr>
+                <c:forEach items="${itemOrganizationEducation.getPositions()}" var="itemPosition">
+                    <tr>
+                        <td width="15%" style="vertical-align: top">${itemPosition.getStartDatetoHtml()}
+                            - ${itemPosition.getEndDatetoHtml()}</td>
+                        <td><b>${itemPosition.getTitle()}</b></td>
+                    </tr>
+                </c:forEach>
+            </c:forEach>
+        </c:if>
     </table>
     <p>
 </section>
