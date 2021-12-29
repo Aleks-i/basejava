@@ -7,8 +7,16 @@
         <servlet-name>resumeServlet</servlet-name>
         <servlet-class>com.urise.webapp.web.ResumeServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>organizationServlet</servlet-name>
+        <servlet-class>com.urise.webapp.web.OrganizationServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>resumeServlet</servlet-name>
         <url-pattern>/resume</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>organizationServlet</servlet-name>
+        <url-pattern>/organization</url-pattern>
     </servlet-mapping>
 </web-app>
