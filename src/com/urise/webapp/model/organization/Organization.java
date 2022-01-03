@@ -16,9 +16,8 @@ import static com.urise.webapp.util.DateUtil.*;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Serializable {
     private static final long serialVersionUID = 1L;
-    private static int idCounter = 0;
 
-    private int id;
+    private String id;
     private Link homePage;
     private List<Position> positions;
 
@@ -31,12 +30,12 @@ public class Organization implements Serializable {
     }
 
     public Organization(Link homePage, List<Position> positions) {
-        this.id = idCounter++;
+        this.id = UUID.randomUUID().toString();
         this.homePage = homePage;
         this.positions = positions;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -64,18 +63,17 @@ public class Organization implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Organization that = (Organization) o;
-        return id == that.id && Objects.equals(homePage, that.homePage) && Objects.equals(positions, that.positions);
+        return Objects.equals(homePage, that.homePage) && Objects.equals(positions, that.positions);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, homePage, positions);
+        return Objects.hash(homePage, positions);
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class Position implements Serializable {
-        private static int idCounter = 0;
-        private int id;
+        private String id;
         @XmlJavaTypeAdapter(LocalDateAdapter.class)
         private LocalDate startDate;
         @XmlJavaTypeAdapter(LocalDateAdapter.class)
@@ -98,14 +96,14 @@ public class Organization implements Serializable {
             Objects.requireNonNull(startDate, "startDate must not be null");
             Objects.requireNonNull(endDate, "endDate must not be null");
             Objects.requireNonNull(title, "title must not be null");
-            this.id = idCounter++;
+            this.id = UUID.randomUUID().toString();
             this.startDate = startDate;
             this.endDate = endDate;
             this.title = title;
             this.description = description;
         }
 
-        public int getId() {
+        public String getId() {
             return id;
         }
 

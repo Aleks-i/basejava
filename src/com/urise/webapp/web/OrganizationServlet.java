@@ -69,15 +69,15 @@ public class OrganizationServlet extends HttpServlet {
     }
 
     private void setEditOrganizationSection(Resume resume, SectionType sectionType, HttpServletRequest request) {
-        int idOrganization = Integer.parseInt(request.getParameter("idOrganization"));
-        int idPosition = Integer.parseInt(request.getParameter("idPosition"));
+        String idOrganization = request.getParameter("idOrganization");
+        String idPosition = request.getParameter("idPosition");
         Organization organization = ((OrganizationSection) resume.getSections().get(sectionType)).getOrganizations().stream()
-                .filter(o -> o.getId() == idOrganization)
+                .filter(o -> o.getId().equals(idOrganization))
                 .findFirst()
                 .get();
         organization.setHomePage(new Link(request.getParameter("nameOrganization"), request.getParameter("homePage")));
         Organization.Position position = organization.getPositions().stream()
-                .filter(p -> p.getId() == idPosition)
+                .filter(p -> p.getId().equals(idPosition))
                 .findFirst()
                 .get();
         position.setStartDate(LocalDateTime.parse(request.getParameter("dateStart")).toLocalDate());
