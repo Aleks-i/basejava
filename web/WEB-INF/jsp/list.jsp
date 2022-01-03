@@ -31,7 +31,7 @@
     </table>
     <br>
     <tr>
-        <td><a href="resume?action=save"><img src="img/add.png"></a></td>
+        <td><a href="resume?action=save"><button>Создать новое резюме</button></a></td>
     </tr>
 </section>
 <jsp:include page="fragments/footer.jsp"/>

@@ -84,6 +84,6 @@ public class ResumeServlet extends HttpServlet {
         } else {
             storage.update(resume);
         }
-        response.sendRedirect("resume?uuid=" + resume.getUuid() + "&action=view");
+        response.sendRedirect("resume?uuid=" + resume.getUuid() + "&action=edit");
     }
 }

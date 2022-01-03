@@ -36,6 +36,8 @@ public class Resume implements Serializable {
         this.addSection(SectionType.PERSONAL, new TextSection(""));
         this.addSection(SectionType.ACHIEVEMENT, new ListSection(""));
         this.addSection(SectionType.QUALIFICATIONS, new ListSection(""));
+        this.addSection(SectionType.EXPERIENCE, new OrganizationSection());
+        this.addSection(SectionType.EDUCATION, new OrganizationSection());
     }
 
     public Resume(String fullName) {
@@ -60,6 +62,8 @@ public class Resume implements Serializable {
         this.addSection(SectionType.PERSONAL, new TextSection(""));
         this.addSection(SectionType.ACHIEVEMENT, new ListSection(""));
         this.addSection(SectionType.QUALIFICATIONS, new ListSection(""));
+        this.addSection(SectionType.EXPERIENCE, new OrganizationSection());
+        this.addSection(SectionType.EDUCATION, new OrganizationSection());
     }
 
     public void addContactData(ContactType contactType, String contact) {

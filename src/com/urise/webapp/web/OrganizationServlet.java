@@ -1,8 +1,10 @@
 package com.urise.webapp.web;
 
+import com.urise.webapp.exception.EmptyFieldException;
 import com.urise.webapp.model.OrganizationSection;
 import com.urise.webapp.model.Resume;
 import com.urise.webapp.model.SectionType;
+import com.urise.webapp.model.organization.Link;
 import com.urise.webapp.model.organization.Organization;
 import com.urise.webapp.storage.Storage;
 import com.urise.webapp.util.Config;
@@ -13,7 +15,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class OrganizationServlet extends HttpServlet {
@@ -33,14 +34,56 @@ public class OrganizationServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
+        if (uuid.isEmpty()) {
+            throw new EmptyFieldException("Enter and save the name");
+        }
         Resume resume = storage.get(uuid);
-        LocalDate dateStart = LocalDateTime.parse(request.getParameter("dateStart")).toLocalDate();
-        LocalDate dateEnd = LocalDateTime.parse(request.getParameter("dateEnd")).toLocalDate();
-        SectionType sectionType = "experience".equals(request.getParameter("sectionType")) ? SectionType.EXPERIENCE : SectionType.EDUCATION;
+
+        switch (request.getParameter("sectionType")) {
+            case "newExperience" -> {
+                setNewOrganizationSection(resume, SectionType.EXPERIENCE, request);
+                response.sendRedirect("resume?uuid=" + uuid + "&action=edit");
+            }
+            case "newEducation" -> {
+                setNewOrganizationSection(resume, SectionType.EDUCATION, request);
+                response.sendRedirect("resume?uuid=" + uuid + "&action=edit");
+            }
+            case "editExperience" -> {
+                setEditOrganizationSection(resume, SectionType.EXPERIENCE, request);
+                response.sendRedirect("resume?uuid=" + uuid + "&action=edit");
+            }
+            case "editEducation" -> {
+                setEditOrganizationSection(resume, SectionType.EDUCATION, request);
+                response.sendRedirect("resume?uuid=" + uuid + "&action=edit");
+            }
+        }
+    }
+
+    private void setNewOrganizationSection(Resume resume, SectionType sectionType, HttpServletRequest request) {
         ((OrganizationSection) resume.getSections().get(sectionType)).getOrganizations().add(0,
                 new Organization(request.getParameter("nameOrganization"), request.getParameter("homePage"),
-                        new Organization.Position(dateStart, dateEnd, request.getParameter("position"), request.getParameter("responsibility"))));
+                        new Organization.Position(LocalDateTime.parse(request.getParameter("dateStart")).toLocalDate(),
+                                LocalDateTime.parse(request.getParameter("dateEnd")).toLocalDate(),
+                                request.getParameter("position"), request.getParameter("responsibility"))));
         storage.update(resume);
-        response.sendRedirect("resume?uuid=" + uuid + "&action=view");
+    }
+
+    private void setEditOrganizationSection(Resume resume, SectionType sectionType, HttpServletRequest request) {
+        int idOrganization = Integer.parseInt(request.getParameter("idOrganization"));
+        int idPosition = Integer.parseInt(request.getParameter("idPosition"));
+        Organization organization = ((OrganizationSection) resume.getSections().get(sectionType)).getOrganizations().stream()
+                .filter(o -> o.getId() == idOrganization)
+                .findFirst()
+                .get();
+        organization.setHomePage(new Link(request.getParameter("nameOrganization"), request.getParameter("homePage")));
+        Organization.Position position = organization.getPositions().stream()
+                .filter(p -> p.getId() == idPosition)
+                .findFirst()
+                .get();
+        position.setStartDate(LocalDateTime.parse(request.getParameter("dateStart")).toLocalDate());
+        position.setEndDate(LocalDateTime.parse(request.getParameter("dateEnd")).toLocalDate());
+        position.setTitle(request.getParameter("position"));
+        position.setDescription(request.getParameter("description"));
+        storage.update(resume);
     }
 }
