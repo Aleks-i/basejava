@@ -147,7 +147,7 @@
                 <c:forEach items="${itemOrganizationEducation.getPositions()}" var="itemPosition">
                     <form method="post" action="organization" enctype="application/x-www-form-urlencoded">
                         <input type="hidden" name="sectionType" value="editEducation">
-                        <input type="hidden" name="uuid" value=${resume.uuid}>
+                        <input type="hidden" name="uuid" value="${resume.uuid}">
                         <input type="hidden" name="idOrganization" value=${itemOrganizationEducation.getId()}>
                         <input type="hidden" name="idPosition" value=${itemPosition.getId()}>
                         <tr>
