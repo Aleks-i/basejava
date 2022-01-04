@@ -152,32 +152,4 @@ public class ResumesForWeb {
         )));
         return TEMPLATE_TEST_RESUME;
     }
-
-    public static void convertListSectionForEditJsp(Resume resume) {
-        convertListSection(resume, SectionType.ACHIEVEMENT);
-        convertListSection(resume, SectionType.QUALIFICATIONS);
-    }
-
-    private static void convertListSection(Resume resume, SectionType sectionType) {
-        ListSection listSection = (ListSection) resume.getSections().get(sectionType);
-        if (listSection == null) {
-            listSection = new ListSection("");
-        } else {
-            listSection.setItems(List.of(listSection.getItems().stream()
-                    .map(String::new)
-                    .collect(Collectors.joining("\n\n"))));
-        }
-    }
-
-    public static List<String> convertContentListSectionForDB(String contet) {
-        return contet.lines()
-                .filter(s -> s.trim().length() > 0)
-                .collect(Collectors.toList());
-    }
-
-    public static Resume initializationNewResume(Resume resume) {
-        resume.setContacts(new EnumMap<>(ContactType.class));
-        resume.setSections(new EnumMap<>(SectionType.class));
-        return resume;
-    }
 }

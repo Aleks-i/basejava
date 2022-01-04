@@ -11,8 +11,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
-import static com.urise.webapp.util.ResumesForWeb.*;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ResumeServlet extends HttpServlet {
     private Storage storage;
@@ -47,13 +48,31 @@ public class ResumeServlet extends HttpServlet {
                 convertListSectionForEditJsp(resume);
             }
             case "save" -> {
-                resume = initializationNewResume(new Resume());
+                resume = new Resume();
+                resume.setContacts(new EnumMap<>(ContactType.class));
+                resume.setSections(new EnumMap<>(SectionType.class));
             }
             default -> throw new IllegalArgumentException("Action " + action + " is illegal");
         }
         request.setAttribute("resume", resume);
         request.getRequestDispatcher("view".equals(action) ? "WEB-INF/jsp/view.jsp" : "WEB-INF/jsp/edit.jsp")
                 .forward(request, response);
+    }
+
+    private void convertListSectionForEditJsp(Resume resume) {
+        convertListSection(resume, SectionType.ACHIEVEMENT);
+        convertListSection(resume, SectionType.QUALIFICATIONS);
+    }
+
+    private void convertListSection(Resume resume, SectionType sectionType) {
+        ListSection listSection = (ListSection) resume.getSections().get(sectionType);
+        if (listSection == null) {
+            listSection = new ListSection("");
+        } else {
+            listSection.setItems(List.of(listSection.getItems().stream()
+                    .map(String::new)
+                    .collect(Collectors.joining("\n\n"))));
+        }
     }
 
     @Override
@@ -104,5 +123,11 @@ public class ResumeServlet extends HttpServlet {
             storage.update(resume);
         }
         response.sendRedirect("resume?uuid=" + resume.getUuid() + "&action=edit");
+    }
+
+    private List<String> convertContentListSectionForDB(String contet) {
+        return contet.lines()
+                .filter(s -> s.trim().length() > 0)
+                .collect(Collectors.toList());
     }
 }
