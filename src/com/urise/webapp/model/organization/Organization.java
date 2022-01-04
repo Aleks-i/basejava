@@ -9,7 +9,10 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 import static com.urise.webapp.util.DateUtil.*;
 
@@ -22,7 +25,6 @@ public class Organization implements Serializable {
     private List<Position> positions;
 
     public Organization() {
-        this.positions = Collections.emptyList();
     }
 
     public Organization(String name, String url, Position... positions) {

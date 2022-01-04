@@ -23,21 +23,6 @@ public class Resume implements Serializable {
     private Map<SectionType, AbstractSection> sections;
 
     public Resume() {
-        this.contacts = new EnumMap<>(ContactType.class);
-        this.sections = new EnumMap<>(SectionType.class);
-        this.addContactData(ContactType.PHONE_NUMBER, "");
-        this.addContactData(ContactType.SKYPE, "");
-        this.addContactData(ContactType.EMAIL, "");
-        this.addContactData(ContactType.PROFILE_LINKEDIN, "");
-        this.addContactData(ContactType.PROFILE_GITHUB, "");
-        this.addContactData(ContactType.PROFILE_STACKOVERFLOW, "");
-        this.addContactData(ContactType.HOME_PAGE, "");
-        this.addSection(SectionType.PERSONAL, new TextSection(""));
-        this.addSection(SectionType.PERSONAL, new TextSection(""));
-        this.addSection(SectionType.ACHIEVEMENT, new ListSection(""));
-        this.addSection(SectionType.QUALIFICATIONS, new ListSection(""));
-        this.addSection(SectionType.EXPERIENCE, new OrganizationSection());
-        this.addSection(SectionType.EDUCATION, new OrganizationSection());
     }
 
     public Resume(String fullName) {
@@ -51,19 +36,6 @@ public class Resume implements Serializable {
         this.fullName = fullName;
         this.contacts = new EnumMap<>(ContactType.class);
         this.sections = new EnumMap<>(SectionType.class);
-        this.addContactData(ContactType.PHONE_NUMBER, "");
-        this.addContactData(ContactType.SKYPE, "");
-        this.addContactData(ContactType.EMAIL, "");
-        this.addContactData(ContactType.PROFILE_LINKEDIN, "");
-        this.addContactData(ContactType.PROFILE_GITHUB, "");
-        this.addContactData(ContactType.PROFILE_STACKOVERFLOW, "");
-        this.addContactData(ContactType.HOME_PAGE, "");
-        this.addSection(SectionType.PERSONAL, new TextSection(""));
-        this.addSection(SectionType.PERSONAL, new TextSection(""));
-        this.addSection(SectionType.ACHIEVEMENT, new ListSection(""));
-        this.addSection(SectionType.QUALIFICATIONS, new ListSection(""));
-        this.addSection(SectionType.EXPERIENCE, new OrganizationSection());
-        this.addSection(SectionType.EDUCATION, new OrganizationSection());
     }
 
     public void addContactData(ContactType contactType, String contact) {
@@ -90,12 +62,20 @@ public class Resume implements Serializable {
         return contacts;
     }
 
+    public void setContacts(Map<ContactType, String> contacts) {
+        this.contacts = contacts;
+    }
+
     public String getContact(ContactType type) {
         return contacts.get(type);
     }
 
     public Map<SectionType, AbstractSection> getSections() {
         return sections;
+    }
+
+    public void setSections(Map<SectionType, AbstractSection> sections) {
+        this.sections = sections;
     }
 
     @Override

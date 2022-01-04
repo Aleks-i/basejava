@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 public class OrganizationServlet extends HttpServlet {
     private Storage storage;
@@ -60,11 +61,15 @@ public class OrganizationServlet extends HttpServlet {
     }
 
     private void setNewOrganizationSection(Resume resume, SectionType sectionType, HttpServletRequest request) {
-        ((OrganizationSection) resume.getSections().get(sectionType)).getOrganizations().add(0,
-                new Organization(request.getParameter("nameOrganization"), request.getParameter("homePage"),
-                        new Organization.Position(LocalDateTime.parse(request.getParameter("dateStart")).toLocalDate(),
-                                LocalDateTime.parse(request.getParameter("dateEnd")).toLocalDate(),
-                                request.getParameter("position"), request.getParameter("responsibility"))));
+        Organization organization = new Organization(request.getParameter("nameOrganization"), request.getParameter("homePage"),
+                new Organization.Position(LocalDateTime.parse(request.getParameter("dateStart")).toLocalDate(),
+                        LocalDateTime.parse(request.getParameter("dateEnd")).toLocalDate(),
+                        request.getParameter("position"), request.getParameter("responsibility")));
+        if (resume.getSections().get(sectionType) == null) {
+            resume.addSection(sectionType, new OrganizationSection(organization));
+        } else {
+            ((OrganizationSection) resume.getSections().get(sectionType)).getOrganizations().add(0, organization);
+        }
         storage.update(resume);
     }
 
@@ -82,8 +87,14 @@ public class OrganizationServlet extends HttpServlet {
                 .get();
         position.setStartDate(LocalDateTime.parse(request.getParameter("dateStart")).toLocalDate());
         position.setEndDate(LocalDateTime.parse(request.getParameter("dateEnd")).toLocalDate());
-        position.setTitle(request.getParameter("position"));
-        position.setDescription(request.getParameter("description"));
+        if (sectionType.equals(SectionType.EXPERIENCE)) {
+            String description = request.getParameter("description").lines()
+                    .map(String::trim)
+                    .filter(s -> s.length() > 0)
+                    .collect(Collectors.joining("\n"));
+            position.setTitle(request.getParameter("position"));
+            position.setDescription(description);
+        }
         storage.update(resume);
     }
 }

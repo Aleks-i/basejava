@@ -62,7 +62,7 @@
     <hr/>
     <h1 align="center">Редактирование разделов опыта работы и образования</h1>
     <table cellpadding="2">
-        <c:if test="${!sections.get(SectionType.EXPERIENCE).getOrganizations().isEmpty()}">
+        <c:if test="${sections.get(SectionType.EXPERIENCE).getOrganizations().size() > 0}">
             <tr>
                 <td colspan="2">
                     <h2>${SectionType.EXPERIENCE.title}</h2>
@@ -70,71 +70,73 @@
             </tr>
             <c:forEach items="${sections.get(SectionType.EXPERIENCE).getOrganizations()}"
                        var="itemOrganizationExperience">
-                <form method="post" action="organization" enctype="application/x-www-form-urlencoded">
-                    <input type="hidden" name="uuid" value="${resume.uuid}">
-                    <input type="hidden" name="sectionType" value="editExperience">
-                    <input type="hidden" name="idOrganization" value=${itemOrganizationExperience.getId()}>
-                    <input type="hidden" name="idPosition" value=${itemOrganizationExperience.getPositions().get(0).getId()}>
-                    <tr>
-                        <td colspan="2">
-                            <dl>
-                                <dt><label for="organizationSectionExperienceName">Название организации</label></dt>
-                                <dd><input type="text" id="organizationSectionExperienceName"
-                                           name="nameOrganization"
-                                           value="${itemOrganizationExperience.getHomePage().getName()}"></dd>
-                            </dl>
-                            <dl>
-                                <dt><label for="organizationSectionExperienceURL">Домашняя страница</label></dt>
-                                <dd><input type="text" id="organizationSectionExperienceURL" name="homePage"
-                                           value="${itemOrganizationExperience.getHomePage().getUrl()}"></dd>
-                            </dl>
-                            <c:forEach items="${itemOrganizationExperience.getPositions()}" var="itemPosition">
-                            <dl>
-                                <dt><label for="date-timeExperience">Период работы</label></dt>
-                                <dd>
-                                    <input type="datetime-local" id="date-timeExperience" name="dateStart"
-                                           value="${itemPosition.getStartLocalDateToLocalDateTime()}"> -
-                                    <input type="datetime-local" name="dateEnd"
-                                           value="${itemPosition.getEndLocalDateToLocalDateTime()}">
-                                </dd>
-                            </dl>
-                            <dl>
-                                <dt><label for="positionExperience">Позиция</label></dt>
-                                <dd>
-                                    <input type="text" id="positionExperience" name="position" size="90%"
-                                           value="${itemPosition.getTitle()}">.<br>
-                                </dd>
-                            </dl>
-                            <dl>
-                                <dt>
-                                    <label for="descriptionExperience">Ключевые обязанности</label>
-                                </dt>
-                                <dd>
-                                    <br>
-                                    <textarea type="text" name="description" id="descriptionExperience"
-                                              style="width: 900px; height: 100px; resize: none">"${itemPosition.getDescription()}"
+                <c:forEach items="${itemOrganizationExperience.getPositions()}"
+                           var="itemPosition">
+                    <form method="post" action="organization" enctype="application/x-www-form-urlencoded">
+                        <input type="hidden" name="uuid" value="${resume.uuid}">
+                        <input type="hidden" name="sectionType" value="editExperience">
+                        <input type="hidden" name="idOrganization" value=${itemOrganizationExperience.getId()}>
+                        <input type="hidden" name="idPosition"
+                               value=${itemPosition.getId()}>
+                        <tr>
+                            <td colspan="2">
+                                <dl>
+                                    <dt><label for="organizationSectionExperienceName">Название организации</label></dt>
+                                    <dd><input type="text" id="organizationSectionExperienceName"
+                                               name="nameOrganization"
+                                               value="${itemOrganizationExperience.getHomePage().getName()}"></dd>
+                                </dl>
+                                <dl>
+                                    <dt><label for="organizationSectionExperienceURL">Домашняя страница</label></dt>
+                                    <dd><input type="text" id="organizationSectionExperienceURL" name="homePage"
+                                               value="${itemOrganizationExperience.getHomePage().getUrl()}"></dd>
+                                </dl>
+                                <dl>
+                                    <dt><label for="date-timeExperience">Период работы</label></dt>
+                                    <dd>
+                                        <input type="datetime-local" id="date-timeExperience" name="dateStart"
+                                               value="${itemPosition.getStartLocalDateToLocalDateTime()}"> -
+                                        <input type="datetime-local" name="dateEnd"
+                                               value="${itemPosition.getEndLocalDateToLocalDateTime()}">
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt><label for="positionExperience">Позиция</label></dt>
+                                    <dd>
+                                        <input type="text" id="positionExperience" name="position" size="90%"
+                                               value="${itemPosition.getTitle()}">.<br>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        <label for="descriptionExperience">Ключевые обязанности</label>
+                                    </dt>
+                                    <dd>
+                                        <br>
+                                        <textarea type="text" name="description" id="descriptionExperience"
+                                                  style="width: 900px; height: 100px; resize: none">${itemPosition.getDescription()}
                                             </textarea>
-                                </dd>
-                            </dl>
-                        </td>
-                    </tr>
-                    </c:forEach>
-                    <tr>
-                        <td colspan="2">
-                            <center>
-                                <button type="submit">Сохранить изменения по организации и продолжить</button>
-                            </center>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <br>
-                        </td>
-                    </tr>
-                </form>
+                                    </dd>
+                                </dl>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <center>
+                                    <button type="submit">Сохранить изменения по организации и продолжить</button>
+                                </center>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <br>
+                            </td>
+                        </tr>
+                    </form>
+                </c:forEach>
             </c:forEach>
         </c:if>
-        <c:if test="${!sections.get(SectionType.EDUCATION).getOrganizations().isEmpty()}">
+        <c:if test="${sections.get(SectionType.EDUCATION).getOrganizations().size() > 0}">
             <tr>
                 <td colspan="2">
                     <h2>${SectionType.EDUCATION.title}</h2>

@@ -13,7 +13,6 @@ public class OrganizationSection extends AbstractSection {
     private List<Organization> organizations;
 
     public OrganizationSection() {
-        this.organizations = Collections.emptyList();
     }
 
     public OrganizationSection(Organization... organizations) {

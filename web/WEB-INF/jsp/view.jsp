@@ -23,7 +23,7 @@
     <p>
     <table cellpadding="2">
         <c:set var="sections" value="${resume.getSections()}"/>
-        <c:if test="${sections.get(SectionType.OBJECTIVE).getContent().length() != 0}">
+        <c:if test="${sections.get(SectionType.OBJECTIVE).getContent() != null}">
             <tr>
                 <td colspan="2">
                     <h2>${SectionType.OBJECTIVE.title}</h2>
@@ -35,7 +35,7 @@
                 </td>
             </tr>
         </c:if>
-        <c:if test="${sections.get(SectionType.PERSONAL).getContent().length() != 0}">
+        <c:if test="${sections.get(SectionType.PERSONAL).getContent() != null}">
             <tr>
                 <td colspan="2">
                     <h2>${SectionType.PERSONAL.title}</h2>
@@ -47,7 +47,7 @@
                 </td>
             </tr>
         </c:if>
-        <c:if test="${!sections.get(SectionType.ACHIEVEMENT).getItems().isEmpty()}">
+        <c:if test="${sections.get(SectionType.ACHIEVEMENT).getItems() != null}">
             <tr>
                 <td colspan="2">
                     <h2>${SectionType.ACHIEVEMENT.title}</h2>
@@ -63,7 +63,7 @@
                 </td>
             </tr>
         </c:if>
-        <c:if test="${!sections.get(SectionType.QUALIFICATIONS).getItems().isEmpty()}">
+        <c:if test="${sections.get(SectionType.QUALIFICATIONS).getItems() != null}">
             <tr>
                 <td colspan="2">
                     <h2>${SectionType.QUALIFICATIONS.title}</h2>

@@ -12,8 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.urise.webapp.util.ResumesForWeb.convertContentListSectionForDB;
-import static com.urise.webapp.util.ResumesForWeb.convertListSectionForEditJsp;
+import static com.urise.webapp.util.ResumesForWeb.*;
 
 public class ResumeServlet extends HttpServlet {
     private Storage storage;
@@ -48,7 +47,7 @@ public class ResumeServlet extends HttpServlet {
                 convertListSectionForEditJsp(resume);
             }
             case "save" -> {
-                resume = new Resume();
+                resume = initializationNewResume(new Resume());
             }
             default -> throw new IllegalArgumentException("Action " + action + " is illegal");
         }
@@ -75,10 +74,30 @@ public class ResumeServlet extends HttpServlet {
                 resume.getContacts().remove(contactType);
             }
         }
-        resume.addSection(SectionType.OBJECTIVE, new TextSection(request.getParameter("textSectionObjective")));
-        resume.addSection(SectionType.PERSONAL, new TextSection(request.getParameter("textSectionPersonal")));
-        resume.addSection(SectionType.ACHIEVEMENT, new ListSection(convertContentListSectionForDB(request.getParameter("listSectionAchievement"))));
-        resume.addSection(SectionType.QUALIFICATIONS, new ListSection(convertContentListSectionForDB(request.getParameter("listSectionQualifications"))));
+        String contentTextSectionObjective = request.getParameter("textSectionObjective");
+        String contentTextSectionPersonal = request.getParameter("textSectionPersonal");
+        String contentListSectionAchievement = request.getParameter("listSectionAchievement");
+        String contentListSectionQualifications = request.getParameter("listSectionQualifications");
+        if (contentTextSectionObjective.trim().length() > 0) {
+            resume.addSection(SectionType.OBJECTIVE, new TextSection(contentTextSectionObjective));
+        } else {
+            resume.getSections().remove(SectionType.OBJECTIVE);
+        }
+        if (contentTextSectionPersonal.trim().length() > 0) {
+            resume.addSection(SectionType.PERSONAL, new TextSection(contentTextSectionPersonal));
+        } else {
+            resume.getSections().remove(SectionType.PERSONAL);
+        }
+        if (contentListSectionAchievement.trim().length() > 0) {
+            resume.addSection(SectionType.ACHIEVEMENT, new ListSection(convertContentListSectionForDB(contentListSectionAchievement)));
+        } else {
+            resume.getSections().remove(SectionType.ACHIEVEMENT);
+        }
+        if (contentListSectionQualifications.trim().length() > 0) {
+            resume.addSection(SectionType.QUALIFICATIONS, new ListSection(convertContentListSectionForDB(contentListSectionQualifications)));
+        } else {
+            resume.getSections().remove(SectionType.QUALIFICATIONS);
+        }
         if (uuid.length() == 0) {
             storage.save(resume);
         } else {

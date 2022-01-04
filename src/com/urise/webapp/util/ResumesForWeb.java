@@ -4,6 +4,7 @@ import com.urise.webapp.model.*;
 import com.urise.webapp.model.organization.Organization;
 
 import java.time.Month;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -159,14 +160,24 @@ public class ResumesForWeb {
 
     private static void convertListSection(Resume resume, SectionType sectionType) {
         ListSection listSection = (ListSection) resume.getSections().get(sectionType);
-        listSection.setItems(List.of(listSection.getItems().stream()
-                .map(String::new)
-                .collect(Collectors.joining("\n\n"))));
+        if (listSection == null) {
+            listSection = new ListSection("");
+        } else {
+            listSection.setItems(List.of(listSection.getItems().stream()
+                    .map(String::new)
+                    .collect(Collectors.joining("\n\n"))));
+        }
     }
 
     public static List<String> convertContentListSectionForDB(String contet) {
         return contet.lines()
                 .filter(s -> s.trim().length() > 0)
                 .collect(Collectors.toList());
+    }
+
+    public static Resume initializationNewResume(Resume resume) {
+        resume.setContacts(new EnumMap<>(ContactType.class));
+        resume.setSections(new EnumMap<>(SectionType.class));
+        return resume;
     }
 }
