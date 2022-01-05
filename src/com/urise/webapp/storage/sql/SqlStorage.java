@@ -33,11 +33,6 @@ public class SqlStorage implements Storage {
             throw new IllegalStateException(e);
         }
         this.helper = new SqlHelper(dbUrl, dbUser, dbPassword);
-        clear();
-        save(RESUME_1);
-        save(RESUME_2);
-        save(RESUME_3);
-        save(RESUME_4);
     }
 
     @Override
