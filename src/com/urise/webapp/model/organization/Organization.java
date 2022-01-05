@@ -21,6 +21,7 @@ public class Organization implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String id;
+    private String uuid;
     private Link homePage;
     private List<Position> positions;
 
@@ -39,6 +40,14 @@ public class Organization implements Serializable {
 
     public String getId() {
         return id;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public Link getHomePage() {

@@ -62,149 +62,101 @@
     <hr/>
     <h1 align="center">Редактирование разделов опыта работы и образования</h1>
     <table cellpadding="2">
-        <c:if test="${sections.get(SectionType.EXPERIENCE).getOrganizations().size() > 0}">
-            <tr>
-                <td colspan="2">
-                    <h2>${SectionType.EXPERIENCE.title}</h2>
-                </td>
-            </tr>
-            <c:forEach items="${sections.get(SectionType.EXPERIENCE).getOrganizations()}"
-                       var="itemOrganizationExperience">
-                <c:forEach items="${itemOrganizationExperience.getPositions()}"
-                           var="itemPosition">
-                    <form method="post" action="organization" enctype="application/x-www-form-urlencoded">
-                        <input type="hidden" name="uuid" value="${resume.uuid}">
-                        <input type="hidden" name="sectionType" value="editExperience">
-                        <input type="hidden" name="idOrganization" value=${itemOrganizationExperience.getId()}>
-                        <input type="hidden" name="idPosition"
-                               value=${itemPosition.getId()}>
-                        <tr>
-                            <td colspan="2">
-                                <dl>
-                                    <dt><label for="organizationSectionExperienceName">Название организации</label></dt>
-                                    <dd><input type="text" id="organizationSectionExperienceName"
-                                               name="nameOrganization"
-                                               value="${itemOrganizationExperience.getHomePage().getName()}"></dd>
-                                </dl>
-                                <dl>
-                                    <dt><label for="organizationSectionExperienceURL">Домашняя страница</label></dt>
-                                    <dd><input type="text" id="organizationSectionExperienceURL" name="homePage"
-                                               value="${itemOrganizationExperience.getHomePage().getUrl()}"></dd>
-                                </dl>
-                                <dl>
-                                    <dt><label for="date-timeExperience">Период работы</label></dt>
-                                    <dd>
-                                        <input type="datetime-local" id="date-timeExperience" name="dateStart"
-                                               value="${itemPosition.getStartLocalDateToLocalDateTime()}"> -
-                                        <input type="datetime-local" name="dateEnd"
-                                               value="${itemPosition.getEndLocalDateToLocalDateTime()}">
-                                    </dd>
-                                </dl>
-                                <dl>
-                                    <dt><label for="positionExperience">Позиция</label></dt>
-                                    <dd>
-                                        <input type="text" id="positionExperience" name="position" size="90%"
-                                               value="${itemPosition.getTitle()}">.<br>
-                                    </dd>
-                                </dl>
-                                <dl>
-                                    <dt>
-                                        <label for="descriptionExperience">Ключевые обязанности</label>
-                                    </dt>
-                                    <dd>
-                                        <br>
-                                        <textarea type="text" name="description" id="descriptionExperience"
-                                                  style="width: 900px; height: 100px; resize: none">${itemPosition.getDescription()}
-                                            </textarea>
-                                    </dd>
-                                </dl>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <center>
-                                    <button type="submit">Сохранить изменения по организации и продолжить</button>
-                                </center>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <br>
-                            </td>
-                        </tr>
-                    </form>
-                </c:forEach>
-            </c:forEach>
-        </c:if>
-        <c:if test="${sections.get(SectionType.EDUCATION).getOrganizations().size() > 0}">
-            <tr>
-                <td colspan="2">
-                    <h2>${SectionType.EDUCATION.title}</h2>
-                </td>
-            </tr>
-            <c:forEach items="${sections.get(SectionType.EDUCATION).getOrganizations()}"
-                       var="itemOrganizationEducation">
-                <c:forEach items="${itemOrganizationEducation.getPositions()}" var="itemPosition">
-                    <form method="post" action="organization" enctype="application/x-www-form-urlencoded">
-                        <input type="hidden" name="sectionType" value="editEducation">
-                        <input type="hidden" name="uuid" value="${resume.uuid}">
-                        <input type="hidden" name="idOrganization" value=${itemOrganizationEducation.getId()}>
-                        <input type="hidden" name="idPosition" value=${itemPosition.getId()}>
-                        <tr>
-                            <td colspan="2">
-                                <dl>
-                                    <dt><label for="organizationSectionEducation">Название организации</label></dt>
-                                    <dd><input type="text" id="organizationSectionEducation"
-                                               name="nameOrganization"
-                                               value="${itemOrganizationEducation.getHomePage().getName()}"></dd>
-                                </dl>
-                                <dl>
-                                    <dt><label for="organizationSectionEducationURL">Домашняя страница</label></dt>
-                                    <dd><input type="text" id="organizationSectionEducationURL" name="homePage"
-                                               value="${itemOrganizationEducation.getHomePage().getUrl()}"></dd>
-                                </dl>
-                                <dl>
-                                    <dt><label for="date-time">Период работы</label></dt>
-                                    <dd>
-                                        <input type="datetime-local" id="date-time" name="dateStart"
-                                               value="${itemPosition.getStartLocalDateToLocalDateTime()}"> -
-                                        <input type="datetime-local" name="dateEnd"
-                                               value="${itemPosition.getEndLocalDateToLocalDateTime()}">
-                                    </dd>
-                                </dl>
-                                <dl>
-                                    <dt><label for="position">Позиция</label></dt>
-                                    <dd>
-                                        <input type="text" id="position" name="position" size="90%"
-                                               value="${itemPosition.getTitle()}">.<br>
-                                    </dd>
-                                </dl>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <center>
-                                    <button type="submit">Сохранить изменения по организации и продолжить</button>
-                                </center>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <br>
-                            </td>
-                        </tr>
-                    </form>
-                </c:forEach>
-            </c:forEach>
-        </c:if>
+        <tr>
+            <td colspan="2">
+                <h2>${SectionType.EXPERIENCE.title}</h2>
+            </td>
+        </tr>
     </table>
-    <jsp:include page="fragments/addorganizationsection.jsp"/>
-    <form method="get" action="resume" enctype="application/x-www-form-urlencoded">
-        <input type="hidden" name="uuid" value="${resume.uuid}">
-        <center>
-            <button type="submit"><a href="resume?uuid=${resume.uuid}&action=view">Завершить редактирование</a></button>
-        </center>
-    </form>
+</section>
+<jsp:include page="fragments/addexperiencesection.jsp"/>
+<section>
+    <table>
+        <c:forEach items="${sections.get(SectionType.EXPERIENCE).getOrganizations()}"
+                   var="itemOrganizationExperience">
+            <tr>
+                <td colspan="2">
+                    <h3>
+                        <a href=${itemOrganizationExperience.getHomePage().getUrl()}>${itemOrganizationExperience.getHomePage().getName()}</a>
+                    </h3>
+                </td>
+            </tr>
+            <c:forEach items="${itemOrganizationExperience.getPositions()}" var="itemPosition">
+                <tr>
+                    <td width="15%" style="vertical-align: top">${itemPosition.getStartDatetoHtml()}
+                        - ${itemPosition.getEndDatetoHtml()}</td>
+                    <td><b>${itemPosition.getTitle()}</b>.<br>${itemPosition.getDescription()}</td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <center>
+                            <a href="organization?uuid=${resume.uuid}&idOrganization=${itemOrganizationExperience.getId()}&action=editExperienceOrganization">
+                                <button>Изменить</button>
+                            </a>
+                        </center>
+                    </td>
+                </tr>
+            </c:forEach>
+        </c:forEach>
+    </table>
+</section>
+<section>
+    <table cellpadding="2">
+        <tr>
+            <td colspan="2">
+                <h2>${SectionType.EDUCATION.title}</h2>
+            </td>
+        </tr>
+    </table>
+</section>
+<jsp:include page="fragments/addeducationsection.jsp"/>
+<section>
+    <table cellpadding="2">
+        <c:forEach items="${sections.get(SectionType.EDUCATION).getOrganizations()}"
+                   var="itemOrganizationEducation">
+            <tr>
+                <td colspan="2">
+                    <h3>
+                        <a href=${itemOrganizationEducation.getHomePage().getUrl()}>${itemOrganizationEducation.getHomePage().getName()}</a>
+                    </h3>
+                </td>
+            </tr>
+            <c:forEach items="${itemOrganizationEducation.getPositions()}" var="itemPosition">
+                <tr>
+                    <td width="15%" style="vertical-align: top">${itemPosition.getStartDatetoHtml()}
+                        - ${itemPosition.getEndDatetoHtml()}</td>
+                    <td><b>${itemPosition.getTitle()}</b></td>
+                </tr>
+            </c:forEach>
+            <tr>
+                <td colspan="2">
+                    <center>
+                        <a href="organization?uuid=${resume.uuid}&idOrganization=${itemOrganizationEducation.getId()}&action=editEducationOrganization">
+                            <button>Изменить</button>
+                        </a>
+                    </center>
+                </td>
+            </tr>
+        </c:forEach>
+        <tr>
+            <td colspan="2">
+                <hr/>
+                <br>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <form method="get" action="resume" enctype="application/x-www-form-urlencoded">
+                    <input type="hidden" name="uuid" value="${resume.uuid}">
+                    <center>
+                        <button type="submit"><a href="resume?uuid=${resume.uuid}&action=view">Завершить
+                            редактирование</a>
+                        </button>
+                    </center>
+                </form>
+            </td>
+        </tr>
+    </table>
 </section>
 <jsp:include page="fragments/footer.jsp"/>
 </body>
