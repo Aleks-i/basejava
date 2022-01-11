@@ -12,15 +12,16 @@ import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
-import static com.urise.webapp.util.DateUtil.*;
+import static com.urise.webapp.util.DateUtil.NOW;
+import static com.urise.webapp.util.DateUtil.of;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    public static final Organization EMPTY = new Organization("", "", Position.EMPTY);
+
     private String uuid;
     private Link homePage;
     private List<Position> positions;
@@ -33,13 +34,8 @@ public class Organization implements Serializable {
     }
 
     public Organization(Link homePage, List<Position> positions) {
-        this.id = UUID.randomUUID().toString();
         this.homePage = homePage;
         this.positions = positions;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public String getUuid() {
@@ -56,10 +52,6 @@ public class Organization implements Serializable {
 
     public List<Position> getPositions() {
         return positions;
-    }
-
-    public void setHomePage(Link homePage) {
-        this.homePage = homePage;
     }
 
     @Override
@@ -84,7 +76,7 @@ public class Organization implements Serializable {
 
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class Position implements Serializable {
-        private String id;
+        public static final Position EMPTY = new Organization.Position();
         @XmlJavaTypeAdapter(LocalDateAdapter.class)
         private LocalDate startDate;
         @XmlJavaTypeAdapter(LocalDateAdapter.class)
@@ -107,15 +99,10 @@ public class Organization implements Serializable {
             Objects.requireNonNull(startDate, "startDate must not be null");
             Objects.requireNonNull(endDate, "endDate must not be null");
             Objects.requireNonNull(title, "title must not be null");
-            this.id = UUID.randomUUID().toString();
             this.startDate = startDate;
             this.endDate = endDate;
             this.title = title;
             this.description = description;
-        }
-
-        public String getId() {
-            return id;
         }
 
         public LocalDate getStartDate() {
@@ -126,20 +113,12 @@ public class Organization implements Serializable {
             return endDate;
         }
 
-        public String getStartDatetoHtml() {
-            return toHtmlLocalDate(startDate);
-        }
-
-        public String getEndDatetoHtml() {
-            return toHtmlLocalDate(endDate);
-        }
-
         public LocalDateTime getStartLocalDateToLocalDateTime() {
-            return startDate.atTime(8, 0);
+            return startDate == null ? LocalDateTime.now() : startDate.atTime(8, 0);
         }
 
         public LocalDateTime getEndLocalDateToLocalDateTime() {
-            return endDate.atTime(8, 0);
+            return startDate == null ? LocalDateTime.now() : endDate.atTime(8, 0);
         }
 
         public String getTitle() {
@@ -148,22 +127,6 @@ public class Organization implements Serializable {
 
         public String getDescription() {
             return description;
-        }
-
-        public void setStartDate(LocalDate startDate) {
-            this.startDate = startDate;
-        }
-
-        public void setEndDate(LocalDate endDate) {
-            this.endDate = endDate;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        public void setDescription(String description) {
-            this.description = description;
         }
 
         @Override

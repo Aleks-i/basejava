@@ -1,5 +1,8 @@
 <%@ page import="com.urise.webapp.model.ContactType" %>
 <%@ page import="com.urise.webapp.model.SectionType" %>
+<%@ page import="com.urise.webapp.model.ListSection" %>
+<%@ page import="com.urise.webapp.model.OrganizationSection" %>
+<%@ page import="com.urise.webapp.util.DateUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -12,7 +15,6 @@
 <body>
 <jsp:include page="fragments/header.jsp"/>
 <section>
-    <h1 align="center">Редактирование контактов, позиции, личных качеств, достижений и квалификации</h1>
     <form method="post" action="resume" enctype="application/x-www-form-urlencoded">
         <input type="hidden" name="uuid" value="${resume.uuid}">
         <dl>
@@ -26,137 +28,68 @@
                 <dd><input type="text" name="${type.name()}" size=30 value="${resume.getContact(type)}"></dd>
             </dl>
         </c:forEach>
-        <p>
-            <c:set var="sections" value="${resume.getSections()}"/>
-        <dl>
-            <dt><h3>${SectionType.OBJECTIVE.title}</h3></dt>
-            <dd><input type="text" name="textSectionObjective" size=100%
-                       value="${sections.get(SectionType.OBJECTIVE)}"></dd>
-        </dl>
-        <dl>
-            <dt><h3>${SectionType.PERSONAL.title}</h3></dt>
-            <dd><input type="text" name="textSectionPersonal" size=100%
-                       value="${sections.get(SectionType.PERSONAL)}"></dd>
-        </dl>
-        <dl>
-            <dt><h3>${SectionType.ACHIEVEMENT.title}</h3></dt>
-            <dd><textarea id="listSectionAchievement"
-                          name="listSectionAchievement" style="width: 900px; height: 250px; resize: none">${sections
-                    .get(SectionType.ACHIEVEMENT).getItems().get(0)}</textarea>
-            </dd>
-        </dl>
-        <dl>
-            <dt><h3>${SectionType.QUALIFICATIONS.title}</h3></dt>
-            <dd><textarea id="listSectionQualifications"
-                          name="listSectionQualifications" style="width: 900px; height: 250px; resize: none">${sections
-                    .get(SectionType.QUALIFICATIONS).getItems().get(0)}</textarea>
-            </dd>
-        </dl>
-        <br>
-        <center>
-            <button type="submit">Сохранить и продолжить</button>
-            <button type="reset" onclick="window.history.back()">Отменить</button>
-        </center>
-        <br>
+        <hr>
+        <c:forEach var="type" items="<%=SectionType.values()%>">
+            <c:set var="section" value="${resume.sections.get(type)}"/>
+            <jsp:useBean id="section" type="com.urise.webapp.model.AbstractSection"/>
+            <h3><a>${type.title}</a></h3>
+            <c:choose>
+                <c:when test="${type=='OBJECTIVE'}">
+                    <input type="text" name="${type}" size="75" value=<%=section%>>
+                </c:when>
+                <c:when test="${type=='PERSONAL'}">
+                    <textarea name="${type}" cols="75" rows="5"><%=section%></textarea>
+                </c:when>
+                <c:when test="${type=='ACHIEVEMENT' || type=='QUALIFICATIONS'}">
+                    <textarea name="${type}" cols="75"
+                              rows="5"><%=String.join("\n", ((ListSection) section).getItems())%></textarea>
+                </c:when>
+                <c:when test="${type=='EXPERIENCE' || type=='EDUCATION'}">
+                    <c:forEach var="organization" items="<%=((OrganizationSection) section).getOrganizations()%>"
+                               varStatus="counter">
+                        <dl>
+                            <dt>Название учреждения:</dt>
+                            <dd><input type="text" name="${type}" size="90" value="${organization.homePage.name}"></dd>
+                        </dl>
+                        <dl>
+                            <dt>Сайт учреждения:</dt>
+                            <dd><input type="text" name="${type}url" size="90" value="${organization.homePage.url}">
+                            </dd>
+                        </dl>
+                        <div style="margin-left: 50px">
+                            <c:forEach var="position" items="${organization.positions}">
+                                <jsp:useBean id="position"
+                                             type="com.urise.webapp.model.organization.Organization.Position"/>
+                                <dl>
+                                    <dt>Период работы:</dt>
+                                    <dd><input type="text" name="${type}${counter.index}startDate" size="10"
+                                               value="<%=DateUtil.format(position.getStartDate())%>"
+                                               placeholder="MM/yyyy"> - <input
+                                            type="textlocal" name="${type}${counter.index}endDate" size="10"
+                                            value="<%=DateUtil.format(position.getEndDate())%>" placeholder="MM/yyyy">
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>Должность:</dt>
+                                    <dd><input type="text" name="${type}${counter.index}title" size="75"
+                                               value="${position.title}">
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>Описание:</dt>
+                                    <dd><textarea name="${type}${counter.index}description" rows="2"
+                                                  cols="75">"${position.description}"</textarea>
+                                    </dd>
+                                </dl>
+                            </c:forEach>
+                        </div>
+                    </c:forEach>
+                </c:when>
+            </c:choose>
+        </c:forEach>
+        <button type="submit">Сохранить</button>
+        <button type="reset" onclick="window.history.back()">Отменить</button>
     </form>
-    <hr/>
-    <h1 align="center">Редактирование разделов опыта работы и образования</h1>
-    <table cellpadding="2">
-        <tr>
-            <td colspan="2">
-                <h2>${SectionType.EXPERIENCE.title}</h2>
-            </td>
-        </tr>
-    </table>
-</section>
-<jsp:include page="fragments/addexperiencesection.jsp"/>
-<section>
-    <table>
-        <c:forEach items="${sections.get(SectionType.EXPERIENCE).getOrganizations()}"
-                   var="itemOrganizationExperience">
-            <tr>
-                <td colspan="2">
-                    <h3>
-                        <a href=${itemOrganizationExperience.getHomePage().getUrl()}>${itemOrganizationExperience.getHomePage().getName()}</a>
-                    </h3>
-                </td>
-            </tr>
-            <c:forEach items="${itemOrganizationExperience.getPositions()}" var="itemPosition">
-                <tr>
-                    <td width="15%" style="vertical-align: top">${itemPosition.getStartDatetoHtml()}
-                        - ${itemPosition.getEndDatetoHtml()}</td>
-                    <td><b>${itemPosition.getTitle()}</b>.<br>${itemPosition.getDescription()}</td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <center>
-                            <a href="organization?uuid=${resume.uuid}&idOrganization=${itemOrganizationExperience.getId()}&action=editExperienceOrganization">
-                                <button>Изменить</button>
-                            </a>
-                        </center>
-                    </td>
-                </tr>
-            </c:forEach>
-        </c:forEach>
-    </table>
-</section>
-<section>
-    <table cellpadding="2">
-        <tr>
-            <td colspan="2">
-                <h2>${SectionType.EDUCATION.title}</h2>
-            </td>
-        </tr>
-    </table>
-</section>
-<jsp:include page="fragments/addeducationsection.jsp"/>
-<section>
-    <table cellpadding="2">
-        <c:forEach items="${sections.get(SectionType.EDUCATION).getOrganizations()}"
-                   var="itemOrganizationEducation">
-            <tr>
-                <td colspan="2">
-                    <h3>
-                        <a href=${itemOrganizationEducation.getHomePage().getUrl()}>${itemOrganizationEducation.getHomePage().getName()}</a>
-                    </h3>
-                </td>
-            </tr>
-            <c:forEach items="${itemOrganizationEducation.getPositions()}" var="itemPosition">
-                <tr>
-                    <td width="15%" style="vertical-align: top">${itemPosition.getStartDatetoHtml()}
-                        - ${itemPosition.getEndDatetoHtml()}</td>
-                    <td><b>${itemPosition.getTitle()}</b></td>
-                </tr>
-            </c:forEach>
-            <tr>
-                <td colspan="2">
-                    <center>
-                        <a href="organization?uuid=${resume.uuid}&idOrganization=${itemOrganizationEducation.getId()}&action=editEducationOrganization">
-                            <button>Изменить</button>
-                        </a>
-                    </center>
-                </td>
-            </tr>
-        </c:forEach>
-        <tr>
-            <td colspan="2">
-                <hr/>
-                <br>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <form method="get" action="resume" enctype="application/x-www-form-urlencoded">
-                    <input type="hidden" name="uuid" value="${resume.uuid}">
-                    <center>
-                        <button type="submit"><a href="resume?uuid=${resume.uuid}&action=view">Завершить
-                            редактирование</a>
-                        </button>
-                    </center>
-                </form>
-            </td>
-        </tr>
-    </table>
 </section>
 <jsp:include page="fragments/footer.jsp"/>
 </body>

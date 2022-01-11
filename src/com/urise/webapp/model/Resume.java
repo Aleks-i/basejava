@@ -1,5 +1,7 @@
 package com.urise.webapp.model;
 
+import com.urise.webapp.model.organization.Organization;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -16,11 +18,24 @@ import java.util.UUID;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Resume implements Serializable {
     private static final long serialVersionUID = 1L;
+
+    public static final Resume EMPTY = new Resume();
+
+    static {
+        EMPTY.setSection(SectionType.OBJECTIVE, TextSection.EMPTY);
+        EMPTY.setSection(SectionType.PERSONAL, TextSection.EMPTY);
+        EMPTY.setSection(SectionType.ACHIEVEMENT, ListSection.EMPTY);
+        EMPTY.setSection(SectionType.QUALIFICATIONS, ListSection.EMPTY);
+        EMPTY.setSection(SectionType.EXPERIENCE, new OrganizationSection(Organization.EMPTY));
+        EMPTY.setSection(SectionType.EDUCATION, new OrganizationSection(Organization.EMPTY));
+    }
+
     // Unique identifier
     private String uuid;
     private String fullName;
-    private Map<ContactType, String> contacts;
-    private Map<SectionType, AbstractSection> sections;
+    private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
+    private final Map<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
+
 
     public Resume() {
     }
@@ -34,15 +49,13 @@ public class Resume implements Serializable {
         Objects.requireNonNull(fullName, "fullName must not be null");
         this.uuid = uuid;
         this.fullName = fullName;
-        this.contacts = new EnumMap<>(ContactType.class);
-        this.sections = new EnumMap<>(SectionType.class);
     }
 
-    public void addContactData(ContactType contactType, String contact) {
+    public void setContactData(ContactType contactType, String contact) {
         contacts.put(contactType, contact);
     }
 
-    public void addSection(SectionType sectionType, AbstractSection abstractSection) {
+    public void setSection(SectionType sectionType, AbstractSection abstractSection) {
         sections.put(sectionType, abstractSection);
     }
 
@@ -62,20 +75,12 @@ public class Resume implements Serializable {
         return contacts;
     }
 
-    public void setContacts(Map<ContactType, String> contacts) {
-        this.contacts = contacts;
-    }
-
     public String getContact(ContactType type) {
         return contacts.get(type);
     }
 
     public Map<SectionType, AbstractSection> getSections() {
         return sections;
-    }
-
-    public void setSections(Map<SectionType, AbstractSection> sections) {
-        this.sections = sections;
     }
 
     @Override

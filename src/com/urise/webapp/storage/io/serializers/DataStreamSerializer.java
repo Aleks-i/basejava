@@ -66,15 +66,15 @@ public class DataStreamSerializer implements StreamSerializer {
     public Resume doRead(InputStream is) throws IOException {
         try (DataInputStream dis = new DataInputStream(is)) {
             Resume resume = new Resume(dis.readUTF(), dis.readUTF());
-            readData(dis, () -> resume.addContactData(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
+            readData(dis, () -> resume.setContactData(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
 
             readData(dis, () -> {
                 SectionType sectionType = SectionType.valueOf(dis.readUTF());
                 switch (sectionType) {
-                    case OBJECTIVE, PERSONAL -> resume.addSection(sectionType, new TextSection(dis.readUTF()));
-                    case ACHIEVEMENT, QUALIFICATIONS -> resume.addSection(sectionType, new ListSection(readCollectionWithException(dis,
+                    case OBJECTIVE, PERSONAL -> resume.setSection(sectionType, new TextSection(dis.readUTF()));
+                    case ACHIEVEMENT, QUALIFICATIONS -> resume.setSection(sectionType, new ListSection(readCollectionWithException(dis,
                             dis::readUTF)));
-                    case EXPERIENCE, EDUCATION -> resume.addSection(sectionType, new OrganizationSection(readCollectionWithException(dis,
+                    case EXPERIENCE, EDUCATION -> resume.setSection(sectionType, new OrganizationSection(readCollectionWithException(dis,
                             () -> new Organization(new Link(dis.readUTF(), dis.readUTF()), readCollectionWithException(dis,
                                     () -> new Organization.Position(LocalDate.parse(dis.readUTF()),
                                             LocalDate.parse(dis.readUTF()),

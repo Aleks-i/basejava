@@ -20,8 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import static com.urise.webapp.util.ResumesForWeb.*;
-
 public class SqlStorage implements Storage {
     protected static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
     SqlHelper helper;
@@ -188,7 +186,7 @@ public class SqlStorage implements Storage {
     private void addContacts(ResultSet rs, Map<String, Resume> storage) throws SQLException {
         while (rs.next()) {
             storage.get(rs.getString("resume_uuid"))
-                    .addContactData(ContactType.valueOf(rs.getString("type")),
+                    .setContactData(ContactType.valueOf(rs.getString("type")),
                             rs.getString("value"));
         }
     }
@@ -197,7 +195,7 @@ public class SqlStorage implements Storage {
         while (rs.next()) {
             SectionType sectionType = SectionType.valueOf(rs.getString("type"));
             String content = rs.getString("value");
-            storage.get(rs.getString("resume_uuid")).addSection(sectionType, Parser.read(content, AbstractSection.class));
+            storage.get(rs.getString("resume_uuid")).setSection(sectionType, Parser.read(content, AbstractSection.class));
         }
     }
 }

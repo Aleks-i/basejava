@@ -37,24 +37,24 @@ public class ResumeTestData {
     public static Resume getResume(String uuid, String fullName) {
         Resume TEMPLATE_TEST_RESUME = new Resume(uuid, fullName);
 
-        TEMPLATE_TEST_RESUME.addContactData(ContactType.PHONE_NUMBER, "+7(921) 855-0482");
-        TEMPLATE_TEST_RESUME.addContactData(ContactType.SKYPE, "skype:grigory.kislin");
-        TEMPLATE_TEST_RESUME.addContactData(ContactType.EMAIL, "gkislin@yandex.ru");
-        TEMPLATE_TEST_RESUME.addContactData(ContactType.PROFILE_LINKEDIN, "https://www.linkedin.com/in/gkislin");
-        TEMPLATE_TEST_RESUME.addContactData(ContactType.PROFILE_GITHUB, "https://github.com/gkislin");
-        TEMPLATE_TEST_RESUME.addContactData(ContactType.PROFILE_STACKOVERFLOW, "https://stackoverflow.com/users/548473");
-        TEMPLATE_TEST_RESUME.addContactData(ContactType.HOME_PAGE, "http://gkislin.ru/");
+        TEMPLATE_TEST_RESUME.setContactData(ContactType.PHONE_NUMBER, "+7(921) 855-0482");
+        TEMPLATE_TEST_RESUME.setContactData(ContactType.SKYPE, "skype:grigory.kislin");
+        TEMPLATE_TEST_RESUME.setContactData(ContactType.EMAIL, "gkislin@yandex.ru");
+        TEMPLATE_TEST_RESUME.setContactData(ContactType.PROFILE_LINKEDIN, "https://www.linkedin.com/in/gkislin");
+        TEMPLATE_TEST_RESUME.setContactData(ContactType.PROFILE_GITHUB, "https://github.com/gkislin");
+        TEMPLATE_TEST_RESUME.setContactData(ContactType.PROFILE_STACKOVERFLOW, "https://stackoverflow.com/users/548473");
+        TEMPLATE_TEST_RESUME.setContactData(ContactType.HOME_PAGE, "http://gkislin.ru/");
 
         //text sections
-        TEMPLATE_TEST_RESUME.addSection(SectionType.OBJECTIVE, new TextSection(
+        TEMPLATE_TEST_RESUME.setSection(SectionType.OBJECTIVE, new TextSection(
                 "Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям")
         );
-        TEMPLATE_TEST_RESUME.addSection(SectionType.PERSONAL, new TextSection(
+        TEMPLATE_TEST_RESUME.setSection(SectionType.PERSONAL, new TextSection(
                 "Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры.")
         );
 
         //list section
-        TEMPLATE_TEST_RESUME.addSection(SectionType.ACHIEVEMENT, new ListSection(List.of(
+        TEMPLATE_TEST_RESUME.setSection(SectionType.ACHIEVEMENT, new ListSection(List.of(
                 "С 2013 года: разработка проектов \"Разработка Web приложения\",\"Java Enterprise\", \"Многомодульный maven. " +
                         "Многопоточность. XML (JAXB/StAX). Веб сервисы (JAX-RS/SOAP). Удаленное взаимодействие (JMS/AKKA)\"). " +
                         "Организация онлайн стажировок и ведение проектов. Более 1000 выпускников.",
@@ -73,7 +73,7 @@ public class ResumeTestData {
         )
         ));
 
-        TEMPLATE_TEST_RESUME.addSection(SectionType.QUALIFICATIONS, new ListSection(List.of(
+        TEMPLATE_TEST_RESUME.setSection(SectionType.QUALIFICATIONS, new ListSection(List.of(
                 "JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2",
                 "Version control: Subversion, Git, Mercury, ClearCase, Perforce",
                 "DB: PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle,",
@@ -97,7 +97,7 @@ public class ResumeTestData {
         )
         ));
 
-        TEMPLATE_TEST_RESUME.addSection(SectionType.EXPERIENCE, new OrganizationSection(List.of(
+        TEMPLATE_TEST_RESUME.setSection(SectionType.EXPERIENCE, new OrganizationSection(List.of(
                 new Organization("javaops", "http://javaops.ru/",
                         new Organization.Position(2013, Month.OCTOBER, "Автор проекта",
                                 "Создание, организация и проведение Java онлайн проектов и стажировок.")),
@@ -144,7 +144,7 @@ public class ResumeTestData {
                                 "внедрение ПО цифровой телефонной станции Alcatel 1000 S12 (CHILL, ASM)."))
         )));
 
-        TEMPLATE_TEST_RESUME.addSection(SectionType.EDUCATION, new OrganizationSection(List.of(
+        TEMPLATE_TEST_RESUME.setSection(SectionType.EDUCATION, new OrganizationSection(List.of(
                 new Organization("coursera", "https://www.coursera.org/course/progfun",
                         new Organization.Position(2013, Month.MARCH, 2013, Month.APRIL,
                                 "\"Functional Programming Principles in Scala\" by Martin Odersky", null)),

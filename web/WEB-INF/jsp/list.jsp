@@ -11,7 +11,9 @@
 <body>
 <jsp:include page="fragments/header.jsp"/>
 <section>
-    <table border="1" cellpadding="8" cellspacing="8">
+    <a href="resume?action=add"><img src="img/add.png"></a>
+    <br>
+    <table border="1" cellpadding="8" cellspacing="0" style="margin: auto">
         <tr>
             <th>Имя</th>
             <th>EMAIL</th>
@@ -29,10 +31,6 @@
             </tr>
         </c:forEach>
     </table>
-    <br>
-    <tr>
-        <td><a href="resume?action=save"><button>Создать новое резюме</button></a></td>
-    </tr>
 </section>
 <jsp:include page="fragments/footer.jsp"/>
 </body>
